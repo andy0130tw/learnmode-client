@@ -1,0 +1,119 @@
+html{
+	font-size: 12px !important;
+}
+
+#navi,#navi .element{
+	background: rgb(207,104,47);
+}
+
+#navi .element:hover{
+	background: rgb(219,128,78);
+}
+
+.cavet:after{
+
+	font-family: metroSysIcons;
+	content: "\e001";
+	transform: rotate(180deg);
+	display: inline-block;
+	margin-left: 20px;
+	-webkit-transform: rotate(180deg);
+}
+
+a.imglightbox{
+	display: inline-block;
+}
+
+#post-main a.imglightbox img{
+	width: 200px;
+}
+
+#post-related a.imglightbox img{
+	width: 150px;
+}
+
+#post-tools,#post-loadmore{
+	border-style: solid;
+	border-width: 1px 0;
+	border-color: #ccc;
+}
+
+#post-float .title{
+	font-size: 2.5rem;
+}
+#post-float{
+	font-size: 1.5rem;
+}
+
+#post-main{
+	margin-top: 15px;
+}
+
+#post-main .user-avatar{
+	width: 64px;
+}
+
+#post-main .user-name{
+	font-size: 120%;
+
+}
+
+#post-main .user-datetime{
+	font-size: 85%;
+	color: #aaa;
+}
+
+#post-main .user-sub{
+	margin-left: 80px;
+}
+
+#post-main .user-message{
+	margin-top: 12px;
+	line-height: 2.2rem;
+	clear: left;
+}
+
+#post-related hr{
+	clear: both;
+}
+
+#post-related .user-avatar{
+	width: 48px;
+	margin-bottom: 8px;
+}
+
+#post-related .user-name{
+	font-size: 95%;
+}
+#post-related .user-datetime{
+	font-size: 75%;
+	color: #bbb;
+}
+#post-related .user-sub{
+	margin-left: 13px;
+	vertical-align: top;
+	float: left;
+}
+
+#post-related .user-message{
+	margin-left: 154px;
+	margin-right: 5px;
+	text-align: justify;
+}
+
+#post-form{
+	background-color: rgb(188,227,247);
+	color: rgb(5,65,115);
+	padding: 8px 16px;
+}
+
+@media only screen and (max-width: 360px) {
+	#post-related .user-sub{
+		float: none !important;
+	}
+
+	#post-related .user-message{
+		margin-left: initial !important;
+		clear: both;
+	}
+}

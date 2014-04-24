@@ -1,0 +1,1 @@
+..\..\tool\minify utility.js utility.min.js

@@ -1,0 +1,415 @@
+﻿<div class="hide">
+<div id="popup-reply" class="popup mfp-hide">
+	<div id="reply-loading">
+		<p class="subheader-secondary text-muted"><span class='loader-ring'><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span></span><!--<span class="icon-loading"></span>--> 載入中...</p>
+	</div>
+	<!--<div id="reply-jumper">
+		<label>Enter ENTRY ID:</label>
+		<div class="input-control text size6"><input type="text" id="postreply-jumper"/></div>
+		<button class="large" onclick="refreshReply($('#postreply-jumper').val())">GO</button>
+	</div>-->
+	<div id="reply-ok" class="hide">
+		<div id="reply-body" class="listview-outlook"></div>
+		<div id="reply-mood" class="toolbar">
+			<button onclick="postMood(1)"><div class="mood mood1"></div><small></small></button>
+			<button onclick="postMood(2)"><div class="mood mood2"></div><small></small></button>
+			<button onclick="postMood(3)"><div class="mood mood3"></div><small></small></button>
+			<button onclick="postMood(4)"><div class="mood mood4"></div><small></small></button>
+			<button onclick="postMood(5)"><div class="mood mood5"></div><small></small></button>
+			<div class="place-right">
+			<button onclick="postMood(0)"><div class="mood mood0"></div>
+				<small class="no-tablet-portrait">清除表情</small>
+				<small class="no-desktop no-large">清除</small>
+			</button>
+			</div>
+		</div>
+
+		<div id="reply-tool" class="btn-placeholder">
+			<button class="large moodlightbox"><span class="icon-power"></span>表情</button>
+			<button class="large action-pin-post">...</button>
+			
+			<div class="place-right">
+				<span>排序：</span>
+				<button class="info large on-left action-refresh-by-score"><span class="icon-stats-up"></span> 得分</button>
+				<button class="info large on-left action-refresh-reverse"><span class="icon-history"></span> 反向</button>
+				<button class="info large action-refresh-reply"><span class="icon-cycle"></span> 正常</button>
+			</div>
+		</div><br/>
+		<div id="reply-accordion" class="panel collapsed" data-role="panel" style="clear:both;">
+			<div class="panel-header bg-cyan fg-white" style="font-size:1.5rem"><span class="icon-copy"></span> 回覆貼文 (<span></span>)</div>
+			<div class="panel-content">
+				<div class="input-control text hide"><input type="text" id="postreply-id" disabled="disabled"/></div>
+				<form id="postreply-form">
+				回覆內容：
+				<div class="input-control textarea"><textarea id="postreply-message" style="height:80px;"></textarea></div>
+				<div id="postreply-file-uploader">
+				上傳圖片：
+				<div class="input-control file"><input type="file" id="postreply-file-image"/><button class="btn-file"></button></div>
+				</div>
+				</form>
+				<div style="min-height:40px">
+				<button id="postreply-submit" class="place-right large bg-cyan fg-white" onclick="postReplyForm();"><span class="icon-reply"></span> 回覆</button>
+				</div>
+			</div>
+		</div>
+		<div id="reply-content" class="listview-outlook"></div>
+		<div id="reply-bottom" class="text-center">
+			<div id="reply-content-loading" class="hide">
+				<h4 class="text-muted"><span class="icon-loading"></span> 載入中...</h4>
+			</div>
+		</div><br/>
+		<div class="btn-placeholder">
+			<button id="btn-loadmore-reply" class="large info">LOAD MORE</button>
+			<button class="large default place-right" onclick="replyBringToTop()"><span class="icon-arrow-up-3"></span> 回到最頂</button>
+		</div>
+	</div>
+</div>
+
+<div id="popup-postshare" class="popup mfp-hide">
+	<div id="postshare-processing" class="hide">
+		<p class="subheader text-muted"><span class='loader-ring'><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span></span><!--<span class="icon-loading"></span>--> 發佈中...</p>
+	</div>
+	<div id="postshare-ok">
+		<h3>發佈訊息</h3>
+		發佈到：
+			<div class="input-control select">
+				<select id="postshare-category">
+					<option value="share">分享</option>
+					<option value="question">大哉問</option>
+					<option value="scrapbook">剪貼簿</option>
+					<option value="watch">觀看影片</option>
+				</select>
+			</div>
+		
+			<!--<div class="input-control select">
+				<select id="postshare-subjects"></select>
+			</div>-->
+			<div class="grid fluid postshare-o1">
+				<div class="row">科目：<small>(可按著Ctrl複選)</small> 已選<span id="postshare-subject-count">0</span>項</div>
+				<div class="row">
+					<div class="input-control select span6">
+						<select id="postshare-subject-category" size="12"></select>
+					</div>
+					<div id="postshare-subject-container" class="input-control select span6">
+					</div>
+					<button onclick="selectAllSubjects(event)" style="width:100%;">全選/取消全選</button>
+				</div>
+			</div>
+		貼文內容：
+			<form id="postshare-form">
+			<div class="input-control textarea"><textarea id="postshare-message" style="height:160px;"></textarea></div>
+			<div class="postshare-o4">
+		上傳圖片： 
+			<small class="postshare-o2">(選填，可傳非正方形圖)</small>
+			<small class="postshare-o3">(必填，建議裁切成正方形)</small>
+			<div class="input-control file"><input type="file" id="postshare-file-image"/><button class="btn-file"></button></div>
+			</div>
+			<div class="postshare-o3 postshare-o5">
+		<div class="postshare-o4">圖片來源網址：<small>(剪貼簿選填)</small></div>
+		<div class="postshare-o5">影片來源網址：<small>(必填)</small></div>
+				<div class="input-control text">
+					<input type="text" id="postshare-url"/>
+				</div>
+			</div>
+			</form>
+		<div class="btn-placeholder">
+			<button id="postshare-cancel" class="place-right large action-dismiss"><span class="icon-cancel-2"></span> 取消</button>
+			<button id="postshare-submit" class="on-left place-right large default" onclick="postShareForm();"><span class="icon-share-2"></span> 送出</button>
+		</div>
+	</div>
+</div>
+
+<div id="popup-announcement" class="popup mfp-hide">
+	<h3>佈告欄</h3>
+	<div id="announcement-body" class="listview-outlook"></div>
+	<div id="announcement-loading" class="text-center hide">
+		<h4 class="text-muted"><span class="icon-loading"></span> 載入中...</h4>
+	</div><br/>
+	<button id="btn-loadmore-announcement" class="large info">LOAD MORE</button>
+	<button class="place-right large default action-dismiss">關閉</button><br/> 
+</div>
+
+<div id="popup-users" class="popup mfp-hide">
+	<div id="users-loading">
+		<p class="subheader-secondary text-muted"><span class='loader-ring'><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span></span><!--<span class="icon-loading"></span>--> 載入中...</p>
+	</div>
+	<div id="users-ok">
+		<h3>使用者列表</h3>
+		<form id="users-search">
+			<legend>搜尋名字 <small class="on-right-more">註：搜尋結果不會包含自己</small></legend>
+			<div class="input-control text"><input type="text" id="users-searchbox"/><button class="btn-search"></button></div>
+		</form>
+		<div id="users-award" class="grid fluid">
+			<div class="row">
+				<div class="span3">
+					<div id="users-award-img"></div><br/>
+					<div id="users-award-badgename" class="subheader-secondary"></div>
+				</div>
+				<div class="span9">
+					<blockquote>
+						<h4>獎牌說明</h4>
+						<div id="users-award-desc1"></div>
+						<h4>累計方式</h4>
+						<div id="users-award-desc2"></div>
+					</blockquote><br/>
+					<table class="table hovered text-center">
+						<thead><tr><th>種類</th><th>需求分數</th><th>獲得日期</th><th>觀看</th></tr></thead>
+						<tbody>
+							<tr class="users-award"><td>銅牌</td><td></td><td></td><td></td></tr>
+							<tr class="users-award"><td>銀牌</td><td></td><td></td><td></td></tr>
+							<tr class="users-award"><td>金牌</td><td></td><td></td><td></td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="users-body" class="listview-outlook" data-role="listview">
+		</div>
+		
+		<button id="btn-loadmore-users" class="large info">LOAD MORE</button>
+		<button class="place-right large default action-dismiss">關閉</button><br/> 
+	</div>
+</div>
+
+
+<div id="popup-news" class="popup mfp-hide">
+	<h3>最新消息/更新紀錄</h3>
+	<div class="listview-outlook" data-role="listview">
+		<div class="list-group"><a href="#" class="group-title">v1.14 2014/3/30</a><div class="group-content">
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>介面</b> 修正動畫設定，刪除不需要的過場、優化網頁主要捲軸。<br/>各種分類的文字修正，可完整正確判斷貼文與貼圖之別，並且可以直接點開來看。</span>
+			</div></a>
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>bug 修復</b> 修復幾個 bug。</span>
+			</div></a>
+		</div></div>
+		<div class="list-group"><a href="#" class="group-title">v1.13 2014/3/23</a><div class="group-content">
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>URI 功能</b> 強化了與周邊 App 的整合。Books, Course, 以及 LM 內部的 URL 現在都可以直接連結了。</span>
+			</div></a>
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>效能優化</b> 裁減了不需要的程式碼，效能會提升多少呢？好像沒多少...</span>
+			</div></a>
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>獎獎堂</b>的資料異常正式確認並修改成「觀看影片」分類。</span>
+			</div></a>
+		</div></div>
+		<div class="list-group"><a href="#" class="group-title">v1.12 2014/3/17</a><div class="group-content">
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>架構</b> 依照改版後新的 API 規定修改程式碼。</span>
+			</div></a>
+		</div></div>
+		<div class="list-group"><a href="#" class="group-title">v1.11 2014/3/14</a><div class="group-content">
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>架構</b> 在歡迎畫面中可放置公告，並且可手動關閉歡迎視窗。</span>
+			</div></a>
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>後端</b> Proxy 更新，不再阻擋 Helper 的發言。</span>
+			</div></a>
+		</div></div>
+
+		<div class="list-group"><a href="#" class="group-title">v1.01,v1.02,v1.10 2014/2/28</a><div class="group-content">
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>貼文引擎更新</b> 原先的 badge 改成較直覺的文字。</span>
+			</div></a>
+		</div></div>
+		<div class="list-group"><a href="#" class="group-title">v1.0 2014/2/10</a><div class="group-content">
+			<a class="list"><div class="list-content compact">
+				<span class="list-title"><b>追蹤列表</b>！含後端更新。<br/>Oh no,I forgot what else I've changed! :(</span>
+			</div></a>
+		</div></div>
+		
+		<div class="list-group"><a href="#" class="group-title">Older log is removed for better performance...</a><div class="group-content">
+			<a class="list"><div class="list-content compact"><span class="list-title">Sorry!</span></div></a>
+		</div></div>
+	</div>
+	<hr/>
+	<div class="btn-placeholder">
+		<button class="default place-right large action-dismiss">關閉</button>
+	</div>
+</div>
+
+<div id="popup-myinfo" class="popup mfp-hide">
+	<div id="myinfo-processing" class="hide">
+		<p class="subheader text-muted"><span class='loader-ring'><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span></span><!--<span class="icon-loading"></span>--> 修改中...</p>
+	</div>	
+	<div id="myinfo-ok">
+			<legend>修改個人資料</legend>
+			<div class="input-control text hide"><input type="text" id="myinfo-build_number"/></div>
+			<label> 姓名 <small>(為避免亂改姓名衍生的糾紛，請慎重更改！)</small></label>
+			<div class="input-control text"><input type="text" id="myinfo-name" disabled="disabled"/></div>
+			<label>帳號名稱：
+			<div class="input-control text"><input type="text" id="myinfo-username"/></div></label>
+			<label>電子郵件：
+			<div class="input-control email"><input type="email" id="myinfo-email"/></div></label>
+			<label>網站：
+			<div class="input-control text"><input type="text" id="myinfo-web"/></div></label>
+			<label>學校地點：
+			<div class="input-control text"><input type="text" id="myinfo-location"/></div></label>
+			<label>自介：
+			<div class="input-control textarea"><textarea id="myinfo-desc"></textarea></div></label>
+			<hr/>
+			<legend>上傳圖片</legend>
+			<strong>以下兩項為選填，後面附上最佳比例。<br/>
+			如要修改才填寫，會依照填寫的狀態分次傳送。</strong>
+		<form>
+			<label>修改大頭貼：<small> (1:1)</small></label>
+			<div class="input-control file"><input type="file" id="myinfo-file-image"/><button class="btn-file"></button></div>
+			<label>修改封面圖：<small> (2:1)</small></label>
+			<div class="input-control file"><input type="file" id="myinfo-file-cover"/><button class="btn-file"></button></div>
+		</form>
+		<div class="btn-placeholder">
+			<button id="postshare-cancel" class="place-right large action-dismiss"><span class="icon-cancel-2"></span> 取消</button>
+			<button id="postshare-submit" class="on-left place-right large default" onclick="postMyInfoForm();"><span class="icon-floppy"></span> 修改</button>
+		</div>
+	</div>
+</div>
+
+<div id="popup-about" class="popup mfp-hide">
+		<h3>關於</h3>
+		<div class="tab-control" data-role="tab-control" data-effect="fade">
+		<ul class="tabs">
+		<li class="active"><a href="#_page_1">網頁簡介</a></li>
+		<li><a href="#_page_2"><i class="icon-lab"></i> 作者</a></li>
+		<li><a href="#_page_3"><i class="icon-pie"></i> 特別感謝</a></li>
+		<li><a href="#_page_4"><i class="icon-rocket"></i> 使用資源</a></li>
+		<li class="place-right"><a href="#_page_5"><i class="icon-help"></i> 說明文件</a></li>
+		<li class="place-right"><a href="#_page_6"><i class="icon-help"></i> FAQ</a></li>
+		</ul>
+		 
+		<div class="frames">
+		<div class="frame" id="_page_1">
+			<p class="subheader-secondary">網頁版LearnMode，不用平板也能隨時追蹤學習平台上的貼文！電腦可用，而且專為手機/平板優化！</p>
+			<p>最適瀏覽環境：<span class="icon-firefox"></span> Firefox, <span class="icon-chrome"></span> Chrome, <span class="icon-IE"></span> IE(9+), <span class="icon-safari"></span> Safari(?), <span class="icon-opera"></span> Opera(?) <br/><small> Flyer內建瀏覽器因效能太差，不推薦。</small></p>
+			<hr/>
+			<p class="subheader-secondary">版權</p>
+			<p class="title">本 著作 係採用創用 CC 姓名標示-非商業性-相同方式分享 3.0 台灣 授權條款授權。<br/>
+			<div class="place-right text-muted on-extra-left"><span class="icon-cc"></span>CC <span class="icon-cc-by"></span>BY <span class="icon-cc-nc"></span>NC <span class="icon-cc-sa"></span>SA</div></p> <br/>
+		</div>
+		<div class="frame" id="_page_2">
+			<p class="subheader-secondary"><u><span class="userlightbox" data-id="d82e4804d">潘廣霖 (andy0130tw)</span></u></p>
+			<p>
+			一個不怎麼活躍的LM使用者。因為偶然一次<u><strong class="action-reply" data-id="52AECDB1DBCA1D067D7C376B">錯用老師身分發言</strong></u>，得以見識到這個平台的特殊。對這網路世界抱持著莫名的憧憬，在深入了解後大膽的踏入這塊土地。<br/>	原是Flash的開發者，卻因HTML5的興起被迫轉換。本來是該沉寂的高三生涯也不沉寂，寧可純真守在螢幕前敲打著鍵盤，學習著如何駕馭、整理這些資料，利用習得的程式概念和滿腔熱血，寫下這個平凡的網頁程式。
+			</p>
+			<a href="http://andy0130tw.blogspot.tw/" target="_blank">我的部落格</a>
+			<hr/>
+			<p class="subheader-secondary"><u><span class="userlightbox" data-id="0bbe079d0">潘昱仁</span></u></p>
+			<p>本網站的圖標(icon)設計者。</p>
+			<a href="https://docs.google.com/document/d/1ELvmQ3En-UT8ynHkek8JnuwES5NYrHDb9haUNA6E5xM/edit?usp=sharing" target="_blank">公開內容（LM） - Google雲端硬碟</a>
+		</div>
+		<div class="frame" id="_page_3">
+			<p>
+			感謝方致偉做的元老級(網址略)LMClient，使我開始思考這件事的可能性；<br/>感謝1322班的陳定毅和1319班的謝至宥兩位學弟給我在LM上的啟發；<br/>感謝LM上的活躍者們給我的支持與鼓勵，細心發現程式裡隱藏的錯誤；<br/>尤其感謝潘昱仁和魏建倫，在我最疑惑和最需要想法的時候，提供我繼續走下去的新點子。<br/>最後，感謝有你的使用，這個網站才能繼續運作下去。
+			</p>
+		</div>
+		<div class="frame" id="_page_4">
+			製作這個網頁時使用到下列資源：
+			<dl>
+			<dt>Metro UI CSS</dt>
+			<dd>這個網頁所用到的樣式集和組件。<a href="http://metroui.org.ua/" target="_blank">metroui.org.ua</a></dd>
+			<dt>Magnific Popup</dt>
+			<dd>顯示小視窗內容時使用的Lightbox。<a href="http://shadowbox-js.com/" target="_blank">shadowbox-js.com</a></dd>
+			<dt>Shadowbox</dt>
+			<dd>顯示圖片時使用的Lightbox。<a href="http://dimsemenov.com/plugins/magnific-popup/" target="_blank">dimsemenov.com/plugins/magnific-popup/</a></dd>
+			<dt>Simple PHP Proxy (後端)</dt><dd>經過微幅修改，成為對LM伺服器溝通的介面。<a href="http://benalman.com/projects/php-simple-proxy/">benalman.com/projects/php-simple-proxy/</a></dd>
+			</dl>
+		</div>
+		<div class="frame" id="_page_5"><span class="subheader">說明文件</span><br/><br/>
+		這是一個還在測試的LearnMode網頁版！下面是一份完整的說明文件：<br/><br/>
+			<span class="subheader-secondary">基本介面</span>
+			<p>
+				網頁由3個架構所組成：選單列(網頁最上面那排，固定移動)、功能列(主介面上方的選單)、主介面。				跳出來的框框有兩種，分別是圓角無框的和方角黑框的。都是點旁邊的黑色區域即可關閉。
+			</p>
+			<span class="subheader-secondary">瀏覽</span>
+			<p>分類：在最上排的選單列中選擇分類，再於下方的功能列中篩選。</p>
+			<dl class="">
+				<dt>觀看動態、觀看公告</dt><dd>預設為自己的動態(相當於Flyer裡面的首頁)，選單列有和Flyer類似的分類可選擇。</dd>
+				<dt>觀看回覆</dt><dd>動態旁邊的按鈕，點入會開啟這則動態相關的資訊。按鈕旁邊的數字代表此則訊息的「分數」，計算方式為表情數+回應數±評分數。</dd>
+				<dt>重新整理</dt><dd>使用選單列的重新整理按鈕可以節省載入網頁的時間和流量。LM伺服器若過於忙碌會導致逾時，需要手動重新整理。</dd>
+				<dt>通知系統</dt><dd>現階段僅限於與伺服器溝通。連線的訊息會在右下角的通知方塊顯示。</dd>
+			</dl>
+			<span class="subheader-secondary">使用者</span>
+			<p>點選人名或照片會開啟該人的名片，可以關注/解關注，或前往該使用者的大聲公。</p>
+			<dl class="">
+				<dt>看自介</dt><dd>在名片上點擊使用者的名字，會跳出自介的通知框。</dd>
+				<dt>關注/解關注</dt><dd>在名片上點選「關注/解關注」按鈕。當然，不能關注自己。</dd>
+				<dt>剪貼簿</dt><dd>觀看使用者時右上角的剪貼簿，可用圖片牆的方式瀏覽。</dd>
+				<dt>獎獎堂</dt><dd>觀看使用者時右上角的獎獎堂，可以很方便的瀏覽使用者的獎章和等級。</dd>
+			</dl>
+			<span class="subheader-secondary">互動</span>
+			<p>下列為本網頁最核心的功能。</p>
+			<dl class="">
+				<dt>發表動態</dt><dd>在主選單中選擇「發佈訊息」，可以發布訊息至愛分享、大哉問或剪貼簿。</dd>
+				<dt>修改個人資料</dt><dd>在主選單中選擇「帳戶/修改個人資料」，可以修改基本資料和上傳相關的圖片。</dd>
+				<dt>甩表情</dt><dd>回覆頁面可以直接點選按鈕甩表情，表情會即時更新。</dd>
+				<dt>評分</dt><dd>大哉問的回答旁邊可以評分，<strong>然而評分資訊還不會即時更新</strong>。</dd>
+				<dt>上傳圖片</dt><dd>每則動態可以附一張圖片(接受JPEG, GIF, PNG)隨訊息發佈。<br/>
+				<b>圖片上傳規定：大小20MB為上限，且須在10秒內傳輸完畢。</b>若右下角沒有出現上傳成功的通知窗則可能失敗。</dd>
+				<dt>誰甩表情/誰評分</dt><dd>在相關的選項上點選即會開啟。</dd>
+			</dl>
+			<hr/>
+			最後，希望你使用愉快:D。
+		<br/>
+		</div>
+		<div class="frame" id="_page_6"><span class="subheader">FAQ</span><br/>
+			<dl class="">
+				<dt>動態載入很慢，常常逾時，是bug嗎？</dt><dd>不是，這是LM伺服器本身過於忙碌所致。為了避免最後的錯誤訊息造成資料無法正常顯示(類似於平板的"查無資料")，<b>這個網站設定的限制時間是40秒</b>。</dd>
+				<dt>發佈大哉問的科目要怎麼複選？</dt><dd>按著鍵盤上Control配著滑鼠就可以囉！</dd>
+				<dt>圖示顯示不出來，如何解決？</dt><dd>圖示是從這個網站下載下來的，大小約80KB，需耐心等待。</dd>
+				<dt>網頁有時候會自己跳到一個詭異的頁面，怎麼辦？</dt><dd>那是廣告...通常幾次之後這種狀況就會消失，如果不勝其擾，可以用備用站點：<a href="http://learnmode.host22.com/">http://learnmode.host22.com/</a>。</dd>
+				<dt>我發現bug了，要怎麼回報？</dt><dd>在選單列/主選單/作者開發樓回覆就可以囉，如果附上錯誤發生的螢幕截圖就更好了。</dd>
+				<dt>還有哪些作者還沒實作的功能呢？</dt><dd>可多了。像是計算最新貼文數、離線瀏覽，還有很紅的追蹤列表等等，隨著第一版的推出，這些事情也只好等些時日在來實作了。</dd>
+				<dt>還有哪些作者還沒實作的功能呢？</dt><dd>可多了。像是計算最新貼文數、離線瀏覽，還有很紅的追蹤列表等等，隨著第一版的推出，這些事情也只好等些時日在來實作了。</dd>
+				
+				<dt>我覺得這裡面缺少我的問題耶。</dt><dd>歡迎發問。</dd>
+			</dl>
+		</div>
+		</div>
+		</div>
+	</div>
+
+<div id="popup-notfound" class="popup mfp-hide">
+	<h2>Page not found!</h2>
+	<h3 class="subheader-secondary">你給的Hash tag是: <code class="fill-hash"></code></h3>
+	<p>這個頁面不存在，不過可以關閉這個視窗回到 LMClient。</p>
+</div>
+
+<!---->
+
+<div class="shbox ext-moodview" style="opacity:0">
+<div class="moodview listview-outlook">
+	<div class="list smart-overflow" style="position:absolute;top:0;bottom:80%;" tabindex="0"><div class="list-content"><img class="mood mood1"/><div></div></div></div>
+	<div class="list smart-overflow" style="position:absolute;top:20%;bottom:60%;" tabindex="0"><div class="list-content"><img class="mood mood2"/><div></div></div></div>
+	<div class="list smart-overflow" style="position:absolute;top:40%;bottom:40%;" tabindex="0"><div class="list-content"><img class="mood mood3"/><div></div></div></div>
+	<div class="list smart-overflow" style="position:absolute;top:60%;bottom:20%;" tabindex="0"><div class="list-content"><img class="mood mood4"/><div></div></div></div>
+	<div class="list smart-overflow" style="position:absolute;top:80%;bottom:0;" tabindex="0"><div class="list-content"><img class="mood mood5"/><div></div></div></div>
+</div>
+</div>
+	
+<div class="shbox ext-voterview" style="opacity:0">
+<div class="voterview listview-outlook">
+	<div class="list smart-overflow" style="position:absolute;top:0;bottom:50%;" tabindex="0"><div class="list-content"><span class="icon-thumbs-up"></span><div></div></div></div>
+	<div class="list smart-overflow" style="position:absolute;top:50%;bottom:0;" tabindex="0"><div class="list-content"><span class="icon-thumbs-down"></span><div></div></div></div>
+</div>
+</div>
+	
+	
+<div class="shbox ext-userview" style="overflow:hidden;opacity:0">
+	<div class="userview-banner">
+		<img class="userview-cover"/>
+	</div>
+	<div class="userview-block-outer bg-hover-darker fg-white" style="background-color:rgba(34, 34, 34, .45);">
+		<img class="userview-image" style="vertical-align:top;"/>
+		<div class="userview-block" style="display:inline-block;">
+			<span class="title truncate"></span><br/>
+			<span class="subtitle truncate"></span><br/>
+			<span class="following fg-lightPink truncate">已關注你 <span class="icon-play-alt"></span></span>
+		</div>
+	</div>
+	<span class="userview-tool">
+		<button class="large place-right success userview-go"><span class="icon-enter"></span> 前往</button>
+		<button class="large place-right on-left-more userview-following"><span class="icon-code"></span>　</button>
+		<div class="userview-info text-muted"></div>
+	</span>
+</div>
+</div>

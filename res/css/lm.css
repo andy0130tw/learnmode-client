@@ -1,0 +1,292 @@
+﻿/*Add*/
+@import url(lm.colorful.css);
+
+.list-title{
+	line-height: 135% !important;
+}
+
+.list-clearfix{
+	clear: both;
+	padding-top: 10px;
+	display: block;
+}
+
+.text-pilcrow{
+	color: #bbb;
+	font-size: 70%;
+}
+
+img.shadow-award{
+	box-shadow: 0px 0px 8px rgba(255,165,0,.6);
+	background: white;
+}
+
+img.shadow-award:hover{
+	box-shadow: 0px 0px 8px rgba(255,165,0,.6),0px 0px 24px rgba(255,165,0,.4) inset;
+}
+
+.post .list-title{
+	margin-top: 16px !important;
+}
+
+.post .list-title.empty{
+	height: 0;
+}
+
+.post .list-title,.post .list-subtitle{
+	overflow: hidden;
+	padding-top:6px !important;
+	padding-bottom:12px !important;
+}
+.post .list-title:empty,.post .list-subtitle:empty{
+	padding-bottom:0 !important;
+}
+
+.post.autoheight .list-title{max-height: 250px;}
+.post.autoheight .list-title:hover{max-height: 400px;}
+.post.autoheight .list-subtitle{max-height: 150px;}
+.post.autoheight .list-subtitle:hover{max-height: 300px;}
+
+.post.autoheight .label{margin-right: 7px;}
+
+.list-content.compact{
+	padding-top:2px !important;
+	padding-bottom:2px !important;
+}
+
+.list-datetime{
+	font-family: "Consolas",typewriter !important;
+	font-size: 75%;
+}
+
+.list-small{
+	font-size: 80%;
+}
+
+dt{color:rgb(0, 138, 0);font-weight: bold;}
+
+dt,dl.horizontal dd{
+	padding-top:12px;
+}
+
+.text-category{
+	color:#0053BE;
+}
+
+img.autoScaleImage{
+	width: 200px;
+	height: 200px;
+}
+
+span.action-reply.pseudolink{
+	box-shadow: 0 0 6px;
+}
+
+.zoomin{
+	font-size: 140% !important;
+	padding: 5px 7px !important;
+}
+
+.btn-placeholder{
+	min-height: 40px;
+}
+
+#btn-bringtop{
+	position: fixed;
+	padding: 4px 8px;
+	font-size: 24px;
+	bottom: 10px;
+	right: 10px;
+	opacity: 0.7;
+	cursor: pointer;
+	z-index: 99;
+	border-radius: 50%;
+	border: 4px solid;
+	box-shadow: 0px 0px 3px navy;
+}
+
+.action-vote-down{margin-right:14px !important;}
+
+.pop-over{
+	border-bottom: 2px dotted currentColor;
+}
+
+.pop-over:hover{
+	text-shadow: 2px 2px 8px currentColor;
+}
+
+.userlightbox{
+	font-size: 110%;
+	cursor: pointer;
+}
+
+.userview-banner{position:absolute;left:0;right:0;bottom:60px;}
+.userview-cover{width:100%;}
+.userview-block-outer{position:absolute;left:4px;bottom:82px;padding:6px 12px;height:80px;}
+.userview-tool{position:absolute;left:0;right:0;bottom:0;padding:10px;height:60px;width:100%;}
+.userview-info{padding-right:10px;overflow:hidden;word-break:break-all;display:table-cell;vertical-align:middle;}
+
+.userview-block *{
+	cursor: default;
+	font-size: 90%;
+}
+.userview-block .following{font-size:85%;font-weight: bold;}
+.userview-block .title{
+	font-size: 115%;
+	font-weight: bold;
+}
+
+.list-appendix{
+	border-top: 1px dashed rgb(153,153,153);
+	margin: 0 20px;
+	padding: 5px 0;
+}
+
+.smart-overflow{
+	overflow-x: hidden;
+	overflow-y: auto;
+	-moz-overflow-scrolling: touch;
+	-webkit-overflow-scrolling: touch;
+	overflow-scrolling: touch;
+	z-index: 0;
+}
+
+#footer{
+	margin-top: 25px;
+}
+
+/*Override*/
+ul{
+	margin-bottom:0;
+}
+
+.list-subtitle{
+	font-size: 100% !important;
+	font-weight: normal;
+	line-height: 20px !important;
+}
+
+.list-content *{
+	white-space:normal !important;
+	word-break:break-all !important;
+}
+
+/*Moods , url(../image/mood/mood.png)*/
+.mood{
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAADwCAMAAABFTdYdAAABXFBMVEUAAABwgY9wgY9wgY9wgY9wgY9wgY9wgY9wgY9wgY9wgY9wgY9wgY9wgY9wgY9wgY93iIhxgo5wgo9xgY5wgo9wgI9zhIxwgI9ygo1wgo9wgY9wgY9wgY9vgJBxgI5wgY9wgY9wgI9wgY9xgo51gIpwgY9wgY9wgI90i4twgY9wgY9wgY9wgY9vgJBwgo9wgY9vgZCAgIBwgI9xgI5wgY9qgJV2iYlxgY5wgY9wgo9ph5aAgIBwgY9vgZAA//9wgI9xgI5wgY9xgo6AgIBxgY9wgY9tkpJxgY5whY9ygo1wgY9wgo9wgI9tgJJugZFwgY9vgZBxgI5xgo5wgY9xgY5vgpBvg5BvgZBwgY9wgY9wgY9xgI5wgY9xgI5wgY9vgJFtg5JvgJBxgo5tgJJwgY9wgY9mgJlzgIxvgJBvgZBwgY9wgY9xgo5vgJBwgY9xgY5wgY9wgI9wgY9wgY8oKr0xAAAAc3RSTlMAzz8P73+/X5+vH4/fL09vDz+/X6+fH48vuf3z6aVGkIIyli0YhspCC4T7+vKXO/z3BqGjbQwNb+ZiEQJ5rgGJg+0rCO7rB2EZMZS9MBxD8UU0s/7efidHuPT5SMMkSx4jhWoO3PAKKJWO7OJ6LmlP1J32sEYqNwAABUZJREFUeF7tmedz4zYQxR86CYKkbdk+21dzveZK7i699957773y/5/J2KK0RKGg5ENiJ/c+kTNPC2Ah7E8LwZM1Bev2xApjMSZedp5KnrbpLpKOraLqkqpCH+tGxARIqGU3KlmTT5Av5RThuNnR43WkV8S7rKZZ0nmjHgZ0VbQkWTkKiXL+XAeLYvU8SgnYrlcBiMLbajFYp4WZB3AcaMnXAtzN3wyGQXQN3k9UctTDVRbw51XYafaZsIU/X0QL3YujoxSgy2g/GgtTAxBNERiD9JQWvYINZSi8cMDI976ACb9NJN6RDET0/SRpMlqAyoNDIBqt9AYoEcjSWN4ACqGkN3k+btT+5KvFRipAajaACuX6ZFNiF8kJCrjQV1PAbOGhgM4sKKQU0Jl8aYaa2vLFnhmQxBAfAkPtA87goHMG+4Qz+ZBlxkOcIUllNNHDTp+JM6TaP6GUXuIMTblJ1RDiDCW2jSPGnDGAlTTHcpwKTFOQgwgkFhsc8TziDJnaGgDqlszEGZI0mMtIP8U2OHG2LbXWraUTQpwh3+B3SiHIGXBGCtTOq7RCJjljIFxQu02KMw5hBgrAJTijaF20ApXgDKOqR3WP/RXOyCU5I/8eZ6RaijNSiSU4M7XlOeOUWAof+7mfEf8QZ+5wxskFnDFcES+gFnJG0e9nsBHOsMGUFeWNOOOh3tA6hRvjTCFo10vO2TgVJOsOOGcyIs7kRZzJizgTS5fKcBZxhiR1oQyfFa5UP+N0pRoOEixnCc6UINVcVXpOHeIMQYI3qtCEy3Q/oyMHhchi4UBwRtzhzK72OWdwcO7N2hqW7lqKxqJuXcyZUgAYvPb5KELOlEBTaF22/cqqttS6aIAy4IyoXRJfXAScGS1qxuNMXuzAXYdJrbXqVWmtE0ZZtdwiFjfKeZzRGJX2OCMxJhtwxmJEKuBMi7SEDDjjxgJGnDFIqY77GSkQS7AEZ5hA/t4s7RSlz5k5iWXjz48FnMGAeYZsRciZAO1aGc5V5WLOwP17nHFGLHlv9h/izJ3/Z5hp+mkoXqQ54wwvOiZmC2sBqN3PlSFnLADDgf5qAbtSAOCIM3R+iEj0qnzOyOCynM5jEXCmpQhevbQy5Az3N6mhvQg5Y+YzpH0bcA9+/hvv4qaRaSqw2kp6M6Ia54zzXv53/Qwp7mecNfFhUYl7Mx2X1AZN6t7Mooka+iLVz5TwUyAteLqfMZ5T1hAs7GeoeDSOWmiUY/2MNAC4KrUyAhB6QT9TEuCNXNzPlKYGBK9chjP7//+ZzcnGzLgx2cSYVtc7T+uradtaF2kttq4c6pI6tBL4xjnjObfm/Hhz+8Kzx+4/vvYB0WNrEG/m2zn5MaY6feHxuXMlGve+cyCdv/lWeG82W4d7DsAD93738PHJywBw/cZsRX1eet+rTwAPPnR47/ni0bsAPPJo75xmqc/f1Q+BZ7YHOdy1PtY/DwOeAXC0G+jwa8CTT1HIft+evgW83Xm69DzwQr+bwGYf4EXgpZ3O1xXglf5xE5PeePmT1yMavwGc640TbHTjUsDN3rixqJAeWQHuWaKfuXYMeOdSvoYfeRfAe1kqvH/iNoAzOSpcvXIaAE7k8PHRKQDY2s5x5ux1AJ/e2Mlx5vJnwK3Pr4WciRP+BfDlV12gDUxC39ffUJpJE2yGxpPAt12kTWA9MN4NfB/51gGsRsbzP0TG1flRIP3409m4tABRyO2ff9lJBwS8svMr8FtUgAgLpN9vnzocspMKylB/XAx8cmXJe7MtP2Cm7BFnFhRSCijVSr40q6ktX+xdb8vh4088q/gKh0bnHAAAAABJRU5ErkJggg==);
+	width:40px !important;
+	height:40px !important;
+	margin:auto;
+}
+
+.mood.mood0{background-position: 0 -200px;}
+.mood.mood1{background-position: 0 -160px;}
+.mood.mood2{background-position: 0 -120px;}
+.mood.mood3{background-position: 0 -80px;}
+.mood.mood4{background-position: 0 -40px;}
+.mood.mood5{background-position: 0 0px;}
+
+.moodview,.voterview{position:absolute !important;top:0;bottom:0;left:0;right:0;}
+.moodview .list-content,.voterview .list-content{position: absolute !important; top: 2px; bottom: 2px; right: 0px; left: 0px;}
+
+img.inline{width:32px;vertical-align:bottom;}
+img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27,161,226,.7);}
+
+.moodview .list-content > div,.voterview .list-content > div {padding-left: 50px}
+.moodview .list-content small, .voterview .list-content small{
+	font-size: 70%;
+	display: block;
+	line-height: 100%;
+}
+
+.voterview .list-content span{
+	float: left;
+	font-size: 200%;
+}
+
+.metro .navigation-bar .refresh-menu, .metro .navbar .refresh-menu {
+    float: right !important;
+    color: #FFF;
+    cursor: pointer;
+    font: 1.8em/20px sans-serif;
+    position: absolute;
+    top: 0px;
+    right: 40px;
+    height: 45px;
+    width: 40px;
+    margin: 0px;
+}
+
+.metro .navigation-bar .refresh-menu:before,
+.metro .navbar .refresh-menu:before {
+  content: "\e1bf";
+  font-family: iconFont;
+  position: absolute;
+  top: 12px;
+  left: 10px;
+}
+
+#btn-bringtop{
+	/*Stub*/	
+}
+
+.moodview .mood{
+	float: left;
+	margin-right: 10px;
+}
+
+#footer{
+	margin-bottom: 30px;
+}
+
+/*Responsive*/
+@media only screen and (max-width: 640px) {
+	.metro button.large{
+		padding-left: 10px !important;
+		padding-right: 10px !important;
+		font-size: 16px !important;
+	}
+	.metro .horizontal-menu li a {
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+	}
+	.metro .listview-outlook .list .list-content {
+		font-size: 14px !important;
+	}
+	.metro .listview-outlook .list .list-content .icon {
+		width: 40px !important;
+		height: 40px !important;
+	}
+	.post .list-title{
+		margin-top: 6px !important;
+	}
+
+	.action-vote-down,.action-vote-up{
+		padding-left: 10px !important;
+		padding-right: 10px !important;
+	}
+
+	img.autoScaleImage{
+		width: 90px !important;
+		height: 90px !important;
+	}
+
+	.mood.mood0{background-position: 0 -150px !important;}
+	.mood.mood1{background-position: 0 -120px !important;}
+	.mood.mood2{background-position: 0 -90px !important;}
+	.mood.mood3{background-position: 0 -60px !important;}
+	.mood.mood4{background-position: 0 -30px !important;}
+	.mood.mood5{background-position: 0 0px !important;}
+	.mood{
+		width: 30px !important;
+		height: 30px !important;
+		background-size: 30px !important;
+	}
+	.moodview .list-content > div{
+		padding-left: 30px !important;
+	}
+
+	img.inline{width:16px !important;}
+}
+
+

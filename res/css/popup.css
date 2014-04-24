@@ -1,0 +1,101 @@
+/*Popup*/
+#sb-wrapper{
+	box-shadow:0px 0px 22px rgba(0,0,0,.9);
+}
+.btn-close{
+	opacity: .5;
+	margin-top: 8px;
+	padding: 6px 16px !important;
+	color: rgb(255, 255, 255) !important;
+	background-color: rgb(199, 80, 80) !important;
+}
+.btn-close:hover{
+	opacity: .9;
+	background-color: rgb(224, 67, 67) !important;
+}
+/*Magnific Popup CSS*/
+.mfp-fade .mfp-container,
+.mfp-fade.mfp-bg {
+	/*For bug in Chrome*/
+	opacity: 0.01;
+	-webkit-backface-visibility: hidden;
+	transition: all 250ms ease-out;
+}
+
+.mfp-fade.mfp-ready .mfp-container {
+	opacity: 1;
+}
+.mfp-zoom.mfp-ready .mfp-container {
+	-o-transform: scale(1);
+	-moz-transform: scale(1);
+	-webkit-transform: scale(1);
+	transform: scale(1); 
+}
+
+.mfp-fade.mfp-ready.mfp-bg {
+	opacity: 0.8;
+}
+
+.mfp-fade.mfp-removing .mfp-container, 
+.mfp-fade.mfp-removing.mfp-bg {
+	opacity: 0.01;
+}
+
+/*Zoom animation*/
+.mfp-zoom .mfp-container,
+.mfp-zoom.mfp-removing .mfp-container{
+	-o-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+	-webkit-transform: scale(0.8);
+	transform: scale(0.8);
+}
+
+.popup {
+	position: relative;
+	background: white;
+	padding: 20px;
+	width: auto;
+	max-width: 660px;
+	margin: 40px auto 20px !important;
+	border-radius: 6px;
+	box-shadow:0 2px 6px rgba(0,0,0,0.3),0 3px 8px rgba(0,0,0,0.2);
+	-webkit-box-shadow:0 2px 6px rgba(0,0,0,0.3),0 3px 8px rgba(0,0,0,0.2);
+	/*-o-transition: height 400ms ease-out;
+	-moz-transition: height 400ms ease-out;
+	-webkit-transition: height 400ms ease-out;
+	transition: height 400ms ease-out;*/
+}
+
+.mfp-no-margins img.mfp-img {
+	padding: 0;
+}
+/* position of shadow behind the image */
+.mfp-no-margins .mfp-figure:after {
+	top: 0;
+	bottom: 0;
+}
+/* padding for main container */
+.mfp-no-margins .mfp-container {
+	padding: 0;
+}
+/*Btn*/
+.mfp-close {
+    line-height: 44px !important;
+	/*text-align: center !important;*/
+    opacity: 0.65 !important;
+    padding: 0 !important;
+    font-size: 28px !important;
+    font-family: Arial,Baskerville,monospace !important;
+}
+
+.mfp-close:hover{
+	color: black !important;
+}
+
+/*Lightbox*/
+.shbox {
+	background: white;
+	min-height: 100%;
+	min-width: 100%;
+}
+#sb-body{background-color: transparent;}

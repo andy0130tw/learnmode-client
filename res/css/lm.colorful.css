@@ -1,0 +1,73 @@
+.metro .post.badge-outer{
+	background-color: rgba(255, 165, 0, 0.1);
+}
+
+.metro .post.badge-outer:hover{
+	background-color: rgba(255, 165, 0, 0.25) !important;
+}
+
+.metro .post.badge-outer:focus,
+.metro .post.badge-outer:active{
+	background-color: rgba(255, 165, 0, 0.25) !important;
+	box-shadow: 0px 0px 10px #FFA500;
+	-webkit-box-shadow: 0px 0px 10px #FFA500;
+}
+
+/**/
+.metro .post.follow-outer{
+	background-color: rgba(50, 205, 50, 0.1);
+}
+
+.metro .post.follow-outer:hover{
+	background-color: rgba(50, 205, 50, 0.25) !important;
+}
+
+.metro .post.follow-outer:focus,
+.metro .post.follow-outer:active{
+	background-color: rgba(50, 205, 50, 0.25) !important;
+	box-shadow: 0px 0px 10px #60A917;
+	-webkit-box-shadow: 0px 0px 10px #60A917;
+}
+
+/**/
+.metro .post.vote-outer{
+	background-color: rgba(255, 215, 0, 0.1);
+}
+
+.metro .post.vote-outer:hover{
+	background-color: rgba(255, 215, 0, 0.25) !important;
+}
+
+.metro .post.vote-outer:focus,
+.metro .post.vote-outer:active{
+	background-color: rgba(255, 215, 0, 0.25) !important;
+	box-shadow: 0px 0px 10px #F0A30A;
+	-webkit-box-shadow: 0px 0px 10px #F0A30A;
+}
+/**/
+.metro .post.emotion-outer{
+	background-color: rgba(255, 20, 147, 0.1);
+	
+}
+
+.metro .post.emotion-outer:hover{
+	background-color: rgba(255, 20, 147, 0.25) !important;
+}
+
+.metro .post.emotion-outer:focus,
+.metro .post.emotion-outer:active{
+	background-color: rgba(255, 20, 147, 0.25) !important;
+	box-shadow: 0px 0px 10px #DC4FAD;
+	-webkit-box-shadow: 0px 0px 10px #DC4FAD;
+}
+
+.metro .post.badge-outer,
+.metro .post.follow-outer,
+.metro .post.vote-outer,
+.metro .post.emotion-outer{
+	text-shadow: 0 0 4px white,0 0 4px white, 1px 1px 4px white, 1px 1px 4px white;
+}
+
+.metro .listview-outlook .list{
+	outline-style: none !important;
+}

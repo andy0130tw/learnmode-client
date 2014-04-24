@@ -1,0 +1,283 @@
+/*Override all font family*/
+input,select,textarea,optgroup{
+	font-family:"華康中黑體(P)","微軟正黑體","Segoe UI",sans-serif !important;
+}
+optgroup{
+	font-style: inherit;
+	font-weight: normal;
+	color: blueviolet;
+}
+
+optgroup > option{
+	color: initial;
+}
+
+html{
+	/*Initially with y-scrollbar*/
+	overflow-y: scroll;
+}
+
+/**********
+ * Animation
+ **********/
+*{
+	-webkit-transition: all 400ms ease-out;
+	-moz-transition: all 400ms ease-out;
+	-o-transition: all 400ms ease-out;
+	transition: all 400ms ease-out;
+
+	-webkit-transition-property: color, border, background, outline,
+		opacity, max-height, box-shadow, text-shadow, -webkit-transform;
+	-moz-transition-property: color, border, background, outline,
+		opacity, max-height, box-shadow, text-shadow, -moz-transform;
+	-o-transition-property: color, border, background, outline,
+		opacity, max-height, box-shadow, text-shadow, transform;
+	transition-property: color, border, background, outline,
+		opacity, max-height, box-shadow, text-shadow, transform;
+}
+
+/* Ring */
+.loader-ring {
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	vertical-align: middle;
+	width: 56px;
+	height: 56px;
+	margin-right: 8px;
+}
+.loader-ring.center{
+	margin: auto;
+	display: block;
+	margin-top: 10px;
+}
+
+.loader-ring .circle {
+	position: absolute;
+	display: inline-block;
+	width: 38px;
+	height: 38px;
+	opacity: 0;
+	top: 8px;
+	left: 8px;
+	-webkit-transform: rotate(225deg);
+	-moz-transform: rotate(225deg);
+	-o-transform: rotate(225deg);
+	transform: rotate(225deg);
+	-webkit-animation-iteration-count: infinite;
+	-moz-animation-iteration-count: infinite;
+	-o-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+	-webkit-animation-name: orbit;
+	-moz-animation-name: orbit;
+	-o-animation-name: orbit;
+	animation-name: orbit;
+	-webkit-animation-duration: 5.5s;
+	-moz-animation-duration: 5.5s;
+	-o-animation-duration: 5.5s;
+	animation-duration: 5.5s;
+}
+.loader-ring .circle:after {
+	content: '';
+	position: absolute;
+	width: 5px;
+	height: 5px;
+	border-radius: 5px;
+	/* color */
+	background: gray;
+}
+.loader-ring .circle:nth-child(2) {
+	-webkit-animation-delay: 240ms;
+	-moz-animation-delay: 240ms;
+	-o-animation-delay: 240ms;
+	animation-delay: 240ms;
+}
+.loader-ring .circle:nth-child(3) {
+	-webkit-animation-delay: 480ms;
+	-moz-animation-delay: 480ms;
+	-o-animation-delay: 480ms;
+	animation-delay: 480ms;
+}
+.loader-ring .circle:nth-child(4) {
+	-webkit-animation-delay: 720ms;
+	-moz-animation-delay: 720ms;
+	-o-animation-delay: 720ms;
+	animation-delay: 720ms;
+}
+.loader-ring .circle:nth-child(5) {
+	-webkit-animation-delay: 960ms;
+	-moz-animation-delay: 960ms;
+	-o-animation-delay: 960ms;
+	animation-delay: 960ms;
+}
+
+
+@-webkit-keyframes orbit {
+	0% {
+		-webkit-transform: rotate(225deg);
+		opacity: 1;
+		-webkit-animation-timing-function: ease-out;
+	}
+	7% {
+		-webkit-transform: rotate(345deg);
+		-webkit-animation-timing-function: linear;
+	}
+	30% {
+		-webkit-transform: rotate(455deg);
+		-webkit-animation-timing-function: ease-in-out;
+	}
+	39% {
+		-webkit-transform: rotate(690deg);
+		-webkit-animation-timing-function: linear;
+	}
+	70% {
+		-webkit-transform: rotate(815deg);
+		opacity: 1;
+		-webkit-animation-timing-function: ease-out;
+	}
+	75% {
+		-webkit-transform: rotate(945deg);
+		-webkit-animation-timing-function: ease-out;
+	}
+	76% {
+		-webkit-transform: rotate(945deg);
+		opacity: 0;
+	}
+	100% {
+		-webkit-transform: rotate(945deg);
+		opacity: 0;
+	}
+}
+
+@keyframes orbit {
+	0% {
+		transform: rotate(225deg);
+		opacity: 1;
+		animation-timing-function: ease-out;
+	}
+	7% {
+		transform: rotate(345deg);
+		animation-timing-function: linear;
+	}
+	30% {
+		transform: rotate(455deg);
+		animation-timing-function: ease-in-out;
+	}
+	39% {
+		transform: rotate(690deg);
+		animation-timing-function: linear;
+	}
+	70% {
+		transform: rotate(815deg);
+		opacity: 1;
+		animation-timing-function: ease-out;
+	}
+	75% {
+		transform: rotate(945deg);
+		animation-timing-function: ease-out;
+	}
+	76% {
+		transform: rotate(945deg);
+		opacity: 0;
+	}
+	100% {
+		transform: rotate(945deg);
+		opacity: 0;
+	}
+}
+
+/**********
+ * No animation
+ **********/
+#sb-body,#sb-overlay,#sb-wrapper,#sb-wrapper-inner,#sb-loading,
+.accordion .content,.group-content,.notify-container *,.frame,#btn-bringtop,
+.panel-content,.no-animation,.vnbx,.vnbx *{
+	-o-transition: none !important;
+	-moz-transition: none !important;
+	-webkit-transition: none !important;
+	transition: none !important;
+}
+
+/**********
+ * Metro Patch
+ **********/
+.metro blockquote{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+/*Let the navbar being lower so that modals could overlap it*/
+.metro .navigation-bar.fixed-top, .metro .navbar.fixed-top,
+.metro .navigation-bar.fixed-bottom, .metro .navbar.fixed-bottom{
+	z-index: 999;
+}
+
+.metro .notify-container{
+	top:auto !important;
+	bottom:10px;
+	right:10px !important;
+	z-index: 999999999 !important;
+}
+
+
+.metro .dataTables_wrapper .dataTables_paginate > span > span {
+	padding: 4px 12px;
+  text-align: center;
+  vertical-align: middle !important;
+  background-color: #d9d9d9;
+  border: 1px transparent solid;
+  color: #222222;
+  border-radius: 0;
+  cursor: pointer;
+  display: inline-block;
+  outline: none;
+  font-family: 'Segoe UI Light_', 'Open Sans Light', Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 16px;
+  margin: auto;
+  color: inherit;
+  display: block;
+  float: left;
+  margin-right: 1px;
+    background-color: #ffffff;
+  cursor: default;
+}
+
+/*Make navbar scrollable*/
+@media only screen and (max-width: 800px) {
+	.navbar-content ul.element-menu,
+	.navigation-bar-content ul.element-menu{
+		max-height: 480px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		-webkit-overflow-scrolling: touch;
+	    -moz-overflow-scrolling: touch;
+	    -ms-overflow-scrolling: touch;
+	    -o-overflow-scrolling: touch;
+	    overflow-scrolling: touch;
+	}
+	.metro .navigation-bar .element-menu > li > a.dropdown-toggle:after,
+	.metro .navbar .element-menu > li > a.dropdown-toggle:after{
+		margin-left: -14px !important;
+	}
+}	
+@media only screen and (min-width: 801px) {
+	.metro .dropdown-menu a{
+		padding: 8px 12px !important;
+	}
+	.metro .dropdown-menu{
+		min-width: 200px !important;
+	}
+
+}
+
+/**********
+ * Utility
+ **********/
+.cursorhand{
+	cursor: pointer;
+}
+.truncate{
+	white-space:nowrap; 
+	text-overflow:ellipsis;
+	overflow: hidden;
+}
