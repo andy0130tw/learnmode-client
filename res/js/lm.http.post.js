@@ -47,7 +47,7 @@ function postShareForm(){
 		}
 		app="browser";
 	}
-	formData.append("device",cookieObject.load("mac"));
+	formData.append("device",storageObject.load("mac"));
 	formData.append("message",$("#postshare-message").val());
 	formData.append("application",app);
 	formData.append("category",category);
@@ -84,7 +84,7 @@ function postReplyForm(){
 	$("#reply-ok .panel-content").slideToggle();
 	$("#reply-accordion").toggleClass("collapsed");
 	var formData = new FormData();
-	formData.append("device",cookieObject.load("mac"));
+	formData.append("device",storageObject.load("mac"));
 	formData.append("message",msg);
 	formData.append("category",replyObject._replyBase.category);
 	formData.append("application",replyObject._replyBase.application);
@@ -110,7 +110,7 @@ function appendSubject(formData,subjectArr){
 
 function postMood(num){
 	var formData = new FormData();
-	formData.append("device",cookieObject.load("mac"));
+	formData.append("device",storageObject.load("mac"));
 	formData.append("mood",num);
 	formData.append("id",$("#postreply-id").val());
 	postProxy("postMood",formData,function(resp){
@@ -122,7 +122,7 @@ function postMood(num){
 function postVote(str,id){
 	assert(id,"postVote","id is missing.");
 	var formData = new FormData();
-	formData.append("device",cookieObject.load("mac"));
+	formData.append("device",storageObject.load("mac"));
 	formData.append("vote",str);
 	formData.append("id",id);
 	postProxy("postVote",formData,function(resp){
@@ -134,7 +134,7 @@ function postVote(str,id){
 
 function postIfFollow(userID,yesno){
 	var formData = new FormData();
-	formData.append("device",cookieObject.load("mac"));
+	formData.append("device",storageObject.load("mac"));
 	formData.append("user",userID);
 	if(yesno)postFollow(formData,userID);
 		else postUnfollow(formData,userID);
@@ -174,7 +174,7 @@ function postIfBlock(user,yesno){
 	if(!BLOCK_CAUTION_MAKER(currentProfile,yesno))return;
 	var formData = new FormData();
 	var userID=currentProfile.username;
-	formData.append("device",cookieObject.load("mac"));
+	formData.append("device",storageObject.load("mac"));
 	formData.append("user",userID);
 	(yesno?postBlock:postUnblock)(formData,userID);
 }

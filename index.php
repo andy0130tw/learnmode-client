@@ -124,13 +124,7 @@
 
 	<div id="_loadingState" class="container grid clearfix">
 		<div class="row"><div class="span8 offset2">
-			<h1><div class='loader-ring'>
-				<div class='circle'></div>
-				<div class='circle'></div>
-				<div class='circle'></div>
-				<div class='circle'></div>
-				<div class='circle'></div>
-			</div>Now Loading.</h1>
+			<h1 class="loading">Now Loading.</h1>
 			<p class="subheader-secondary">
 				Starting up Learn Mode Client...
 			</p>
@@ -192,18 +186,15 @@
 			</div></a>
 		</div>
 		
-		<div id="main-loading" class="hide">
-			<div class='loader-ring center'><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span></div><!-- <span class="icon-loading"></span> --> 
-			<h2 class="text-muted text-center"><span> 載入中...</span></h2>
-			<hr/>
-		</div><br/>
+		<div id="main-loading" class="hide fg-navy"></div><br/>
 		<div class="text-center">
 			<button id="btn-loadmore" class="large info">LOAD MORE ENTRIES</button><br/>
 		</div>
 	</div>
 	
 	<div id="footer" class="container clearfix">
-		<span>LMClient <big>v1</big>--- The next generation of LM. 2013-2014, LMClient © by Andy Pan<br/>
+		<span class="tertiary-text">
+		LMClient <big>v1</big>--- The next generation of LM. 2013-2014, LMClient © by Andy Pan<br/>
 		The name of the site is inspired by <a href="http://ggt.tw/">LMClient on ggt.tw</a>. 
 
 		</span>
@@ -269,7 +260,9 @@
 	<script src="/res/js/jquery.magnific-popup.min.js"></script>
 	<script src="/res/js/path.min.js"></script>
 	<script src="/res/js/shadowbox.js"></script>
+	<script src="/res/js/timeago.js"></script>
 	<script src="/res/js/bootstrap.popover.min.js"></script>
+	<script src="/res/js/fastclick.js"></script>
 	<script src="/res/js/metro.min.js"></script>
 	
 	<!----><script src="/res/js/lm.js"></script><!---->
@@ -281,9 +274,7 @@
 	<script src="/res/js/lm.http.parser.js"></script>
 	<script src="/res/js/lm.http.post.js"></script>
 	<script src="/res/js/lm.http.renderer.js"></script>
-	<script src="/res/js/lm.init.js"></script>
-	<script src="/res/js/lm.init.login.js"></script>
-	<script src="/res/js/lm.ui.js"></script>
+	<script src="/res/js/lm.ui.js?asdfg"></script>
 	<script src="/res/js/lm.ui.lightbox.js"></script>
 	<script src="/res/js/lm.ui.modal.js"></script>
 	<script src="/res/js/lm.ui.myinfo.js"></script>
@@ -295,7 +286,11 @@
 	<script src="/res/js/lm.util.cookie.js"></script>
 	<script src="/res/js/lm.util.hash.js"></script>
 	<script src="/res/js/lm.util.js"></script>
-	<script src="/res/js/lm.util.json.js"></script><!- - -->
+	<script src="/res/js/lm.util.json.js"></script>
+
+	<script src="/res/js/lm.init.js"></script>
+	<script src="/res/js/lm.init.login.js"></script><!- - -->
+
 	</body>
 	
 </html>

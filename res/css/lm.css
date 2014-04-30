@@ -19,6 +19,7 @@
 img.shadow-award{
 	box-shadow: 0px 0px 8px rgba(255,165,0,.6);
 	background: white;
+	cursor: pointer;
 }
 
 img.shadow-award:hover{
@@ -54,9 +55,13 @@ img.shadow-award:hover{
 	padding-bottom:2px !important;
 }
 
-.list-datetime{
+.list-datetime time,.list-datetime .datetime-full{
 	font-family: "Consolas",typewriter !important;
-	font-size: 75%;
+	font-size: 105%;
+}
+
+.list-datetime{
+	font-size:75%;
 }
 
 .list-small{
@@ -80,6 +85,7 @@ img.autoScaleImage{
 
 span.action-reply.pseudolink{
 	box-shadow: 0 0 6px;
+	cursor: pointer;
 }
 
 .zoomin{

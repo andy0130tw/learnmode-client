@@ -46,6 +46,8 @@ function listAward(param,clearbefore){
 
 function listAnnouncement(param,clearbefore){
 	if(clearbefore)$("#announcement-body").empty();
+	$("#announcement-loading").html(getLoadingRing("center"));
+	setShow("#announcement-loading","",false);
 	loadFromLM("announcement/list",param,addToAnnouncementPopup);
 	return param;
 }
@@ -55,6 +57,7 @@ function getDetailedPost(param,onlyMainMessage){
 		loadFromLM("read",param,parseMood);
 	}else{
 		setShow("#reply-loading","#reply-ok",false);
+		setShow("#reply-sub-loading","#reply-sub-ok",false);
 		loadFromLM("read",param,parseReply);
 		getDetailedMood({id:param.id,count:COUNT.MOOD});
 	}
@@ -69,6 +72,8 @@ function getDetailedMood(param){
 }
 
 function getRelated(param){
+	$("#reply-content-loading").html(getLoadingRing("center"));
+	setShow("#reply-content-loading","",false);
 	assert(param.id,"getRelated","The request might be unsent.");
 	var newParam={};
 	for(var x in param){

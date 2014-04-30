@@ -69,5 +69,18 @@
 }
 
 .metro .listview-outlook .list{
+	cursor: default;
 	outline-style: none !important;
+}
+.metro .post::selection{
+	box-shadow: 1px 1px red;
+}
+
+.metro .post:focus,
+.metro .post:active{
+	box-shadow: 0px 0px 10px rgb(205,230,247);
+}
+
+#reply-body .list.post{
+	background-color: aliceblue;
 }

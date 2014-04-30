@@ -5,7 +5,15 @@ main();
 
 function main(){
 	//Init BEFORE dom ready
-	
+	//No utils can be used here.
+	var LOADING_MARKUP='<div class="loader-ring">';
+	for(var i=0;i<5;i++){
+		LOADING_MARKUP+='<span class="circle"></span>';
+	}
+	LOADING_MARKUP+="</div>";
+
+	$("#_loadingState .loading").prepend(LOADING_MARKUP);
+
 	//Init lightbox
 	Shadowbox.init({skipSetup:true,viewportPadding:24});
 	//Init useMobileRule
@@ -18,18 +26,22 @@ function main(){
 function init(){
 	try{
 		if(FREEZE)return;
-		
+
+		//Remove click delay
+		if(typeof FastClick!="undefined")FastClick.attach(document.body);
+
 		//Timer
 		var __st=new Date();
 
 		//Alter hyperlink with href="#"
 		$("a[href='#']").attr("href","javascript:void(0)");
+
 		//Nav buttons
 		switchNavByType("user");
 		//Alter AJAX failure
 		overrideAJAX();
 		//Init cookies
-		cookieObject.init();
+		storageObject.init();
 
 		//Setting up listeners
 		setupListeners();
@@ -37,6 +49,7 @@ function init(){
 		initOverlayButtons();
 		
 		translateMagnificPopup();
+		translateTimeago();
 		$.magnificPopup.defaults.fixedBgPos=true;
 
 		fillInConstants();
@@ -53,7 +66,7 @@ function init(){
 
 function fillInConstants(){
 	$("#btn-user-name").html("Logging in...");
-	$("#dp-mac").html(cookieObject.load("mac"));
+	$("#dp-mac").html(storageObject.load("mac"));
 	$(".fill-version").html(VERSION_MAJOR+VERSION_MINOR+VERSION_COUNT);
 	$(".fill-version-count").html(VERSION_COUNT);
 	$(".fill-last-modify").html(LAST_MODIFY);
@@ -202,4 +215,26 @@ function checkUseMobileRule(){
 		USE_MOBILE_RULE=!!localStorage.getItem("use-mobile")||false;
 	}
 	if(USE_MOBILE_RULE)console.log("[checkUseMobileRule] Rule applied.");
+}
+
+function translateTimeago(){
+	$.timeago.settings.strings={
+		prefixAgo:null,
+		prefixFromNow:null,
+		suffixAgo:"前",
+		suffixFromNow:"後",
+		seconds:"%d 秒",
+		minute:"約 1 分鐘",
+		minutes:"%d 分鐘",
+		hour:"約 1 小時",
+		hours:"%d 小時",
+		day:"約 1 天",
+		days:"%d 天",
+		month:"約 1 個月",
+		months:"%d 個月",
+		year:"約 1 年",
+		years:"%d 年",
+		numbers:[],
+		wordSeparator:""
+	}
 }

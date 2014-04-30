@@ -57,10 +57,12 @@ function addToAnnouncementPopup(resp){
 	var listArr=resp.list;
 	lastestAnnouncementID=resp.info.oldest;
 	switchEnabled("#btn-loadmore-announcement",resp.info.more);
+	var buf="";
 	for (var x in listArr){
 		var obj=modifyObj(listArr[x],resp,"announcement");
-		$("#announcement-body").append(renderAnnouncement(obj));
+		buf+=renderAnnouncement(obj);
 	}
+	$("#announcement-body").append(buf);
 	setShow("#announcement-loading","",true);
 	addLightbox();
 }
@@ -72,14 +74,18 @@ function addToUsersPopup(resp){
 	switchEnabled("#btn-loadmore-users",resp.info.more);
 	//Tricky, the searching result never contains oneself.
 	if(userArr.length==0)$("#users-body").append(listitemNull("查無結果..."));
+	var buf="";
 	for (var x in listArr){
 		var user=userArr[listArr[x].user];
 		//Maybe there is some useful data, merge them to the userobj.
 		user._badge=listArr[x].badge;
 		user._subject=listArr[x].subject;
 		user._date=listArr[x].date;
-		$("#users-body").append(renderUserListView(user));
+		buf+=renderUserListView(user);
 	}
+	$("#users-body").append(buf);
+	$("#users-body-loading").empty();
+	setShow("#users-body-loading","",true);
 }
 
 function addToReplyPopup(resp){
@@ -99,11 +105,13 @@ function addToReplyPopup(resp){
 	if(listArr.length==0){
 		$("#reply-content").html(listitemNull("還沒有回應。"));
 	}
+	var buf="";
 	for (var a in resp.list){
 		var obj=modifyObj(listArr[a],resp);
 		//obj._user=userArr[obj.from];
-		$("#reply-content").append(renderPostListView(obj,true));
+		buf+=renderPostListView(obj,true);
 	}
+	$("#reply-content").append(buf);
 	finishReplyPopup();
 }
 
@@ -111,7 +119,8 @@ function finishReplyPopup(){
 	//Add lightbox listener
 	addLightbox();
 	//Show the result
-	setShow("#reply-loading","#reply-ok",true);
+	setShow("#reply-sub-loading","#reply-sub-ok",true);
+	$("#reply-content-loading").empty();
 	setShow("#reply-content-loading","",true);
 	checkPinPostButton();
 }
@@ -127,6 +136,7 @@ function parseMood(resp){
 		switchClass(moodbtn.eq(i),"inverse",(i==resp.my_mood-1||(i==5&&resp.my_mood==0)));
 		if(i<5)moodlabel.html(resp.moods[i]);
 	}
+	setShow("#reply-loading","#reply-ok",true);
 }
 
 function parseDetailedMood(resp){
@@ -169,7 +179,7 @@ function parseReply(resp){
 
 /*function saveNotificationCount(resp){
 	console.log("[saveNotificationCount] resp=",resp);
-	var oldObj=cookieObject.load("notificationCount");
+	var oldObj=storageObject.load("notificationCount");
 	var newObj=resp.counts;
 	//Calculate counts difference
 	if(oldObj){
@@ -180,7 +190,7 @@ function parseReply(resp){
 			$(".label.fill-count[data-category='"+x+"']").html(diff);
 		}
 	}
-	cookieObject.save("notificationCount",$.extend(oldObj,newObj));
+	storageObject.save("notificationCount",$.extend(oldObj,newObj));
 }*/
 
 var badgeObj={};

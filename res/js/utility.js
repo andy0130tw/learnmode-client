@@ -111,13 +111,16 @@ function ICON(iconid){
 }
 
 /*Date util*/
-function dateConverter(raw){
+function dateConverter(raw,useStamp){
 	var d=new Date(raw);
 	if(isNaN(d.getTime()))return "DATE INVAILD!";
 	//Substitute it with XX days ago.
 	var diff=typeof(dateGetDays)!="undefined"?dateGetDays(d):false;
-	var sd=diff||numFill([d.getFullYear(),d.getMonth()+1,d.getDate()],2).join("-");
+	var sd=numFill([d.getFullYear(),d.getMonth()+1,d.getDate()],2).join("-");
 	var td=numFill([d.getHours(),d.getMinutes(),d.getSeconds()],2).join(":");
+	if(useStamp)return TAG("time","timeago","datetime='"+raw+"'","")
+		+TAG("span","datetime-full no-phone"," ("+sd+" "+td+")");
+	sd=diff||sd;
 	return sd+" "+td;
 }
 
@@ -190,8 +193,8 @@ function setShow(loading,complete,show){
 		setShow(complete,loading,true);
 		return;
 	}
-	$(loading).addClass("hide");
-	$(complete).removeClass("hide");
+	switchVisible(loading,false);
+	switchVisible(complete,true);
 }
 
 function switchClass(obj,className,condition){
@@ -202,6 +205,7 @@ function switchVisible(obj,condition){
 	if(condition) $(obj).removeClass("hide");
 		else $(obj).addClass("hide");
 }
+
 function switchEnabled(obj,condition){
 	var classes=["info","default","primary","inverse","success"];
 	if(condition) {

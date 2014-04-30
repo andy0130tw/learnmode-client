@@ -5,6 +5,7 @@ function LMLoader(){
 	self.respInfo=null;
 	self.action="";
 	self.lastReq=null;
+	self.xhr=null;
 	self.target=null;
 	self.dummyContent="";
 
@@ -33,14 +34,21 @@ function LMLoader(){
 		self.action=action;
 		self.lastReq=param;
 		var toCont=self.preLoad();
-		if(toCont)self.loadFunc(action,param,flush);
+		if(toCont){
+			if(self.xhr)self.xhr.abort();
+			self.xhr=self.loadFunc(action,param,flush);
+		}
 	};
 	
 	self.loadMore=function(){
 		self.clearBefore=false;
+		if(!self.respInfo)return;
 		self.lastReq.before=self.respInfo.oldest;
 		var toCont=self.preLoad();
-		if(toCont)self.loadFunc(self.action,self.lastReq,flush);
+		if(toCont){
+			if(self.xhr)self.xhr.abort();
+			xhr=self.loadFunc(self.action,self.lastReq,flush);
+		}
 	};
 
 	self.clear=function(){
@@ -62,6 +70,7 @@ $(function(){
 	mainLoader.parse=parsePostListView;
 	mainLoader.preLoad=function(){
 		setShow("#main-loading","",false);
+		$("#main-loading").html(getLoadingRing("center")+"<hr/>");
 		viewRecognize(this.lastReq,this.clearBefore);
 		if(this.lastReq.category=="__badge"){
 			addToAward(currentProfile.badges);
@@ -103,6 +112,7 @@ function addToContent(data){
 	switchEnabled("#btn-loadmore",this.respInfo.more);
 	this.target.append(data);
 	if(data===false)this.target.append(listitemNull("沒有動態可顯示。"));
+	$("#main-loading").empty();
 	setShow("#main-loading","",true);
 	//Add lightbox listener
 	addLightbox();

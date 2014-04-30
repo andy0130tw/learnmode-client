@@ -39,6 +39,9 @@ function addLightbox(){
 		trigger:"hover",
 		delay: { show: 200, hide: 1200 }
 	});
+
+	//Init timeago
+	$("time.timeago").timeago();
 }
 
 function voteUpClick(e){
@@ -73,7 +76,7 @@ function readRMPostAndRender(){
 	var x=confirm("觀看被RM的貼文是一項禁忌的功能，於 2014/2/12 推出，請低調使用。\n還是要繼續嗎？");
 	if(!x)return;
 	that.html(ICON("busy")+" 載入RM貼文中...");
-	loadFromProxy("RMpost",{id:that.data("rm"),mac:cookieObject.load("mac")},function(resp){
+	loadFromProxy("RMpost",{id:that.data("rm"),mac:storageObject.load("mac")},function(resp){
 		if(!resp)return;
 		var obj=modifyObj(resp.list[0],resp);
 		obj.flagged=false;
@@ -96,6 +99,7 @@ function loadMore(){
 }
 
 function loadMoreReply(){
+	$("#reply-content-loading").html(getLoadingRing("center"));
 	setShow("#reply-content-loading","",false);
 	getRelated({id:replyObject.id,before:replyObject._oldest});
 }
@@ -213,6 +217,13 @@ function replyBringToTop(){
 		$('html,body').scrollTop(topPos);
 	}
 	else that.animate({ scrollTop: 0 },FX_BRING_TOP_DURATION);
+}
+
+function getLoadingRing(cls){
+	var cir="";
+	for(var i=0;i<5;i++)
+		cir+=TAG("span","circle","");
+	return TAG("div","loader-ring"+(cls?" "+cls:""),cir);
 }
 
 /******* VIEW MANAGEMENT *******/

@@ -1,7 +1,7 @@
 ﻿var VERSION_MAJOR="1.";
-var VERSION_MINOR="34";
+var VERSION_MINOR="40";
 var VERSION_COUNT="";
-var LAST_MODIFY="2014/4/23";
+var LAST_MODIFY="2014/4/30";
 
 var LOCAL_TEST=(location.hostname=="localhost");
 var DEBUGGING_ENVIROMENT=(!location.hostname);
@@ -202,7 +202,8 @@ var randomTip=[
 	"這個網頁常常在更新啊。懷疑是不是最新版的話，整個網頁重新整理一次就知道了。",
 	"用網頁版留言的附帶優惠，是計算機科學的等級會升級。",
 	"這網頁的圖標是 皮 用 InkScape 做的。",
-	"剪貼簿的另外一種瀏覽方式在整個網頁的右上角，不知道有沒有人用(嘀咕)。",
+	"宣傳一下本校同學製作的 LMClientX，詳情請見作者開發樓。",
+	"Open Sans 果然是網頁上的免費神字體，自 1.36 版已全面更換。",
 	"最近一直在幫網頁的程式碼瘦身，可能會發生一點意外吧？！",
 	"這網頁在Flyer預設瀏覽器的效能問題，一直是惡夢。",
 	"關注/解關注常常會很遲鈍，這是伺服器的問題，耐心等待吧。",

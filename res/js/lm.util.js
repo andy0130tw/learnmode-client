@@ -179,7 +179,8 @@ function normalize(str){
 function markupContent(str){
 	//
 	//bold: \*\*([^*]*(?:\*[^*]+)*)\*\*
-	//
+	//underline revised: -{2,3}(?!-)(.+?)-{2,3}
+	// > still bug
 	str=str.replace(/--\s*(.+?)\s*--/g,"<del>$1</del>")
 		.replace(/\*\*\s*(.*?)\s*\*\*/g,"<strong>$1</strong>")
 		.replace(/__\s*(.+?)__\s*/g,"<u>$1</u>");
@@ -275,5 +276,5 @@ function getRelationWithUser(user){
 			}
 		}
 	}
-	return "";
+	return false;
 }

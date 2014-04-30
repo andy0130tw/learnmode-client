@@ -18,7 +18,7 @@ function loadFromLM(action,data,success,failure,autoRetry){
 	data=data||{};
 	if(!data.device){
 		//console.log("[loadFromLM] MAC added to the req.");
-		data.device=cookieObject.load("mac");
+		data.device=storageObject.load("mac");
 	}
 	return $.ajax({url:urlParam(URL_LM+action,data),
 		dataType:"jsonp",
@@ -120,7 +120,7 @@ function loadUserdata(action,data,success){
 	data.action=action;
 	if(!data.mac){
 		//console.log("[loadFromLM] MAC added to the req.");
-		data.mac=cookieObject.load("mac");
+		data.mac=storageObject.load("mac");
 	}
 	return $.ajax({url:urlParam(URL_USERDATA,data),
 		dataType:"jsonp",
@@ -146,7 +146,7 @@ function postUserdata(action,postdata,success){
 		success(null);
 		return;
 	}
-	var getdata={action:action,mac:cookieObject.load("mac")};
+	var getdata={action:action,mac:storageObject.load("mac")};
 	postdata=postdata||{};
 	return $.ajax({url:urlParam(URL_USERDATA,getdata),
 		type: "POST",

@@ -2,6 +2,8 @@
 	param.count=COUNT.USER_SEARCH;
 	if(clearbefore)clrUsersPopup();
 	switchVisible("#users-award",false);
+	$("#users-body-loading").html(getLoadingRing("center"));
+	setShow("#users-body-loading","",false);
 	loadFromLM("profile/search",param,addToUsersPopup);
 	return param;
 }
@@ -33,6 +35,8 @@ function searchBadgeWinners(param,clearbefore){
 }
 
 function loadMoreUsers(){
+	$("#users-body-loading").html(getLoadingRing("center"));
+	setShow("#users-body-loading","",false);
 	usersMoreFN({before:lastestUsersID});
 }
 

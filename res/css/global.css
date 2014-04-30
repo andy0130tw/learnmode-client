@@ -82,9 +82,9 @@ html{
 	position: absolute;
 	width: 5px;
 	height: 5px;
-	border-radius: 5px;
+	border-radius: 100%;
 	/* color */
-	background: gray;
+	background: currentColor;
 }
 .loader-ring .circle:nth-child(2) {
 	-webkit-animation-delay: 240ms;

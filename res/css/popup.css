@@ -1,5 +1,5 @@
 /*Popup*/
-#sb-wrapper{
+#sb-wrapper-inner{
 	box-shadow:0px 0px 22px rgba(0,0,0,.9);
 }
 .btn-close{
@@ -98,4 +98,5 @@
 	min-height: 100%;
 	min-width: 100%;
 }
-#sb-body{background-color: transparent;}
+/*#sb-body{background-color: transparent;}
+*/

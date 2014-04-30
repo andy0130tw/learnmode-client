@@ -32,7 +32,7 @@ function postMyInfoImage(imageCtrlFile,dataName){
 	if(imageCtrlFile.files&&imageCtrlFile.files[0]){
 		myInfoCount++;
 		var formData=new FormData();
-		formData.append("device", cookieObject.load("mac"));
+		formData.append("device", storageObject.load("mac"));
 		formData.append(dataName,imageCtrlFile.files[0]);
 		postProxy("uploadProfileImage",formData,myInfoSuccess);
 	}
@@ -54,7 +54,7 @@ function checkMyInfo(notChanged){
 //Util
 function addFormDataIfChanged(arr,prefix){
 	var formData = new FormData(),needReturn=false;
-	formData.append("device",cookieObject.load("mac"));
+	formData.append("device",storageObject.load("mac"));
 	for(var i=0;i<arr.length;++i){
 		var oldData=myProfile[arr[i]];
 		var newData=$(prefix+arr[i]).val();

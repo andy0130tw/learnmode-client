@@ -14,8 +14,8 @@ function initLogin(){
 		modal("#popup-welcome",true,true);
 		splashNeedClose=true;
 	}
-	$("#welcome-mac").html(cookieObject.load("mac"));
-	if(!cookieObject.load("mac")){
+	$("#welcome-mac").html(storageObject.load("mac"));
+	if(!storageObject.load("mac")){
 		modal("#popup-login",true,true);
 		return;
 	}
@@ -38,7 +38,7 @@ function initLogin(){
 	if(!URL_PROXY)
 		$("#welcome-hst").addClass("error").html("[N/A]");
 	else 
-		loadFromProxy("did_login",{did:cookieObject.load("mac")},function(resp){
+		loadFromProxy("did_login",{did:storageObject.load("mac")},function(resp){
 			$("#welcome-hst").addClass("success").html("[200 OK]");
 		});
 
@@ -53,7 +53,7 @@ function relogin(){
 		alert("MAC無效，無法登入。");
 		return;
 	}
-	$.cookie("mac",$("#login-mac").html(),{expires:365});
+	storageObject.save("mac",$("#login-mac").html());
 	location.reload();
 }
 
@@ -108,7 +108,7 @@ function checkMAC(){
 }
 
 function confirmClearMAC(){
-	if(cookieObject.load("mac")){
+	if(storageObject.load("mac")){
 		ans=confirm("即將從 LMClient 登出，確定？");
 		if(ans){
 			clearClientData();

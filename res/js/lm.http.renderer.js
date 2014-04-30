@@ -48,7 +48,7 @@ function renderPost(obj,isCompact){
 			+TAG("span",COLOR_CLASS.SCHOOL,user.school)+"&nbsp;"
 			+TAG("span",compactMsg(obj))+"<br/>"
 			//+TAG("span","text-warning list-small","&nbsp;&nbsp;&nbsp;"+op.label)+"<br/>"
-			+TAG("span","list-datetime",dateConverter(obj.date))+"<br/>"
+			+TAG("span","list-datetime",dateConverter(obj.date,true))+"<br/>"
 			+op.contentFN(obj)
 			+renderURI(obj)
 			//+TAG("span","list-subtitle",obj);
@@ -60,7 +60,7 @@ function renderPost(obj,isCompact){
 			+TAG("span",COLOR_CLASS.SCHOOL,user.school)
 			+TAG("span","text-muted list-small"," @ "+(obj.application||"---"))
 			+TAG("span","text-info list-small","&nbsp;&nbsp;&nbsp;"+("?: "+obj.category))+"<br/>"
-			+TAG("span","list-datetime",dateConverter(obj.date))+"<br/>"
+			+TAG("span","list-datetime",dateConverter(obj.date,true))+"<br/>"
 			+TAG("span","list-title text-alert","UNKNOWN CATEGORY:"+obj.category+". Raw JSON dump:")
 			+TAG("span","list-remark",JSON.stringify(obj));
 	}
@@ -109,7 +109,7 @@ function renderAnnouncement(obj){
 	var content=renderAvatar(user)
 			+renderUser(obj)+"&nbsp;"
 			+TAG("span",COLOR_CLASS.SCHOOL,user.school)+"<br/>"
-			+TAG("span","list-datetime",dateConverter(obj.date))+"<br/>"
+			+TAG("span","list-datetime",dateConverter(obj.date,true))+"<br/>"
 			+renderContent(obj)
 			+(obj.image?TAGi(obj.image):"")
 			+renderURI(obj)
@@ -269,7 +269,7 @@ function renderUserListView(user){
 	//if(desc.match(/([^\u0000-\u00ff]{13,})&nbsp;/g))console.log("WRAP FOUND!"+user.username);
 	//desc=desc.replace(/([^\u0000-\u00ff]{21,25})&nbsp;/g,"$1<br/>");
 	//desc=desc.replace(/([^\u0000-\u00ff]{26})/g,"$1<br/>");
-
+	var relation=getRelationWithUser(user);
 	var content=renderAvatar(user)
 		+renderUserRaw(user,"%%% ("+user.username+")")+"&nbsp;"
 		+TAG("span",COLOR_CLASS.SCHOOL,user.school+"/"+user.class_name)+"&nbsp;"
@@ -278,9 +278,9 @@ function renderUserListView(user){
 			+"‧"
 			+TAG("span",user.is_following?COLOR_CLASS.LABEL_ACTIVE:"",ICON("pop-in")+user.followers_count)
 			+"<br/>"
-			+getRelationWithUser(user))
+			+(relation||""))
 		+(user._date?"<br/>"+TAG("span","list-datetime",
-			(dateConverter(user._date))
+			(dateConverter(user._date,true))
 			+(SUBJECT_MAP[user._subject]?", "+SUBJECT_MAP[user._subject]:"")):"")
 		+TAG("pre","list-subtitle",desc);
 	return listitem(content);
@@ -336,7 +336,7 @@ function renderBadgeImage(obj){
 function renderSSTitle(obj){
 	var voters=[];
 	for(var i=0;i<obj.voters.length;++i)voters.push(obj.voters[i].name);
-	var rtn=dateConverter(obj.date)
+	var rtn=dateConverter(obj.date,true);
 	var subject=renderSubject(obj,5);
 	rtn+=(needSubject(obj.category)?TAG("span","text-muted"," 科目："+subject):"")
 		+(voters.length?
