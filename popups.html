@@ -24,43 +24,46 @@
 			</div>
 		</div>
 
-		<div id="reply-tool" class="btn-placeholder">
-			<button class="large moodlightbox"><span class="icon-power"></span>表情</button>
-			<button class="large action-pin-post">...</button>
-			
-			<div class="place-right">
-				<span>排序：</span>
-				<button class="info large on-left action-refresh-by-score"><span class="icon-stats-up"></span> 得分</button>
-				<button class="info large on-left action-refresh-reverse"><span class="icon-history"></span> 反向</button>
-				<button class="info large action-refresh-reply"><span class="icon-cycle"></span> 正常</button>
-			</div>
-		</div><br/>
-		<div id="reply-accordion" class="panel collapsed" data-role="panel" style="clear:both;">
-			<div class="panel-header bg-cyan fg-white" style="font-size:1.5rem"><span class="icon-copy"></span> 回覆貼文 (<span></span>)</div>
-			<div class="panel-content">
-				<div class="input-control text hide"><input type="text" id="postreply-id" disabled="disabled"/></div>
-				<form id="postreply-form">
-				回覆內容：
-				<div class="input-control textarea"><textarea id="postreply-message" style="height:80px;"></textarea></div>
-				<div id="postreply-file-uploader">
-				上傳圖片：
-				<div class="input-control file"><input type="file" id="postreply-file-image"/><button class="btn-file"></button></div>
-				</div>
-				</form>
-				<div style="min-height:40px">
-				<button id="postreply-submit" class="place-right large bg-cyan fg-white" onclick="postReplyForm();"><span class="icon-reply"></span> 回覆</button>
-				</div>
-			</div>
+		<div id="reply-sub-loading">
+			<h2><span class='loader-ring center'><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span></span><!--<span class="icon-loading"></span>--></p></h2>
 		</div>
-		<div id="reply-content" class="listview-outlook"></div>
-		<div id="reply-bottom" class="text-center">
-			<div id="reply-content-loading" class="hide">
-				<h4 class="text-muted"><span class="icon-loading"></span> 載入中...</h4>
+		<div id="reply-sub-ok">
+			<div id="reply-tool" class="btn-placeholder">
+				<button class="large moodlightbox"><span class="icon-power"></span>表情</button>
+				<button class="large action-pin-post">...</button>
+				
+				<div class="place-right">
+					<span>排序：</span>
+					<button class="info large on-left action-refresh-by-score"><span class="icon-stats-up"></span> 得分</button>
+					<button class="info large on-left action-refresh-reverse"><span class="icon-history"></span> 反向</button>
+					<button class="info large action-refresh-reply"><span class="icon-cycle"></span> 正常</button>
+				</div>
+			</div><br/>
+			<div id="reply-accordion" class="panel collapsed" data-role="panel" style="clear:both;">
+				<div class="panel-header bg-cyan fg-white" style="font-size:1.5rem"><span class="icon-copy"></span> 回覆貼文 (<span></span>)</div>
+				<div class="panel-content">
+					<div class="input-control text hide"><input type="text" id="postreply-id" disabled="disabled"/></div>
+					<form id="postreply-form">
+					回覆內容：
+					<div class="input-control textarea"><textarea id="postreply-message" style="height:80px;"></textarea></div>
+					<div id="postreply-file-uploader">
+					上傳圖片：
+					<div class="input-control file"><input type="file" id="postreply-file-image"/><button class="btn-file"></button></div>
+					</div>
+					</form>
+					<div style="min-height:40px">
+					<button id="postreply-submit" class="place-right large bg-cyan fg-white" onclick="postReplyForm();"><span class="icon-reply"></span> 回覆</button>
+					</div>
+				</div>
 			</div>
-		</div><br/>
-		<div class="btn-placeholder">
-			<button id="btn-loadmore-reply" class="large info">LOAD MORE</button>
-			<button class="large default place-right" onclick="replyBringToTop()"><span class="icon-arrow-up-3"></span> 回到最頂</button>
+			<div id="reply-content" class="listview-outlook"></div>
+			<div id="reply-bottom">
+				<h3 id="reply-content-loading" class="hide"></h3>
+			</div><br/>
+			<div class="btn-placeholder">
+				<button id="btn-loadmore-reply" class="large info">LOAD MORE</button>
+				<button class="large default place-right" onclick="replyBringToTop()"><span class="icon-arrow-up-3"></span> 回到最頂</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -122,9 +125,7 @@
 <div id="popup-announcement" class="popup mfp-hide">
 	<h3>佈告欄</h3>
 	<div id="announcement-body" class="listview-outlook"></div>
-	<div id="announcement-loading" class="text-center hide">
-		<h4 class="text-muted"><span class="icon-loading"></span> 載入中...</h4>
-	</div><br/>
+	<h3 id="announcement-loading" class="hide"></h3><br/>
 	<button id="btn-loadmore-announcement" class="large info">LOAD MORE</button>
 	<button class="place-right large default action-dismiss">關閉</button><br/> 
 </div>
@@ -165,7 +166,7 @@
 		</div>
 		<div id="users-body" class="listview-outlook" data-role="listview">
 		</div>
-		
+		<div id="users-body-loading"></div>
 		<button id="btn-loadmore-users" class="large info">LOAD MORE</button>
 		<button class="place-right large default action-dismiss">關閉</button><br/> 
 	</div>
