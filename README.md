@@ -6,6 +6,7 @@ A Learn Mode client built with HTML5, CSS3 and JavaScript, which focuses on perf
 Version
 ------
 v1.40
+
 The project is used only as a repo to save and compare code, not a copy from the live demo.
 
 Description
