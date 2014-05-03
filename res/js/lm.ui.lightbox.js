@@ -63,8 +63,9 @@ function addToUserLightbox(){
 		var container1=container.find(".userview-block");
 		var container2=container.find(".userview-tool");
 		if(!userProfile._rendered){
+			userProfile._rendered=true;
 			$("#sb-player .ext-userview .userview-cover").attr("src",imageLM(userProfile.cover,"X"));
-			container1.click(function(){
+			container.find(".userview-block-outer").click(function(){
 				alert(userProfile.desc?
 						"自介：\n--------\n"
 							+userProfile.desc
@@ -85,7 +86,7 @@ function addToUserLightbox(){
 		}
 		
 		//Dynamic contents don't need to prevent it.
-		var userRelation=getRelationWithUser(userProfile);
+		var userRelation=getRelationWithUser(userProfile)||"";
 		userRelation&&(userRelation+="‧");
 		container.find(".userview-info").html(userRelation+
 			("已關注 %%% 人‧被 @@@ 人關注"
@@ -108,7 +109,6 @@ function addToUserLightbox(){
 				postIfFollow($(this).data("id"),true);
 			});
 		}
-		userProfile._rendered=true;
 	}
 	console.log("[addToUserLightbox] type="+(userProfile?"ok":"pending"));
 }

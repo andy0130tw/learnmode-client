@@ -56,7 +56,9 @@ function getDetailedPost(param,onlyMainMessage){
 	if(onlyMainMessage){
 		loadFromLM("read",param,parseMood);
 	}else{
+		$("#reply-loading").html(getLoadingRing()+"載入中…");
 		setShow("#reply-loading","#reply-ok",false);
+		$("#reply-sub-loading").html(getLoadingRing("center"));
 		setShow("#reply-sub-loading","#reply-sub-ok",false);
 		loadFromLM("read",param,parseReply);
 		getDetailedMood({id:param.id,count:COUNT.MOOD});

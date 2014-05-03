@@ -4,7 +4,8 @@
 	switchVisible("#users-award",false);
 	$("#users-body-loading").html(getLoadingRing("center"));
 	setShow("#users-body-loading","",false);
-	loadFromLM("profile/search",param,addToUsersPopup);
+	lastestUsersReq=loadFromLM("profile/search",param,addToUsersPopup);
+	usersMoreFN._param=param;
 	return param;
 }
 function searchFollowing(param,clearbefore){
@@ -13,7 +14,7 @@ function searchFollowing(param,clearbefore){
 	switchVisible("#users-award",false);
 	param.count=COUNT.USER;
 	param.user=currentProfile.username;
-	loadFromLM("following",param,addToUsersPopup);
+	lastestUsersReq=loadFromLM("following",param,addToUsersPopup);
 	return param;
 }
 function searchFollower(param,clearbefore){
@@ -31,18 +32,22 @@ function searchBadgeWinners(param,clearbefore){
 	param.count=COUNT.USER_BADGE;
 	lastestUsersReq=loadFromLM("badge/winners",param,addToUsersPopup);
 	usersMoreFN=searchBadgeWinners;
+	usersMoreFN._param=param;
 	return param;
 }
 
 function loadMoreUsers(){
 	$("#users-body-loading").html(getLoadingRing("center"));
 	setShow("#users-body-loading","",false);
-	usersMoreFN({before:lastestUsersID});
+	var param={before:lastestUsersID};
+	var oldParam=usersMoreFN._param;	
+	if(oldParam)param=$.extend(true,param,oldParam);
+	usersMoreFN(param);
 }
 
 function searchUserSubmit(e){
 	e.preventDefault();
-	var param={q:$('#users-searchbox').val()};
+	var param={q:encodeURIComponent($('#users-searchbox').val())};
 	lastestUsersID="";
 	searchUser(param,true);
 	usersMoreFN=searchUser;

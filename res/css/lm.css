@@ -111,7 +111,7 @@ span.action-reply.pseudolink{
 	box-shadow: 0px 0px 3px navy;
 }
 
-.action-vote-down{margin-right:14px !important;}
+.vote-container{margin-right:14px !important;}
 
 .pop-over{
 	border-bottom: 2px dotted currentColor;
@@ -267,7 +267,7 @@ img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27
 		margin-top: 6px !important;
 	}
 
-	.action-vote-down,.action-vote-up{
+	.action-vote{
 		padding-left: 10px !important;
 		padding-right: 10px !important;
 	}
@@ -294,5 +294,3 @@ img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27
 
 	img.inline{width:16px !important;}
 }
-
-

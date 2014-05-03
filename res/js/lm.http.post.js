@@ -1,6 +1,7 @@
-﻿/*
+﻿/*!
 Copyright:
 Code related to formData was modified from ggt.tw
+See: ggt.tw/learnmode
 */
 function postShareForm(){
 	var formData = new FormData();
@@ -53,13 +54,14 @@ function postShareForm(){
 	formData.append("category",category);
 
 	var subjects=$(".postshare-subject option:selected").map(function(){return this.value}).get();
+	//Subjects will be auto processed in proxy.
 	//if(!needSubject(category)||!subjects.length)//subjects=[10001,90006];
 	if(!subjects.length){
 		if(category=="watch")subjects=[10001,10004,30007];
 	}
 	formData=appendSubject(formData,subjects);
 	
-	if(ctrlFile.files&&ctrlFile.files[0]&&category!="watch")
+	if(ctrlFile.files&&ctrlFile.files[0])
 		formData.append("image",ctrlFile.files[0]);
 	
 	setShow("#postshare-ok","#postshare-processing",true);
@@ -81,8 +83,7 @@ function postReplyForm(){
 		return;
 	}
 	//close
-	$("#reply-ok .panel-content").slideToggle();
-	$("#reply-accordion").toggleClass("collapsed");
+	$("#popup-reply-accordion-content").collapse('hide');
 	var formData = new FormData();
 	formData.append("device",storageObject.load("mac"));
 	formData.append("message",msg);
@@ -114,12 +115,13 @@ function postMood(num){
 	formData.append("mood",num);
 	formData.append("id",$("#postreply-id").val());
 	postProxy("postMood",formData,function(resp){
-		notify.info("甩表情成功！");
+		var msg=resp.message=="0"?"清除表情或未變動":("甩了一個 [ "+HASH.mood[resp.message]+" ]");
+			notify.info(msg+"！");
 		getDetailedPost({id:$("#postreply-id").val()},true);
 	});
 }
 
-function postVote(str,id){
+function postVote(str,id,callback){
 	assert(id,"postVote","id is missing.");
 	var formData = new FormData();
 	formData.append("device",storageObject.load("mac"));
@@ -128,7 +130,8 @@ function postVote(str,id){
 	postProxy("postVote",formData,function(resp){
 		var result=resp.message;
 		var msg={up:ICON("thumbs-up"),down:ICON("thumbs-down"),clear:"清除評分"};
-		notify.info(msg[result]+"成功！<br/>PS. 評分情形要重新整理後才會更新。");
+		notify.info("評了一個"+msg[result]+"！<br/>評分分數要重新整理後才會更新。");
+		callback(resp);
 	});
 }
 

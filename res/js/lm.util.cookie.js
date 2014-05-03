@@ -52,6 +52,19 @@ var storageObject={
 				return cookie[key]=val;
 			}
 		}
-		
+	},
+	remove:function(key){
+		if(useLocalStorage){
+			return localStorage.removeItem(key);
+		}else{
+			return $.removeCookie(key);
+		}
+	},
+	clear:function(){
+		if(useLocalStorage){
+			return localStorage.clear();
+		}else{
+			for(var x in cookie)$.removeCookie(x);
+		}
 	}
 }

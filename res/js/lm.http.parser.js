@@ -30,7 +30,7 @@ function modifyObj(obj,rawresp,type){
 	if(!listArr.length)$("#mainContent").append(listitemNull("沒有動態可顯示。"));
 	setShow("#main-loading","",true);
 	//Add lightbox listener
-	addLightbox();
+	registerListListener();
 	var __st2=new Date();
 	console.log("[addToContent/Render] "+(__st2-__st1)+"ms");
 }
@@ -48,7 +48,7 @@ function addToThumbnails(resp){
 	$("#mainContent").append(TAG("div","grid",data.join("")));
 	setShow("#main-loading","",true);
 	//Add lightbox listener
-	addLightbox();
+	registerListListener();
 	var __st2=new Date();
 	console.log("[addToThumbnails/Render] "+(__st2-__st1)+"ms");
 }*/
@@ -64,7 +64,7 @@ function addToAnnouncementPopup(resp){
 	}
 	$("#announcement-body").append(buf);
 	setShow("#announcement-loading","",true);
-	addLightbox();
+	registerListListener();
 }
 
 function addToUsersPopup(resp){
@@ -84,6 +84,7 @@ function addToUsersPopup(resp){
 		buf+=renderUserListView(user);
 	}
 	$("#users-body").append(buf);
+	registerListListener();
 	$("#users-body-loading").empty();
 	setShow("#users-body-loading","",true);
 }
@@ -117,7 +118,7 @@ function addToReplyPopup(resp){
 
 function finishReplyPopup(){
 	//Add lightbox listener
-	addLightbox();
+	registerListListener();
 	//Show the result
 	setShow("#reply-sub-loading","#reply-sub-ok",true);
 	$("#reply-content-loading").empty();
@@ -160,7 +161,7 @@ function parseReply(resp){
 	replyObject._sort="date";
 
 	$("#reply-body").html(renderCompactPost(replyObject));
-	addLightbox();
+	registerListListener();
 	parseMood(resp);
 	var replyBase=HASH.replyParser[replyObject.category]||HASH.replyParser._none;
 	//If the obj is undefined, then don't show anything
@@ -170,7 +171,8 @@ function parseReply(resp){
 	switchVisible("#postreply-file-uploader",replyBase.allowImage);
 	replyObject._replyBase=replyBase;
 	if(!replyBase.none){
-		$(".panel-header").children("span").eq(1).html(resp.list[0].ref_count);
+		//Set count
+		$("#reply-ok .panel-title > div").children("span").eq(1).html(resp.list[0].ref_count);
 		getRelated({id:resp.list[0].id});
 	}else{
 		finishReplyPopup();

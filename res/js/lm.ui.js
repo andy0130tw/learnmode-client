@@ -19,7 +19,7 @@
 	//History.pushState(null,"","#!/post/"+self.data("id"));
 }
 
-function addLightbox(){
+function registerListListener(){
 	/*if(USE_MOBILE_RULE){
 		//Note that vanillabox will be
 		// called twice if we don't do cleanup.
@@ -44,14 +44,15 @@ function addLightbox(){
 	$("time.timeago").timeago();
 }
 
-function voteUpClick(e){
-	if($(this).hasClass("inverse"))postVote("up",$(this).data("id"));
-	else postVote("clear",$(this).data("id"));
-}
-
-function voteDownClick(e){
-	if($(this).hasClass("inverse"))postVote("down",$(this).data("id"));
-	else postVote("clear",$(this).data("id"));
+function voteClick(e){
+	var self=$(this);
+	var data=self.data();
+	var id=data.id;
+	var func=data.func;
+	var classConst=COLOR_CLASS.VOTE_BUTTON;
+	postVote(func,id,function(resp){
+		self.removeClass().addClass(classConst._common+" "+classConst[resp.message]);
+	});
 }
 
 /**
@@ -84,7 +85,7 @@ function readRMPostAndRender(){
 		// This will overwrite the main area
 		var isCompact=!that.parents(".list").hasClass("autoheight");
 		that.parents(".list").replaceWith(renderPostListView(obj,isCompact));
-		addLightbox();
+		registerListListener();
 		//that.data("rm",null);
 	});
 }

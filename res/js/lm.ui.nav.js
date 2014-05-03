@@ -122,7 +122,7 @@ function switchNavByType(type){
 	switchVisible("nav .categorymenu",
 		type=="question"||type=="share"||type=="scrapbook"||
 		type=="comment"||type=="answer"||type=="watch"||
-		type=="practice"||type=="annotation"||type=="course");
+		type=="practice"||type=="annotation"||type=="course"||type=="!badge");
 	switchVisible("nav .hotmenu",
 		type=="question"||type=="share"||type=="scrapbook"||
 		type=="answer");

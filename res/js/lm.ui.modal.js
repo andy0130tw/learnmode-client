@@ -37,13 +37,12 @@ function modalShowAwardRaw(badgeList){
 	setShow("#users-loading","#users-ok",true);
 	var badgeName=badgeList[badgeList.length-1].badge;
 	var badgeDetailed=badgeSearch(badgeName);
-	var badgeSubject=SUBJECT_MAP[badgeList[0].subject];
-	if(badgeSubject)badgeSubject="<br/>"+badgeSubject;
-	else badgeSubject="";
+	var badgeSubject=SUBJECT_MAP[badgeList[0].subject]||"";
 
 	$("#users-award-img").html(TAGb2(badgeName));
-	addLightbox();
-	$("#users-award-badgename").html(badgeDetailed[0][0]+badgeDetailed[1]+TAG("small",badgeSubject));
+	registerListListener();
+	$("#users-award-info > [data-field='name']").html(badgeDetailed[0][0]+badgeDetailed[1]);
+	$("#users-award-info > [data-field='subject']").html(badgeSubject);
 	$("#users-award-desc1").html(badgeDetailed[0][1][0].replaceAll("|","<br/>"));
 	$("#users-award-desc2").html(badgeDetailed[0][1][1].replaceAll("|","<br/>"));
 
@@ -74,24 +73,27 @@ function modalShowAwardRaw(badgeList){
 }
 
 function modalShowAward(){
-	if($(this).data("id"))
-		modalShowAwardRaw(badgeObj[$(this).data("id")]);
+	var data=$(this).data();
+	if(data.id)
+		modalShowAwardRaw(badgeObj[data.id]);
 	else{
 		//Generate a temp badge container for it
-		var badgeName=$(this).data("badge");
-		var subject=$(this).data("subject");
-		var date=$(this).data("date");
+		var badgeName=data.badge;
+		var subject=data.subject;
+		var date=data.date;
 		var tmpBadgeObj=[{badge:badgeName,subject:subject,date:date}];
 		modalShowAwardRaw(tmpBadgeObj);
 	}
 }
 
 function modalShowBadgeWinners(){
-	var badgeName=$(this).data("id");
+	var data=$(this).data();
+	var badgeName=data.id;
+	var badgeSubject=data.subject;
 	var badgeDetailed=badgeSearch(badgeName);
 	$("#users-award-img").html(TAGb2(badgeName));
-	addLightbox();
-	$("#users-award-badgename").html(badgeDetailed[0][0]+badgeDetailed[1]);
+	registerListListener();
+	$("#users-award-info > [data-field='name']").html(badgeDetailed[0][0]+badgeDetailed[1]);
 	searchBadgeWinners({badge:badgeName},true);
 }
 
@@ -106,13 +108,13 @@ function postshareSubjectCategoryChange(){
 }
 
 function postshareCategoryChange(){
-	var newValue=(this==window)?"share":$(this).val();
-	switchVisible(".postshare-o1",newValue=="question");
-	switchVisible(".postshare-o2",newValue!="scrapbook");
-	switchVisible(".postshare-o3",newValue=="scrapbook");
-	switchVisible(".postshare-o4",newValue!="watch");
-	switchVisible(".postshare-o5",newValue=="watch");
-	switchVisible(".postshare-o3.postshare-o5",newValue=="scrapbook"||newValue=="watch");
+	var val=(this==window)?"share":$(this).val();
+	switchVisible("#postshare-o-subject",val=="question"||val=="watch");
+	switchVisible("#postshare-o-image-rect",val=="scrapbook");
+	switchVisible("#postshare-o-image-rect-no",val!="scrapbook");
+	switchVisible("#postshare-o-url",val=="scrapbook"||val=="watch");
+	switchVisible("#postshare-o-url-scrap",val=="scrapbook");
+	switchVisible("#postshare-o-url-video",val=="watch");
 }
 
 function changeSubjectSelection(){

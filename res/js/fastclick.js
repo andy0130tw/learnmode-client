@@ -77,7 +77,7 @@ function FastClick(layer, options) {
 	 *
 	 * @type number
 	 */
-	this.touchBoundary = options.touchBoundary || 10;
+	this.touchBoundary = options.touchBoundary || 3;
 
 
 	/**
@@ -112,7 +112,7 @@ function FastClick(layer, options) {
 
 	// Set up event handlers as required
 	if (deviceIsAndroid) {
-		layer.addEventListener('mouseover', this.onMouse, true);
+		//layer.addEventListener('mouseover', this.onMouse, true);
 		layer.addEventListener('mousedown', this.onMouse, true);
 		layer.addEventListener('mouseup', this.onMouse, true);
 	}
@@ -261,6 +261,8 @@ FastClick.prototype.needsFocus = function(target) {
 		// No point in attempting to focus disabled inputs
 		return !target.disabled && !target.readOnly;
 	default:
+		//alert("Test result: "+target.className);
+		//return true;
 		return (/\bneedsfocus\b/).test(target.className);
 	}
 };

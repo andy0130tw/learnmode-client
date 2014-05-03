@@ -115,7 +115,7 @@ function addToContent(data){
 	$("#main-loading").empty();
 	setShow("#main-loading","",true);
 	//Add lightbox listener
-	addLightbox();
+	registerListListener();
 	var __st2=new Date();
 	console.log("[addToContent/Render] "+(__st2-__st1)+"ms");
 }

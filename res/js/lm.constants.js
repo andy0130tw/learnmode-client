@@ -1,7 +1,7 @@
 ﻿var VERSION_MAJOR="1.";
-var VERSION_MINOR="40";
+var VERSION_MINOR="43";
 var VERSION_COUNT="";
-var LAST_MODIFY="2014/4/30";
+var LAST_MODIFY="2014/5/3";
 
 var LOCAL_TEST=(location.hostname=="localhost");
 var DEBUGGING_ENVIROMENT=(!location.hostname);
@@ -66,7 +66,14 @@ var COLOR_CLASS={
 	RM_HINT:"text-warning action-reveal-rm",
 	RM_REVEALED:"text-alert",
 	LABEL_ACTIVE:"fg-cobalt",
-	PARSE_ERROR:"text-alert"
+	PARSE_ERROR:"text-alert",
+
+	VOTE_BUTTON:{
+		_common:"bg-hover-gray action-vote",
+		up:"success",
+		down:"warning",
+		clear:"inverse"
+	},
 }
 
 var TEXT_RETURN_ALT=" "+TAG("small","text-pilcrow",ICON("pilcrow"));
@@ -113,7 +120,7 @@ var HASH={
 		"trailblazer": ["善答星",["回答問題","每題問題+2分"],[5e2,3e3,12e3]],
 		"validator": ["讚讚星",["對回答進行評分","???"],[5e2,3e3,12e3]],
 		"apprentice": ["實習生",["登入","每天+1分|同日登入不重複計算"],[30,80,2e2]],
-		"lodestar": ["北極星",["被其他人關注","每人+1分|解關注我不知道會不會減少"],[30,80,2e2]],
+		"lodestar": ["北極星",["被其他人關注","每人+1分|不重複計算，解關注不會減少"],[30,80,2e2]],
 		"visionary": ["夢想家",["發表貼圖","每則+3分"],[2e2,15e2,3e3]],
 		"discoverer": ["發現家",["發表貼文","每則+1分"],[5e2,4e3,8e3]],
 		"touchstone": ["感動家",["甩表情","每個+1分"],[2e2,15e2,3e3]],
@@ -204,9 +211,8 @@ var randomTip=[
 	"這網頁的圖標是 皮 用 InkScape 做的。",
 	"宣傳一下本校同學製作的 LMClientX，詳情請見作者開發樓。",
 	"Open Sans 果然是網頁上的免費神字體，自 1.36 版已全面更換。",
-	"最近一直在幫網頁的程式碼瘦身，可能會發生一點意外吧？！",
 	"這網頁在Flyer預設瀏覽器的效能問題，一直是惡夢。",
-	"關注/解關注常常會很遲鈍，這是伺服器的問題，耐心等待吧。",
+	"關注/解關注常常會很遲鈍，這是伺服器的問題，需要耐心等待。",
 	"想不到 Tips 了... 請常逛作者開發樓吧。",
 	"小螢幕和大螢幕會有好多地方不一樣，這都是為了在有限的視窗中擺放最適合的內容，所精心(?)調整而成。"
 ];

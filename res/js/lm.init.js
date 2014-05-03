@@ -28,7 +28,8 @@ function init(){
 		if(FREEZE)return;
 
 		//Remove click delay
-		if(typeof FastClick!="undefined")FastClick.attach(document.body);
+		if(typeof FastClick!="undefined")
+			FastClick.attach(document.body);
 
 		//Timer
 		var __st=new Date();
@@ -101,10 +102,9 @@ function setupListeners(){
 		.on("click",'.action-reply',modalShowReply)
 		.on("click",".action-award",modalShowAward)
 		.on("click",".action-badgewinner",modalShowBadgeWinners)
-		.on("click",'.action-vote-up',voteUpClick)
-		.on("click",'.action-vote-down',voteDownClick)
+		.on("click",'.action-vote',voteClick)
 		.on("click",'.action-reveal-rm',readRMPostAndRender)
-		.on("shown.bs.popover",'*[data-toggle="popover"]',addLightbox);
+		.on("shown.bs.popover",'*[data-toggle="popover"]',registerListListener);
 
 	/*$(window).resize(
 		_.debounce(function(){
@@ -181,8 +181,9 @@ var initOnce=function(){
 	$("#users-search").submit(searchUserSubmit);
 	
 	//Close panel by default
-	$("#reply-ok .panel-content").slideToggle();
-
+	//$("#reply-ok .panel-content").slideToggle();
+	$("#popup-reply-accordion-content").collapse();
+	
 	//Init fastclick
 	//FastClick.attach(document.body);
 

@@ -69,6 +69,7 @@ function initHashRoutes(){
 		var query=this.params['restArg'];
 		if(!hashBodyIsChanged(query))return;
 		modalNavigate("#popup-reply",false,false);
+		
 		clrReplyPopup(true);
 		$("#postreply-id").val(id);
 		getDetailedPost({id:id});

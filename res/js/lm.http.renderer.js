@@ -155,10 +155,25 @@ function renderAvatarRaw(user,sty){
 }
 
 function renderVoteButton(obj){
-	class1=obj.my_vote=="up"?"success":"inverse";
-	class2=obj.my_vote=="down"?"warning":"inverse";
-	return renderButtonRaw(ICON("thumbs-down"),"place-right bg-hover-gray action-vote-down "+class2,obj.id)+
-		renderButtonRaw(ICON("thumbs-up"),"place-right bg-hover-gray action-vote-up "+class1,obj.id);
+	var classConst=COLOR_CLASS.VOTE_BUTTON;
+	class1=obj.my_vote=="up"?
+		{sty:classConst.up,func:"clear"}
+		:{sty:classConst.clear,func:"up"};
+	class2=obj.my_vote=="down"?
+		{sty:classConst.down,func:"clear"}
+		:{sty:classConst.clear,func:"down"};
+	return TAG("div","vote-container place-right",
+		renderButtonRaw(
+			ICON("thumbs-up"),
+			classConst._common+" "+class1.sty,
+			{func:class1.func,id:obj.id}
+		)
+		+renderButtonRaw(
+			ICON("thumbs-down"),
+			classConst._common+" "+class2.sty,
+			{func:class2.func,id:obj.id}
+		)
+	);
 }
 
 function NULL(){return "";}
@@ -223,7 +238,7 @@ function renderSubject(obj,limit){
 	for(var i=0;i<len;++i){
 		arr.push(SUBJECT_MAP[obj.subjects[i].id]);
 		if(i+1==limit&&len-arr.length>1){
-			arr.push("...("+(len-arr.length)+")");
+			arr.push("…("+(len-arr.length)+")");
 			break;
 		}
 	}
@@ -270,6 +285,7 @@ function renderUserListView(user){
 	//desc=desc.replace(/([^\u0000-\u00ff]{21,25})&nbsp;/g,"$1<br/>");
 	//desc=desc.replace(/([^\u0000-\u00ff]{26})/g,"$1<br/>");
 	var relation=getRelationWithUser(user);
+	var subject=SUBJECT_MAP[user._subject];
 	var content=renderAvatar(user)
 		+renderUserRaw(user,"%%% ("+user.username+")")+"&nbsp;"
 		+TAG("span",COLOR_CLASS.SCHOOL,user.school+"/"+user.class_name)+"&nbsp;"
@@ -279,9 +295,10 @@ function renderUserListView(user){
 			+TAG("span",user.is_following?COLOR_CLASS.LABEL_ACTIVE:"",ICON("pop-in")+user.followers_count)
 			+"<br/>"
 			+(relation||""))
-		+(user._date?"<br/>"+TAG("span","list-datetime",
-			(dateConverter(user._date,true))
-			+(SUBJECT_MAP[user._subject]?", "+SUBJECT_MAP[user._subject]:"")):"")
+		+(user._date?
+			"<br/>"+TAG("span","list-datetime",
+				(dateConverter(user._date,true))+(subject?", "+TAG("span","text-success",subject):""))
+			:"")
 		+TAG("pre","list-subtitle",desc);
 	return listitem(content);
 }
@@ -296,9 +313,15 @@ function renderButton(obj,label){
 	if(!id)return "";
 	return renderButtonRaw(label,"large primary place-right action-reply",id);
 }
-function renderButtonRaw(label,sty,dataid,customTAG){
-	if(!dataid)return "";
-	return TAG(customTAG||"button",sty,"data-id='"+dataid+"'",label);
+function renderButtonRaw(label,sty,data,customTAG){
+	if(!data)return "";
+	var dataObj={};
+	dataObj=(typeof data=="string")?{id:data}:data;
+	var attr="";
+	for(var x in dataObj){
+		attr+="data-"+x+"='"+dataObj[x]+"' ";
+	}
+	return TAG(customTAG||"button",sty,attr,label);
 }
 
 function renderScore(obj){
@@ -364,7 +387,7 @@ function compactMsg(obj){
 				+TAG("span",COLOR_CLASS.BADGE,"獎章")+"！";
 		}
 	}else if(obj.category=="!emotion"){
-		if(obj.message==0)return "清除了他對"
+		if(obj.message==0)return "清除/維持了他對"
 			+rin()+"的 "
 			+wi(COLOR_CLASS.EMOTION)+" 的"
 			+TAG("strong",COLOR_CLASS.EMOTION,"表情")+"。";

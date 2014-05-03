@@ -131,7 +131,6 @@ function fillMAC(){
 }
 
 function clearClientData(){
-	var items=$.cookie();
-	for(var x in items)$.removeCookie(x);
+	storageObject.remove("mac");
 	localStorage.removeItem("identity");
 }
