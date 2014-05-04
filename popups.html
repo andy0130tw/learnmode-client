@@ -1,8 +1,6 @@
 ﻿<div class="hide">
 <div id="popup-reply" class="popup mfp-hide">
-	<div id="reply-loading">
-		<p class="subheader-secondary text-muted"><span class='loader-ring'><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span></span><!--<span class="icon-loading"></span>--> 載入中...</p>
-	</div>
+	<div id="reply-loading" class="subheader-secondary text-muted"></div>
 	<!--<div id="reply-jumper">
 		<label>Enter ENTRY ID:</label>
 		<div class="input-control text size6"><input type="text" id="postreply-jumper"/></div>
@@ -11,22 +9,20 @@
 	<div id="reply-ok" class="hide">
 		<div id="reply-body" class="listview-outlook"></div>
 		<div id="reply-mood" class="toolbar">
-			<button onclick="postMood(1)"><div class="mood mood1"></div><small></small></button>
-			<button onclick="postMood(2)"><div class="mood mood2"></div><small></small></button>
-			<button onclick="postMood(3)"><div class="mood mood3"></div><small></small></button>
-			<button onclick="postMood(4)"><div class="mood mood4"></div><small></small></button>
-			<button onclick="postMood(5)"><div class="mood mood5"></div><small></small></button>
+			<button class="needsclick" onclick="postMood(1)"><div class="mood mood1"></div><small></small></button>
+			<button class="needsclick" onclick="postMood(2)"><div class="mood mood2"></div><small></small></button>
+			<button class="needsclick" onclick="postMood(3)"><div class="mood mood3"></div><small></small></button>
+			<button class="needsclick" onclick="postMood(4)"><div class="mood mood4"></div><small></small></button>
+			<button class="needsclick" onclick="postMood(5)"><div class="mood mood5"></div><small></small></button>
 			<div class="place-right">
-			<button onclick="postMood(0)"><div class="mood mood0"></div>
+			<button onclick="postMood(0)"><div class="needsclick mood mood0"></div>
 				<small class="no-tablet-portrait">清除表情</small>
 				<small class="no-desktop no-large">清除</small>
 			</button>
 			</div>
 		</div>
 
-		<div id="reply-sub-loading">
-			<h2><span class='loader-ring center'><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span><span class='circle'></span></span><!--<span class="icon-loading"></span>--></p></h2>
-		</div>
+		<div id="reply-sub-loading"></div>
 		<div id="reply-sub-ok">
 			<div id="reply-tool" class="btn-placeholder">
 				<button class="large moodlightbox"><span class="icon-power"></span>表情</button>
@@ -39,9 +35,12 @@
 					<button class="info large action-refresh-reply"><span class="icon-cycle"></span> 正常</button>
 				</div>
 			</div><br/>
-			<div id="reply-accordion" class="panel collapsed" data-role="panel" style="clear:both;">
-				<div class="panel-header bg-cyan fg-white" style="font-size:1.5rem"><span class="icon-copy"></span> 回覆貼文 (<span></span>)</div>
-				<div class="panel-content">
+			<div id="reply-accordion" class="panel panel-primary">
+				<div class="panel-heading"><div class="panel-title"><div href="#popup-reply-accordion-content" data-toggle="collapse">
+					<span class="icon-copy"></span> 回覆貼文 (<span></span>)
+				</div></div></div>
+				
+				<div id="popup-reply-accordion-content" class="panel-collapse collapse in"><div class="panel-body">
 					<div class="input-control text hide"><input type="text" id="postreply-id" disabled="disabled"/></div>
 					<form id="postreply-form">
 					回覆內容：
@@ -51,10 +50,10 @@
 					<div class="input-control file"><input type="file" id="postreply-file-image"/><button class="btn-file"></button></div>
 					</div>
 					</form>
-					<div style="min-height:40px">
-					<button id="postreply-submit" class="place-right large bg-cyan fg-white" onclick="postReplyForm();"><span class="icon-reply"></span> 回覆</button>
+					<div class="btn-placeholder">
+					<button id="postreply-submit" class="place-right large fg-white" style="background-color:#428BCA;" onclick="postReplyForm();"><span class="icon-reply"></span> 回覆</button>
 					</div>
-				</div>
+				</div></div>
 			</div>
 			<div id="reply-content" class="listview-outlook"></div>
 			<div id="reply-bottom">
@@ -87,29 +86,31 @@
 			<!--<div class="input-control select">
 				<select id="postshare-subjects"></select>
 			</div>-->
-			<div class="grid fluid postshare-o1">
-				<div class="row">科目：<small>(可按著Ctrl複選)</small> 已選<span id="postshare-subject-count">0</span>項</div>
-				<div class="row">
-					<div class="input-control select span6">
+			<div id="postshare-o-subject" class="panel panel-default">
+				<div class="panel-heading"><div class="panel-title"><a href="#popup-postshare-subject-sel" data-toggle="collapse">
+						科目：<small>(可按著Ctrl複選)</small> 已選 <span id="postshare-subject-count">0</span> 項
+					</a></div></div>
+				<div class="panel-collapse collapse in" id="popup-postshare-subject-sel"><div class="panel-body">
+					<div class="input-control select" style="width:46%;float:left;">
 						<select id="postshare-subject-category" size="12"></select>
 					</div>
-					<div id="postshare-subject-container" class="input-control select span6">
+					<div id="postshare-subject-container" class="input-control select" style="width:46%;float:right;">
 					</div>
 					<button onclick="selectAllSubjects(event)" style="width:100%;">全選/取消全選</button>
-				</div>
+				</div></div>
 			</div>
 		貼文內容：
 			<form id="postshare-form">
 			<div class="input-control textarea"><textarea id="postshare-message" style="height:160px;"></textarea></div>
-			<div class="postshare-o4">
+			<div id="postshare-o-image">
 		上傳圖片： 
-			<small class="postshare-o2">(選填，可傳非正方形圖)</small>
-			<small class="postshare-o3">(必填，建議裁切成正方形)</small>
+			<small id="postshare-o-image-rect-no">(選填，可傳非正方形圖)</small>
+			<small id="postshare-o-image-rect">(必填，建議裁切成正方形)</small>
 			<div class="input-control file"><input type="file" id="postshare-file-image"/><button class="btn-file"></button></div>
 			</div>
-			<div class="postshare-o3 postshare-o5">
-		<div class="postshare-o4">圖片來源網址：<small>(剪貼簿選填)</small></div>
-		<div class="postshare-o5">影片來源網址：<small>(必填)</small></div>
+			<div id="postshare-o-url">
+				<div id="postshare-o-url-scrap">圖片來源網址：<small>(剪貼簿選填)</small></div>
+				<div id="postshare-o-url-video">影片來源網址：<small>(必填)</small></div>
 				<div class="input-control text">
 					<input type="text" id="postshare-url"/>
 				</div>
@@ -144,7 +145,10 @@
 			<div class="row">
 				<div class="span3">
 					<div id="users-award-img"></div><br/>
-					<div id="users-award-badgename" class="subheader-secondary"></div>
+					<div id="users-award-info" class="subheader-secondary">
+						<div data-field="name"></div>
+						<small data-field="subject"></small>
+					</div>
 				</div>
 				<div class="span9">
 					<blockquote>
@@ -270,16 +274,16 @@
 		<h3>關於</h3>
 		<div class="tab-control" data-role="tab-control" data-effect="fade">
 		<ul class="tabs">
-		<li class="active"><a href="#_page_1">網頁簡介</a></li>
-		<li><a href="#_page_2"><i class="icon-lab"></i> 作者</a></li>
-		<li><a href="#_page_3"><i class="icon-pie"></i> 特別感謝</a></li>
-		<li><a href="#_page_4"><i class="icon-rocket"></i> 使用資源</a></li>
-		<li class="place-right"><a href="#_page_5"><i class="icon-help"></i> 說明文件</a></li>
-		<li class="place-right"><a href="#_page_6"><i class="icon-help"></i> FAQ</a></li>
+		<li class="active"><a href="#_popup-about-page_1">網頁簡介</a></li>
+		<li><a href="#_popup-about-page_2"><i class="icon-lab"></i> 作者</a></li>
+		<li><a href="#_popup-about-page_3"><i class="icon-pie"></i> 特別感謝</a></li>
+		<li><a href="#_popup-about-page_4"><i class="icon-rocket"></i> 使用資源</a></li>
+		<li class="place-right"><a href="#_popup-about-page_5"><i class="icon-help"></i> 說明文件</a></li>
+		<li class="place-right"><a href="#_popup-about-page_6"><i class="icon-help"></i> FAQ</a></li>
 		</ul>
 		 
 		<div class="frames">
-		<div class="frame" id="_page_1">
+		<div class="frame" id="_popup-about-page_1">
 			<p class="subheader-secondary">網頁版LearnMode，不用平板也能隨時追蹤學習平台上的貼文！電腦可用，而且專為手機/平板優化！</p>
 			<p>最適瀏覽環境：<span class="icon-firefox"></span> Firefox, <span class="icon-chrome"></span> Chrome, <span class="icon-IE"></span> IE(9+), <span class="icon-safari"></span> Safari(?), <span class="icon-opera"></span> Opera(?) <br/><small> Flyer內建瀏覽器因效能太差，不推薦。</small></p>
 			<hr/>
@@ -287,7 +291,7 @@
 			<p class="title">本 著作 係採用創用 CC 姓名標示-非商業性-相同方式分享 3.0 台灣 授權條款授權。<br/>
 			<div class="place-right text-muted on-extra-left"><span class="icon-cc"></span>CC <span class="icon-cc-by"></span>BY <span class="icon-cc-nc"></span>NC <span class="icon-cc-sa"></span>SA</div></p> <br/>
 		</div>
-		<div class="frame" id="_page_2">
+		<div class="frame" id="_popup-about-page_2">
 			<p class="subheader-secondary"><u><span class="userlightbox" data-id="d82e4804d">潘廣霖 (andy0130tw)</span></u></p>
 			<p>
 			一個不怎麼活躍的LM使用者。因為偶然一次<u><strong class="action-reply" data-id="52AECDB1DBCA1D067D7C376B">錯用老師身分發言</strong></u>，得以見識到這個平台的特殊。對這網路世界抱持著莫名的憧憬，在深入了解後大膽的踏入這塊土地。<br/>	原是Flash的開發者，卻因HTML5的興起被迫轉換。本來是該沉寂的高三生涯也不沉寂，寧可純真守在螢幕前敲打著鍵盤，學習著如何駕馭、整理這些資料，利用習得的程式概念和滿腔熱血，寫下這個平凡的網頁程式。
@@ -298,12 +302,12 @@
 			<p>本網站的圖標(icon)設計者。</p>
 			<a href="https://docs.google.com/document/d/1ELvmQ3En-UT8ynHkek8JnuwES5NYrHDb9haUNA6E5xM/edit?usp=sharing" target="_blank">公開內容（LM） - Google雲端硬碟</a>
 		</div>
-		<div class="frame" id="_page_3">
+		<div class="frame" id="_popup-about-page_3">
 			<p>
 			感謝方致偉做的元老級(網址略)LMClient，使我開始思考這件事的可能性；<br/>感謝1322班的陳定毅和1319班的謝至宥兩位學弟給我在LM上的啟發；<br/>感謝LM上的活躍者們給我的支持與鼓勵，細心發現程式裡隱藏的錯誤；<br/>尤其感謝潘昱仁和魏建倫，在我最疑惑和最需要想法的時候，提供我繼續走下去的新點子。<br/>最後，感謝有你的使用，這個網站才能繼續運作下去。
 			</p>
 		</div>
-		<div class="frame" id="_page_4">
+		<div class="frame" id="_popup-about-page_4">
 			製作這個網頁時使用到下列資源：
 			<dl>
 			<dt>Metro UI CSS</dt>
@@ -315,7 +319,7 @@
 			<dt>Simple PHP Proxy (後端)</dt><dd>經過微幅修改，成為對LM伺服器溝通的介面。<a href="http://benalman.com/projects/php-simple-proxy/">benalman.com/projects/php-simple-proxy/</a></dd>
 			</dl>
 		</div>
-		<div class="frame" id="_page_5"><span class="subheader">說明文件</span><br/><br/>
+		<div class="frame" id="_popup-about-page_5"><span class="subheader">說明文件</span><br/><br/>
 		這是一個還在測試的LearnMode網頁版！下面是一份完整的說明文件：<br/><br/>
 			<span class="subheader-secondary">基本介面</span>
 			<p>
@@ -352,7 +356,7 @@
 			最後，希望你使用愉快:D。
 		<br/>
 		</div>
-		<div class="frame" id="_page_6"><span class="subheader">FAQ</span><br/>
+		<div class="frame" id="_popup-about-page_6"><span class="subheader">FAQ</span><br/>
 			<dl class="">
 				<dt>動態載入很慢，常常逾時，是bug嗎？</dt><dd>不是，這是LM伺服器本身過於忙碌所致。為了避免最後的錯誤訊息造成資料無法正常顯示(類似於平板的"查無資料")，<b>這個網站設定的限制時間是40秒</b>。</dd>
 				<dt>發佈大哉問的科目要怎麼複選？</dt><dd>按著鍵盤上Control配著滑鼠就可以囉！</dd>

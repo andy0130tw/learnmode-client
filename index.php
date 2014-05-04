@@ -14,12 +14,11 @@
 		<link rel="stylesheet" href="/res/css/metro-bootstrap-responsive.min.css"/>
 		<link rel="stylesheet" href="/res/css/magnific-popup.css"/>
 		<link rel="stylesheet" href="/res/css/shadowbox.css"/>
-		<link rel="stylesheet" href="/res/css/vanillabox/bitter.css"/>
 		
 		<link rel="stylesheet" href="/res/css/lm.css"/>
 		<link rel="stylesheet" href="/res/css/global.css"/>
 		<link rel="stylesheet" href="/res/css/popup.css"/>
-		<link rel="stylesheet" href="/res/css/bootstrap.popover.min.css"/>
+		<link rel="stylesheet" href="/res/css/bootstrap.component.min.css"/>
 	</head>
 	
 	<body class="metro">
@@ -81,10 +80,11 @@
 				<span class="element-divider"></span>
 				<li><a class="dropdown-toggle" href="#"><span class="icon-list"></span> 分類</a>
 					<ul class="dropdown-menu" data-role="dropdown">
+					<li class="menu-title">主要</li>
 					<li><a href="#" class="action-sel-em" data-category="share"><span class="icon-comments-4"></span> 愛分享</a></li>
 					<li><a href="#" class="action-sel-em" data-category="question"><span class="icon-comments-2"></span> 大哉問</a></li>
 					<li><a href="#" class="action-sel-em" data-category="scrapbook"><span class="icon-pictures"></span> 剪貼簿</a></li>
-					<li class="divider"></li>
+					<li class="menu-title">其他動態</li>
 					<li><a href="#" class="action-sel-em" data-category="watch"><span class="icon-film"></span> 影片</a></li>
 					<li><a href="#" class="action-sel-em" data-category="annotation"><span class="icon-book"></span>&nbsp;書籍標註</a></li>
 					<li><a href="#" class="action-sel-em" data-category="course"><span class="icon-camera-2"></span>&nbsp;課程</a></li>
@@ -94,10 +94,11 @@
 				<span class="element-divider"></span>
 				<li><a class="dropdown-toggle" href="#"><span class="icon-stats"></span> 紀錄</a>
 					<ul class="dropdown-menu" data-role="dropdown">
+					<li><a href="#" class="action-sel-em" data-category="!badge"><span class="icon-medal-2"></span> 獎牌/等級</a></li>
+					<li class="menu-title">只有自己的</li>
 					<li><a href="#" class="action-sel-em" data-category="!follow"><span class="icon-share-3"></span> 關注</a></li>
 					<li><a href="#" class="action-sel-em" data-category="!emotion"><span class="icon-stats"></span> 甩表情</a></li>
 					<li><a href="#" class="action-sel-em" data-category="!vote"><span class="icon-stats"></span> 評分</a></li>
-					<li><a href="#" class="action-sel-em" data-category="!badge"><span class="icon-medal-2"></span> 獎牌/等級</a></li>
 					</ul>
 				</li>
 				<span class="element-divider"></span>
@@ -140,13 +141,14 @@
 				<span class="icon-location" style="font-size:2.2rem"></span><a class="dropdown-toggle" href="#"> <span id="nav-location">首頁</span></a>
 				<ul class="dropdown-menu" data-role="dropdown">
 					<li><a href="#" class="action-sel" data-category="all"><span class="icon-accessibility"></span>&nbsp;全部動態</a></li>
+					<li class="menu-title">主要</li>
 					<li><a href="#" class="action-sel" data-category="share"><span class="icon-comments-4"></span>&nbsp;愛分享</a></li>
 					<li><a href="#" class="action-sel" data-category="question"><span class="icon-comments-2"></span>&nbsp;大哉問</a></li>
 					<li><a href="#" class="action-sel" data-category="scrapbook"><span class="icon-pictures"></span>&nbsp;剪貼簿</a></li>
-					<li class="divider nohomemenu"></li>
+					<li class="menu-title">回覆</li>
 					<li class="nohomemenu"><a href="#" class="action-sel" data-category="comment"><span class="icon-comments-3"></span>&nbsp;評論</a></li>
 					<li class="nohomemenu"><a href="#" class="action-sel" data-category="answer"><span class="icon-comments"></span>&nbsp;回答</a></li>
-					<li class="divider nohomemenu"></li>
+					<li class="menu-title">其他</li>
 					<li class="nohomemenu"><a href="#" class="action-sel" data-category="watch"><span class="icon-film"></span>&nbsp;觀看影片</a></li>
 					<li class="nohomemenu"><a href="#" class="action-sel" data-category="annotation"><span class="icon-book"></span>&nbsp;書籍標註</a></li>
 					<li class="nohomemenu"><a href="#" class="action-sel" data-category="course"><span class="icon-camera-2"></span>&nbsp;課程</a></li>
@@ -179,11 +181,11 @@
 
 	<div id="root" class="container clearfix hide">
 		<div class="listview-outlook" id="mainContent">
-			<a href="#" class="list"><div class="list-content">
+			<div href="#" class="list" tabindex="0"><div class="list-content">
 				<strong class="list-title">Announcement</strong>
 				<span class="label">Info: </span> Last Modified on <span class="fill-last-modify"></span> ver.<span class="fill-version"></span><br/>
 				<span class="label">Random Tip: </span><span class="fill-random-tip"></span>
-			</div></a>
+			</div></div>
 		</div>
 		
 		<div id="main-loading" class="hide fg-navy"></div><br/>
@@ -191,7 +193,7 @@
 			<button id="btn-loadmore" class="large info">LOAD MORE ENTRIES</button><br/>
 		</div>
 	</div>
-	
+
 	<div id="footer" class="container clearfix">
 		<span class="tertiary-text">
 		LMClient <big>v1</big>--- The next generation of LM. 2013-2014, LMClient © by Andy Pan<br/>
@@ -227,14 +229,18 @@
 			<div class="row">
 				<div class="span3">
 					<div class="input-control text"><input type="text" id="login-input-mac"/></div>
-					<div class="accordion with-marker" data-role="accordion">
-						<div class="accordion-frame">
-							<a href="#" class="heading active">輸入MAC</a>
-							<div class="content">請在框內輸入12個十六進位字元(不分大小寫)，或使用右側小鍵盤輸入。<br/></div>
+					<div class="panel-group" id="popup-login-helper">
+						<div class="panel panel-primary">
+							<div class="panel-heading"><div class="panel-title"><a href="#popup-login-helper_1" data-toggle="collapse" data-parent="#popup-login-helper">輸入 MAC</a></div></div>
+							<div class="panel-collapse collapse in" id="popup-login-helper_1"><div class="panel-body">
+								請在框內輸入12個十六進位字元(不分大小寫)，或使用右側小鍵盤輸入。
+							</div></div>
 						</div>
-						<div class="accordion-frame">
-							<a href="#" class="heading">怎麼查MAC？</a>
-							<div class="content">Flyer的MAC碼在<code>設定</code>-&gt;<code>關於平板電腦</code>-&gt;<code>硬體資訊</code>-&gt;<code>[Wi-Fi MAC位址]</code></div>
+						<div class="panel panel-warning">
+							<div class="panel-heading"><div class="panel-title"><a href="#popup-login-helper_2" data-toggle="collapse" data-parent="#popup-login-helper">怎麼查 MAC 碼？</a></div></div>
+							<div class="panel-collapse collapse" id="popup-login-helper_2"><div class="panel-body">
+								Flyer 的 MAC 碼在<code>設定</code>-&gt;<code>關於平板電腦</code>-&gt;<code>硬體資訊</code>-&gt;<code>[Wi-Fi MAC位址]</code>。
+							</div></div>
 						</div>
 					</div>
 				</div>
@@ -246,7 +252,7 @@
 					<button class="info">A</button><button class="info">B</button><button class="info">C</button>
 					<button class="info">D</button><button class="info">E</button><button class="info">F</button>
 				</div>
-			</div><br/>&nbsp;
+			</div>
 			<div class="btn-placeholder">
 				<button class="default large place-right" style="display:block;width:100%;" onclick="relogin()">輸入完畢</button>
 			</div>
@@ -261,7 +267,7 @@
 	<script src="/res/js/path.min.js"></script>
 	<script src="/res/js/shadowbox.js"></script>
 	<script src="/res/js/timeago.js"></script>
-	<script src="/res/js/bootstrap.popover.min.js"></script>
+	<script src="/res/js/bootstrap.component.min.js"></script>
 	<script src="/res/js/fastclick.js"></script>
 	<script src="/res/js/metro.min.js"></script>
 	
@@ -274,7 +280,7 @@
 	<script src="/res/js/lm.http.parser.js"></script>
 	<script src="/res/js/lm.http.post.js"></script>
 	<script src="/res/js/lm.http.renderer.js"></script>
-	<script src="/res/js/lm.ui.js?asdfg"></script>
+	<script src="/res/js/lm.ui.js"></script>
 	<script src="/res/js/lm.ui.lightbox.js"></script>
 	<script src="/res/js/lm.ui.modal.js"></script>
 	<script src="/res/js/lm.ui.myinfo.js"></script>
