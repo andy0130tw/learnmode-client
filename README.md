@@ -15,14 +15,14 @@ Recent changes
 * Voting up/down now integrates and improves.
 * Remove panel and accordion in MetroUI(Replaced by Bootstrap components below).
 * Rename Bootstrap .popover to .component, adding panel and collapsible into it.
-* Rename some function name.
-* Make loading ring only when in need(remove if hiding).
+* Rename some functions' names.
+* Make loading ring only when in need(remove if hidden).
 * Add ggt.tw copyright information and show it in minified js.
 * New mechanism to show approperiate panel by category in posting modal.
 * Update !badge's switchNavByType.
-* Improve storageObject.
+* Improve storageObject, add method: clear, remove.
 * Update notify.info when sending !emotion and !vote.
-* Fix bug: improperly logout.
+* Fix bug: improper logging out.
 * Fix bug: userRelation will not be shown instead of string 'false' in name cards.
 * Fix bug: badge's subjects are now persistent between different view button clicked (also optimized dom cache).
 * Fix bug: data loses when clicking load more button in users' modal.
