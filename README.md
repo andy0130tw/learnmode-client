@@ -21,11 +21,11 @@ Recent changes
 * Add tooltips on subjects. 
 * Add option to list posts reversely
 * Update appearance of voters, with simple substitutions like myself, questioner, or the user himself.
-* Add dummy user as a fallback when the user is not in the database(be deleted... most of them are virtual accounts before.)
+* Add dummy user as a fallback when the user is not in the database(be deleted... most of which are virtual accounts before.)
 * Fix some issue caused by polyfilling `Array.prototype.indexOf`.
-* Update searching users modal to preserve last searched result. 
+* Update searching users modal to preserve last searched result.
 * Update some regex for marking up posts and rendering notifications from Books, Course, and Practice.
-* Fix bug: name of the user on top of the screen overflows.
+* Fix bug: name of the user on top of the screen overflows in mobile view.
 * Fix bug: `console.log` may not exist.
 * Add animation support detection. Provide fallback content if the loading ring is not supposed to be rendered properly.
 * Always use JSON instead of JSONP when available.
