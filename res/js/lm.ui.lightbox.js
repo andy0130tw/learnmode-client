@@ -55,6 +55,7 @@ function showVoterLightbox(){
 function addToUserLightbox(){
 	if(userProfile){
 		//Prevent rerender.
+		var user=userProfile;
 		var container=$("#sb-player .ext-userview");
 		if(!container[0]){
 			console.log("[addToUserLightbox] type=objmiss");
@@ -62,45 +63,58 @@ function addToUserLightbox(){
 		};
 		var container1=container.find(".userview-block");
 		var container2=container.find(".userview-tool");
-		if(!userProfile._rendered){
-			userProfile._rendered=true;
-			$("#sb-player .ext-userview .userview-cover").attr("src",imageLM(userProfile.cover,"X"));
-			container.find(".userview-block-outer").click(function(){
-				alert(userProfile.desc?
-						"自介：\n--------\n"
-							+userProfile.desc
-							+"\n--------\n"
-						:"此人沒有自介！"
-					);
+		if(!user._rendered){
+			user._rendered=true;
+			$("#sb-player .ext-userview .userview-cover").attr("src",imageLM(user.cover,"X"));
+			/*container.find(".userview-block-outer").off()*/
+			container.find(".userview-toggle").click(function(){
+				//v1.64
+				/*alert(user.desc?
+					"自介：\n--------\n"
+						+user.desc
+						+"\n--------\n"
+					:"此人沒有自介！"
+				);*/
+				container.find(".userview-viewport").toggleClass("alt");
 			});
-			container.find(".userview-image").attr("src",imageLM(userProfile.image));
-			container1.find(".title").html(userProfile.name+" ("+userProfile.username+")");
-			container1.find(".subtitle").html(userProfile.school+" "+(userProfile.class_name=="TH"?"老師":userProfile.class_name));
+			container.find(".userview-desc").html(processContent(user.desc));
+			container.find(".userview-misc").html(
+				"地點："+user.location
+				+"<br/>使用者UID："+user.uid
+				+"<br/>使用者ID："+user.id
+			);
+
+			container.find(".userview-image").attr("src",imageLM(user.image));
+			container1.find(".title").html(user.name+" ("+user.username+")");
+			container1.find(".subtitle").html(user.school+" "+(user.class_name=="TH"?"老師":user.class_name));
 			container.css("opacity",1);
 			container2.find(".userview-go").click(function(){
-				currentProfile=userProfile;
-				viewLoad({/*sort:"date",*/user:userProfile.username},true);
+				currentProfile=user;
+				viewLoad({/*sort:"date",*/user:user.username},true);
 				modalHide();
 				Shadowbox.close();
 			});
+
+			//v1.64
+			//registerListUtil(container).registerTimeAgo();
 		}
 		
 		//Dynamic contents don't need to prevent it.
-		var userRelation=getRelationWithUser(userProfile)||"";
+		var userRelation=getRelationWithUser(user)||"";
 		userRelation&&(userRelation+="‧");
 		container.find(".userview-info").html(userRelation+
 			("已關注 %%% 人‧被 @@@ 人關注"
-				.replace("%%%",userProfile.following_count)
-				.replace("@@@",userProfile.followers_count))
+				.replace("%%%",user.following_count)
+				.replace("@@@",user.followers_count))
 		);
-		switchVisible(container1.find(".following"),userProfile.is_followed_by);
+		switchVisible(container1.find(".following"),user.is_followed_by);
 		var followingButton=container2.find(".userview-following");
-		followingButton.data("id",userProfile.username);
+		followingButton.data("id",user.username);
 		//Attach appropriate event listener
 		followingButton.off().removeClass("danger info");
-		if(isMyself(userProfile)){
+		if(isMyself(user)){
 			followingButton.attr("disabled","disabled").html(ICON("home")+" 你自己");
-		}else if(userProfile.is_following){
+		}else if(user.is_following){
 			followingButton.addClass("danger").html(ICON("link-2")+" 取消關注").click(function(){
 				postIfFollow($(this).data("id"),false);
 			});
@@ -110,7 +124,7 @@ function addToUserLightbox(){
 			});
 		}
 	}
-	console.log("[addToUserLightbox] type="+(userProfile?"ok":"pending"));
+	console.log("[addToUserLightbox] type="+(user?"ok":"pending"));
 }
 
 var detailedMood=[];
@@ -120,12 +134,13 @@ function addToMoodLightbox(){
 	for(var i=0;i<5;++i){
 		var arr=detailedMood[i],data=[];
 		for(var j=0;j<arr.length;j++){
-			var avatar=renderAvatarRaw(arr[j],"inline shadow userlightbox");
+			var avatar=renderAvatarRaw(arr[j],
+				"inline shadow"+(!arr[j]._is_dummy?" userlightbox":""));
 			var username=renderUserRaw(arr[j]);
 			var datetime=TAG("small","["+dateConverter(arr[j]._mood_date)+"]");
 			data.push(TAG("div","","style='display:inline-block'",avatar+username+"<br/>"+datetime));
 		}
-		container.eq(i).html(data.length?data.join(",&nbsp;"):TAG("span","text-muted","Nobody..."));
+		container.eq(i).html(data.length?data.join("&nbsp;&nbsp;"):TAG("span","text-muted","Nobody..."));
 		
 	}
 }
@@ -144,12 +159,13 @@ function addToVoterLightbox(){
 	for(var i=0;i<2;++i){
 		var arr=voter[i],data=[];
 		for(var j=0;j<arr.length;j++){
-			var avatar=renderAvatarRaw(arr[j],"inline shadow userlightbox");
+			var avatar=renderAvatarRaw(arr[j],
+				"inline shadow"+(!arr[j]._is_dummy?" userlightbox":""));
 			var username=renderUserRaw(arr[j]);
 			var datetime=TAG("small","["+dateConverter(arr[j]._vote_date)+"]");
 			data.push(TAG("div","","style='display:inline-block'",avatar+username+"<br/>"+datetime));
 		}
-		container.eq(i).html(data.length?data.join(",&nbsp;"):TAG("span","text-muted","Nobody..."));
+		container.eq(i).html(data.length?data.join("&nbsp;&nbsp;"):TAG("span","text-muted","Nobody..."));
 	}
 	$(".ext-voterview").css("opacity",1);
 	console.log("[addToVoterLightbox] type=ok");

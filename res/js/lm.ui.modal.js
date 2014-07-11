@@ -8,6 +8,7 @@ function openNewsForm(){
 
 function showFollowerPopup(){
 	showUsersPopup((isMyself(currentProfile)?"":currentProfile.name+" 的 ")+"粉絲團 ("+currentProfile.followers_count+")");
+	clrUsersPopup();
 	switchVisible("#users-search",false);
 	searchFollower(null,true);
 	usersMoreFN=searchFollower;
@@ -15,6 +16,7 @@ function showFollowerPopup(){
 
 function showFollowingPopup(){
 	showUsersPopup((isMyself(currentProfile)?"":currentProfile.name+" 的 ")+"我關注 ("+currentProfile.following_count+")");
+	clrUsersPopup();
 	switchVisible("#users-search",false);
 	searchFollowing(null,true);
 	usersMoreFN=searchFollowing;
@@ -22,11 +24,21 @@ function showFollowingPopup(){
 
 function showUsersPopup(title){
 	modal("#popup-users");
-	clrUsersPopup();
 	setShow("#users-loading","#users-ok",false);
-	$("#popup-users").find("h3").html(title);
-	lastestUsersReq="";
+	if(usersMoreFN!=searchUser)clrUsersPopup();
+
+	//switchEnabled("#btn-loadmore-users",false);
+	$("#popup-users").find("h3:eq(0)").html(title);
 }
+
+var shadowboxBadgeImageOption={
+	onOpen:function(){
+		$("#sb-body").addClass("white");
+	},
+	onClose:function(){
+		$("#sb-body").removeClass("white");
+	}
+};
 
 function modalShowAwardRaw(badgeList){
 	showUsersPopup("獎牌");
@@ -39,14 +51,16 @@ function modalShowAwardRaw(badgeList){
 	var badgeDetailed=badgeSearch(badgeName);
 	var badgeSubject=SUBJECT_MAP[badgeList[0].subject]||"";
 
-	$("#users-award-img").html(TAGb2(badgeName));
-	registerListListener();
+	var ctrl=$("#users-award-img");
+	ctrl.html(TAGb2(badgeName));
+	registerListUtil(ctrl).setupLightbox(shadowboxBadgeImageOption);
 	$("#users-award-info > [data-field='name']").html(badgeDetailed[0][0]+badgeDetailed[1]);
 	$("#users-award-info > [data-field='subject']").html(badgeSubject);
 	$("#users-award-desc1").html(badgeDetailed[0][1][0].replaceAll("|","<br/>"));
 	$("#users-award-desc2").html(badgeDetailed[0][1][1].replaceAll("|","<br/>"));
 
-	$(".users-award").removeClass("info");
+	var awardList=$(".users-award");
+	awardList.removeClass("info");
 	
 	//Transfer data
 	var badgeObj=new Array(3);
@@ -56,19 +70,19 @@ function modalShowAwardRaw(badgeList){
 	}
 	var last=0;
 	for(var i=0;i<3;++i){
-		var container=$(".users-award").eq(i).children("td");
+		var container=awardList.eq(i).children("td");
 		container.eq(1).html(badgeDetailed[0][2][i]);
 		if(badgeObj[i]){
 			var nowBadge=badgeObj[i].badge;
 			last=i;
-			container.eq(2).html(dateConverter(badgeObj[i].date));
+			container.eq(2).html(dateConverter(badgeObj[i].date,true));
 			container.eq(3).html(renderButtonRaw("觀看","success action-badgewinner",nowBadge));
 		}else{
 			container.eq(2).html("...");
 			container.eq(3).html("...");
 		}
 	}
-	$(".users-award").eq(last).addClass("info");
+	awardList.eq(last).addClass("info");
 	searchBadgeWinners({badge:badgeName},true);
 }
 
@@ -91,8 +105,9 @@ function modalShowBadgeWinners(){
 	var badgeName=data.id;
 	var badgeSubject=data.subject;
 	var badgeDetailed=badgeSearch(badgeName);
-	$("#users-award-img").html(TAGb2(badgeName));
-	registerListListener();
+	var ctrl=$("#users-award-img");
+	ctrl.html(TAGb2(badgeName));
+	registerListUtil(ctrl).setupLightbox(shadowboxBadgeImageOption);
 	$("#users-award-info > [data-field='name']").html(badgeDetailed[0][0]+badgeDetailed[1]);
 	searchBadgeWinners({badge:badgeName},true);
 }

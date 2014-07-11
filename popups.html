@@ -24,15 +24,16 @@
 
 		<div id="reply-sub-loading"></div>
 		<div id="reply-sub-ok">
-			<div id="reply-tool" class="btn-placeholder">
+			<div id="reply-tool" class="btn-placeholder clearfix">
 				<button class="large moodlightbox"><span class="icon-power"></span>表情</button>
 				<button class="large action-pin-post">...</button>
 				
 				<div class="place-right">
-					<span>排序：</span>
-					<button class="info large on-left action-refresh-by-score"><span class="icon-stats-up"></span> 得分</button>
-					<button class="info large on-left action-refresh-reverse"><span class="icon-history"></span> 反向</button>
-					<button class="info large action-refresh-reply"><span class="icon-cycle"></span> 正常</button>
+					<span id="reply-label-sort-1">排序：</span>
+					<span id="reply-label-sort-2">排序方式：</span>
+					<button class="info large compact on-left action-refresh-by-score"><span class="icon-stats-up"></span> 得分</button>
+					<button class="info large compact on-left action-refresh-reverse"><span class="icon-history"></span> 反向</button>
+					<button class="info large compact action-refresh-reply"><span class="icon-cycle"></span> 正常</button>
 				</div>
 			</div><br/>
 			<div id="reply-accordion" class="panel panel-primary">
@@ -41,10 +42,8 @@
 				</div></div></div>
 				
 				<div id="popup-reply-accordion-content" class="panel-collapse collapse in"><div class="panel-body">
-					<div class="input-control text hide"><input type="text" id="postreply-id" disabled="disabled"/></div>
-					<form id="postreply-form">
-					回覆內容：
-					<div class="input-control textarea"><textarea id="postreply-message" style="height:80px;"></textarea></div>
+					<form id="postreply-form" style="margin:0">
+					<div class="input-control textarea"><textarea id="postreply-message" style="height:80px;" placeholder="回覆內容…"></textarea></div>
 					<div id="postreply-file-uploader">
 					上傳圖片：
 					<div class="input-control file"><input type="file" id="postreply-file-image"/><button class="btn-file"></button></div>
@@ -76,7 +75,7 @@
 		發佈到：
 			<div class="input-control select">
 				<select id="postshare-category">
-					<option value="share">分享</option>
+					<option value="share">愛分享</option>
 					<option value="question">大哉問</option>
 					<option value="scrapbook">剪貼簿</option>
 					<option value="watch">觀看影片</option>
@@ -88,7 +87,7 @@
 			</div>-->
 			<div id="postshare-o-subject" class="panel panel-default">
 				<div class="panel-heading"><div class="panel-title"><a href="#popup-postshare-subject-sel" data-toggle="collapse">
-						科目：<small>(可按著Ctrl複選)</small> 已選 <span id="postshare-subject-count">0</span> 項
+						<i class="icon-cube-2"></i> 科目：<small>(可按著Ctrl複選)</small> 已選 <span id="postshare-subject-count">0</span> 項
 					</a></div></div>
 				<div class="panel-collapse collapse in" id="popup-postshare-subject-sel"><div class="panel-body">
 					<div class="input-control select" style="width:46%;float:left;">
@@ -101,7 +100,7 @@
 			</div>
 		貼文內容：
 			<form id="postshare-form">
-			<div class="input-control textarea"><textarea id="postshare-message" style="height:160px;"></textarea></div>
+			<div class="input-control textarea"><textarea id="postshare-message" placeholder="發表內容…" style="height:160px;"></textarea></div>
 			<div id="postshare-o-image">
 		上傳圖片： 
 			<small id="postshare-o-image-rect-no">(選填，可傳非正方形圖)</small>
@@ -112,7 +111,7 @@
 				<div id="postshare-o-url-scrap">圖片來源網址：<small>(剪貼簿選填)</small></div>
 				<div id="postshare-o-url-video">影片來源網址：<small>(必填)</small></div>
 				<div class="input-control text">
-					<input type="text" id="postshare-url"/>
+					<input type="text" id="postshare-url" placeholder="網址…"/>
 				</div>
 			</div>
 			</form>
@@ -138,8 +137,8 @@
 	<div id="users-ok">
 		<h3>使用者列表</h3>
 		<form id="users-search">
-			<legend>搜尋名字 <small class="on-right-more">註：搜尋結果不會包含自己</small></legend>
-			<div class="input-control text"><input type="text" id="users-searchbox"/><button class="btn-search"></button></div>
+			<legend>搜尋帳號或名字 <small class="on-right-more">註：搜尋結果不會包含自己</small></legend>
+			<div class="input-control text"><input type="text" id="users-searchbox" placeholder="空白則從最新使用者開始列出"/><button class="btn-search"></button></div>
 		</form>
 		<div id="users-award" class="grid fluid">
 			<div class="row">
@@ -241,17 +240,17 @@
 	<div id="myinfo-ok">
 			<legend>修改個人資料</legend>
 			<div class="input-control text hide"><input type="text" id="myinfo-build_number"/></div>
-			<label> 姓名 <small>(為避免亂改姓名衍生的糾紛，請慎重更改！)</small></label>
+			<label for="myinfo-name"> 姓名 <small>(為避免亂改姓名衍生的糾紛，請慎重更改！)</small></label>
 			<div class="input-control text"><input type="text" id="myinfo-name" disabled="disabled"/></div>
-			<label>帳號名稱：
-			<div class="input-control text"><input type="text" id="myinfo-username"/></div></label>
-			<label>電子郵件：
-			<div class="input-control email"><input type="email" id="myinfo-email"/></div></label>
-			<label>網站：
-			<div class="input-control text"><input type="text" id="myinfo-web"/></div></label>
-			<label>學校地點：
+			<label for="myinfo-username">帳號名稱：
+			<div class="input-control text"><input type="text" id="myinfo-username" required="required"/></div></label>
+			<label for="myinfo-email">電子郵件：
+			<div class="input-control email"><input type="email" id="myinfo-email" required="required"/></div></label>
+			<label for="myinfo-web">網站：
+			<div class="input-control text"><input type="text" id="myinfo-web" required="required"/></div></label>
+			<label for="myinfo-location">位置：
 			<div class="input-control text"><input type="text" id="myinfo-location"/></div></label>
-			<label>自介：
+			<label for="myinfo-desc">自介：
 			<div class="input-control textarea"><textarea id="myinfo-desc"></textarea></div></label>
 			<hr/>
 			<legend>上傳圖片</legend>
@@ -400,21 +399,34 @@
 	
 	
 <div class="shbox ext-userview" style="overflow:hidden;opacity:0">
-	<div class="userview-banner">
-		<img class="userview-cover"/>
+	<div class="userview-toggle" tabindex="0"><i class="icon-file"></i></div>
+	<div class="userview-viewport">
+	<div class="userview-first">
+		<div class="userview-banner">
+			<img class="userview-cover"/>
+		</div>
+		<div class="userview-block-outer bg-hover-darker fg-white" style="background-color:rgba(34, 34, 34, .45);">
+			<img class="userview-image" style="vertical-align:top;"/>
+			<div class="userview-block" style="display:inline-block;">
+				<span class="title truncate"></span><br/>
+				<span class="subtitle truncate"></span><br/>
+				<span class="following fg-lightPink truncate">已關注你 <span class="icon-play-alt"></span></span>
+			</div>
+		</div>
+		<span class="userview-tool">
+			<button class="large place-right success userview-go"><span class="icon-enter"></span> 前往</button>
+			<button class="large place-right on-left-more userview-following"><span class="icon-code"></span>　</button>
+			<div class="userview-info text-muted"></div>
+		</span>
 	</div>
-	<div class="userview-block-outer bg-hover-darker fg-white" style="background-color:rgba(34, 34, 34, .45);">
-		<img class="userview-image" style="vertical-align:top;"/>
-		<div class="userview-block" style="display:inline-block;">
-			<span class="title truncate"></span><br/>
-			<span class="subtitle truncate"></span><br/>
-			<span class="following fg-lightPink truncate">已關注你 <span class="icon-play-alt"></span></span>
+
+	<div class="userview-second">
+		<h3>自介：</h3>
+		<div class="userview-desc">
+		</div>
+		<h3>其他資訊：</h3>
+		<div class="userview-misc">
 		</div>
 	</div>
-	<span class="userview-tool">
-		<button class="large place-right success userview-go"><span class="icon-enter"></span> 前往</button>
-		<button class="large place-right on-left-more userview-following"><span class="icon-code"></span>　</button>
-		<div class="userview-info text-muted"></div>
-	</span>
-</div>
+	</div>
 </div>

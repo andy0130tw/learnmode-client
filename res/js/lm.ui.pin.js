@@ -176,7 +176,7 @@ function updatePinCount(){
 		}
 	}else{
 		//Math.round(cnt/ttl*100)+"%"
-		ctrl.html(TAG("div","progress-bar","data-role='progress-bar' data-value='0'"));
+		ctrl.html(TAG("div","progress-bar","data-role='progress-bar' data-value='0'",""));
 		ctrl.find("div.progress-bar").data("value",cnt/ttl*100);
 		ctrl.parent().removeClass("text-info").addClass("text-muted");
 	}	
@@ -204,9 +204,14 @@ function togglePinCurrentPost(){
 
 
 function checkPinPostButton(){
-	var data=pinList[replyObject.id];
-	$(".action-pin-post").html(data?ICON("star-3")+" 追蹤ON":ICON("star")+" 追蹤OFF");
-	switchClass(".action-pin-post","primary",data);
+	var ctrlStr="#reply-tool .action-pin-post";
+	var hasPin=pinList!==undefined;
+	switchVisible(ctrlStr,hasPin);
+	if(hasPin){
+		var data=pinList[replyObject.id];
+		$(ctrlStr).html(data?ICON("star-3")+" 追蹤ON":ICON("star")+" 追蹤OFF");
+		switchClass(ctrlStr,"primary",data);
+	}
 }
 
 function togglePinList(){

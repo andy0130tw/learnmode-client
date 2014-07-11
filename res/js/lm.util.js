@@ -58,18 +58,82 @@ function TAGl(img,link,scale,autoScale){
 		TAG("img",sty,attr,""));
 }
 
+function strUntilInvalid(str,invaildStr){
+	var pos=str.indexOf(invaildStr);
+	return pos>0?str.slice(0,pos):str;
+}
+
+//var rootUrl=document.location.protocol+'//'+(document.location.hostname||document.location.host);
+//From http://james.padolsey.com/javascript/parsing-urls-with-the-dom/, super fast!
+//http://jsperf.com/url-parsing
+function parseURL(url) {
+    var a =  document.createElement('a');
+    a.href = url;
+    return {
+        source: url,
+        protocol: a.protocol.replace(':',''),
+        host: a.hostname,
+        port: a.port,
+        query: a.search,
+        /*params: (function(){
+            var ret = {},
+                seg = a.search.replace(/^\?/,'').split('&'),
+                len = seg.length, i = 0, s;
+            for (;i<len;i++) {
+                if (!seg[i]) { continue; }
+                s = seg[i].split('=');
+                ret[s[0]] = s[1];
+            }
+            return ret;
+        })(),*/
+        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+        hash: a.hash.replace('#',''),
+        path: a.pathname.replace(/^([^\/])/,'/$1'),
+        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+        segments: a.pathname.replace(/^\//,'').split('/')
+    };
+}
+/*//remove trailing ://
+url=url.toLowerCase().replace(/^.+:\/{2,}/,"");
+//remove fragments and query string
+var pathName=strUntilInvalid(strUntilInvalid(url,"?"),"#");
+var path=pathName.split("/");
+var root=path.shift();
+var nPath=[];
+for(var i=0,c=path.length;i<c;i++){
+	var node=path[i];
+	if(node=="..")nPath.pop();
+	else if(node&&node!=".")nPath.push(node);
+}
+return {hostname:root,path:nPath.join("/")};
+}
+*/
 
 
 function LINK(url,text){
 	var label=text||url;
 	//Truncate
-	label=truncateText(label,40);
-	var isBlank=" target='_blank'";
-	if(url.indexOf("http://lm.twbbs.org")==0
-		||url.indexOf("http://andy0130tw.qov.tw")==0
-		||url.indexOf("http://learnmode.host22.com")==0)
-		isBlank="";
-	return TAG("a","","href='"+url+"'"+isBlank,ICON("new-tab-2")+" "+label);
+	if(label.length>=70){
+		label=truncateText(label,25)+truncateText(label,-30);
+	}else{
+		label=truncateText(label,40);
+	}
+	
+	var SERVER_LIST=["lm.twbbs.org","andy0130tw.qov.tw","learnmode.host22.com"];
+	//for(var i=0;)
+	var urlObj=parseURL(url);
+	if(SERVER_LIST.indexOf(urlObj.host)>=0
+		&&(urlObj.path=="/"||urlObj.path==document.path)){
+		//console.log(urlObj);
+		//internal post
+		var hash=urlObj.hash;
+		var postid;
+		if(postid=/^!\/post\/(.+)/.exec(hash)){
+			label=text||("內部貼文 ["+postIdTruncate(postid[1])+"]");
+			return TAG("a","","href='#"+hash+"'",ICON("tag")+" "+label);
+		}
+	}
+	return TAG("a","","href='"+url+"' target='_blank'",ICON("new-tab-2")+" "+label);
 }
 
 function TABLE(arr,reviver){
@@ -164,6 +228,10 @@ function urlToLink(str){
 	});
 }
 
+function postIdTruncate(id){
+	return id.substring(0,8);
+}
+
 function normalize(str){
 	//The LM replaced " with \" and \ with \\, which is unnecessary!
 	return str.replaceAll("\\\"","\"")
@@ -181,9 +249,9 @@ function markupContent(str){
 	//bold: \*\*([^*]*(?:\*[^*]+)*)\*\*
 	//underline revised: -{2,3}(?!-)(.+?)-{2,3}
 	// > still bug
-	str=str.replace(/--\s*(.+?)\s*--/g,"<del>$1</del>")
-		.replace(/\*\*\s*(.*?)\s*\*\*/g,"<strong>$1</strong>")
-		.replace(/__\s*(.+?)__\s*/g,"<u>$1</u>");
+	str=str.replace(/--[ ]*(.+?)[ ]*--/g,"<del>$1</del>")
+		.replace(/\*\*[ ]*(.*?)[ ]*\*\*/g,"<strong>$1</strong>")
+		.replace(/__[ ]*(.+?)__[ ]*/g,"<u>$1</u>");
 
 	return str;
 }
@@ -194,6 +262,33 @@ function processContent(str,trim){
 		if(trimmed)return nl2br(urlToLink(markupContent(normalize(trimmed))))+TAG("span","text-muted","…(Read More)");
 	}
 	return nl2br(urlToLink(markupContent(normalize(str))));
+}
+
+function isAnimationSupported(){
+	//cache the ans
+	var _ans=isAnimationSupported.ans;
+	if(_ans!==undefined)return _ans;
+	var animation=false,
+		elm=$("body")[0],
+		//animationstring='animation',
+		//keyframeprefix='',
+		domPrefixes='Webkit Moz O ms Khtml'.split(' ');//,
+		//pfx  = '';
+
+	if( elm.style.animationName !== undefined ) { animation = true; }    
+
+	if( animation === false ) {
+	  for( var i = 0; i < domPrefixes.length; i++ ) {
+	    if( elm.style[ domPrefixes[i] + 'AnimationName' ] !== undefined ) {
+	      //pfx = domPrefixes[ i ];
+	      //animationstring = pfx + 'Animation';
+	      //keyframeprefix = '-' + pfx.toLowerCase() + '-';
+	      animation = true;
+	      break;
+	    }
+	  }
+	}
+	return isAnimationSupported.ans=animation;
 }
 
 //Exprimental v1.3
@@ -245,11 +340,15 @@ function extractSubject(subjectObj){
 
 function isMyself(user){
 	if(!myProfile)throw new Error("isMyself, myProfile is not ready!");
-	return user.id==myProfile.id;
+	return isSameUser(user,myProfile);
+}
+
+function isSameUser(user1,user2){
+	return user1.id==user2.id;
 }
 
 function needSubject(category){
-	var __s=["question","answer","!badge","watch","annotation"];
+	var __s=["question","!badge","watch","annotation","course"];
 	for(var i=0;i<__s.length;++i)if(category==__s[i])return true;
 	return false;
 }

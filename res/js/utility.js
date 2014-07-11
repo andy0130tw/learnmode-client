@@ -82,8 +82,10 @@ function urlParam(url,obj){
 }
 
 function truncateText(str,limit){
-	if(str.length>limit)str=str.substring(0,limit)+TAG("span","text-muted","…");
-	return str;
+	if(str.length<=Math.abs(limit))
+		return str;
+	str=limit>=0?str.slice(0,limit):str.slice(limit);
+	return limit>=0?(str+TAG("span","text-muted","…")):str;
 }
 
 /*TAG util*/
@@ -116,11 +118,16 @@ function dateConverter(raw,useStamp){
 	if(isNaN(d.getTime()))return "DATE INVAILD!";
 	//Substitute it with XX days ago.
 	var diff=typeof(dateGetDays)!="undefined"?dateGetDays(d):false;
-	var sd=numFill([d.getFullYear(),d.getMonth()+1,d.getDate()],2).join("-");
+	var yd=numFill(d.getFullYear(),4);
+	var sd=numFill([d.getMonth()+1,d.getDate()],2).join("-");
 	var td=numFill([d.getHours(),d.getMinutes(),d.getSeconds()],2).join(":");
+	var dist=new Date()-d;
+	var dfull=td;
+	if(dist>=1296e5)dfull=sd+" "+dfull;
+	if(dist>=29808e6)dfull=yd+"-"+dfull;
 	if(useStamp)return TAG("time","timeago","datetime='"+raw+"'","")
-		+TAG("span","datetime-full no-phone"," ("+sd+" "+td+")");
-	sd=diff||sd;
+		+TAG("span","datetime-full"," &middot; "+dfull);
+	sd=diff||yd+"-"+sd;
 	return sd+" "+td;
 }
 

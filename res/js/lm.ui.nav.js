@@ -14,44 +14,19 @@
 		currentProfile=myProfile;
 	});
 
-	/*$("#shh").click(function(){
-		navClick();
-		viewLoad({category:"share",sort:"score"},true);
-	});
-	$("#shhk").click(function(){
-		navClick();
-		viewLoad({category:"share"},true);
-	});
-	$("#shh2").click(function(){
-		navClick();
-		viewLoad({category:"question",sort:"score"},true);
-	});
-	$("#shh2k").click(function(){
-		navClick();
-		viewLoad({category:"question"},true);
-	});
-	$("#shh2u").click(function(){
-		navClick();
-		viewLoad({category:"question",unanswered:true,sort:"date"},true);
-	});
-	$("#shh4").click(function(){
-		navClick();
-		viewLoad({category:"scrapbook",sort:"score"},true);
-	});
-	$("#shh4k").click(function(){
-		navClick();
-		viewLoad({category:"scrapbook"},true);
-	});*/
 	$("#shh5").click(function(){
 		navClick();
 		viewLoad({category:"!badge",sort:"date"},true);
 	});
 
-	$("#shh3").click(function(){
+	$("#action-announcement").click(function(){
 		navClick();
 		listAnnouncement({count:COUNT.ANNOUNCEMENT},true);
 		modal("#popup-announcement");
 		setShow("#announcement-loading","",false);
+	});
+	$("#action-history").click(function(){
+		navClick(reloadWithReversed);
 	});
 	$("#action-search").click(function(){
 		navClick();
@@ -66,15 +41,18 @@
 	});
 	$("#nav-new").click(function(){
 		mainLoader.lastReq=deleteProp(mainLoader.lastReq,"user");
-		viewLoadMerge({sort:"date",before:null},true);
+		viewLoadMerge(clearParamTimeStamp({sort:"date"}),true);
 	});
 	$("#nav-hot").click(function(){
 		mainLoader.lastReq=deleteProp(mainLoader.lastReq,"user");
-		viewLoadMerge({sort:"score",before:null},true);
+		viewLoadMerge(clearParamTimeStamp({sort:"score"}),true);
 	});
 	$("#nav-unanswered").click(function(){
 		if(mainLoader.lastReq.unanswered)viewLoad(deleteProp(mainLoader.lastReq,"unanswered"),true)
-		else viewLoadMerge({unanswered:true,sort:"date",before:null},true);
+		else {
+			viewLoadMerge(clearParamTimeStamp({unanswered:true,sort:"date"}),true);
+
+		}
 	});
 	$("#nav-album").click(function(){
 		var param={category:"scrapbook"};
@@ -85,14 +63,18 @@
 	$("#nav-award").click(function(){
 		//We don't need any arg to do this
 		//Though this func is placed in get.
-		if(mainLoader.lastReq.category=="__badge")
-			viewLoad(deleteProp(mainLoader.lastReq,"category"),true);
+		if(mainLoader.lastReq.category=="__badge"){
+			mainLoader.lastReq.category=mainLoader.lastReq._category;
+			viewLoadMerge({},true);
+		}
 		else {
 			/*viewRecognize({category:"__badge"});
 			mainLoader.lastReq.category="__badge";
 			mainLoader.clear();
 			addToAward(currentProfile.badges);*/
 
+			//manipulate attr
+			mainLoader.lastReq._category=mainLoader.lastReq.category;
 			viewLoadMerge({category:"__badge"},true);
 		}
 			
@@ -110,7 +92,7 @@
 	$(".action-sel-em").click(function(){
 		var data=$(this).data();
 		var sort=data["sort"]||null;
-		viewLoad({category:data["category"],sort:sort,before:null},true);
+		viewLoad(clearParamTimeStamp({category:data["category"],sort:sort}),true);
 	});
 }
 
@@ -129,7 +111,9 @@ function switchNavByType(type){
 }
 
 function navUpdate(param){
-	$("nav")
+	var $nav=$("nav");
+	
+	$nav
 		.find(".categorymenu,.questionmenu,.usermenu,.hotmenu")
 		.find("a").removeClass("text-muted").removeClass("text-success");
 
@@ -139,9 +123,13 @@ function navUpdate(param){
 	}
 	if(param.category=="scrapbook")linkname.push("#nav-album");
 	if(param.category=="__badge")linkname.push("#nav-award");
-	
-	switchVisible("#nav-hot",!param.unanswered);
-	switchVisible("#nav-myfollow,#nav-myself",param.category);
+
+	switchVisible(".historymenu:eq(0)",param.after==OLDEST_TIMESTAMP);
+
+	if(!$nav.find(".hotmenu:eq(0)").hasClass("hide"))
+		switchVisible(".hotmenu:eq(0)",!param.unanswered);
+	if(!$nav.find(".categorymenu:eq(0)").hasClass("hide"))
+		switchVisible(".categorymenu:eq(0)",param.category);
 	
 	if(param.user==myProfile.uid||param.user==myProfile.username)linkname.push("#nav-myself");
 	else{

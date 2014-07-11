@@ -19,11 +19,12 @@ function initLogin(){
 		modal("#popup-login",true,true);
 		return;
 	}
-	if(typeof localStorage!="undefined")
+	if(isLocalStorageSupported()){
 		var tmp;
 		if(tmp=localStorage.getItem("identity")){
-			myProfile=JSON.parse(tmp);
 			try{
+				myProfile=JSON.parse(tmp);
+				fillIdentity();
 				if(!GIVE_UP_LOADING)viewLoad({});
 				console.log("[doLogin] Cached identity discovered. Use it.");
 			}catch(err){
@@ -31,7 +32,8 @@ function initLogin(){
 				console.log("[doLogin] Corrupted user data. Cleared.");
 			}
 		}
-
+	}
+	
 	readProfile();
 	getPinList();
 	
@@ -57,25 +59,37 @@ function relogin(){
 	location.reload();
 }
 
+//v1.63 - fill view to skip loading identity
+function fillIdentity(){
+	assert(myProfile,"fillIdentity");
+	$("#accountBtn").data("id",myProfile.username);
+	$(".action-account").data("id",myProfile.username);
+	$(".fill-username").html(myProfile.name);
+	$("#btn-user-img").attr("src",imageLM(myProfile.image));
+	//executing twice is okay!
+	//fillIdentity=function(){};
+}
+
 function doLogin(resp){
 	var __first=!(myProfile=={});
 	myProfile=resp.profile;
 	currentProfile=myProfile;
 	if(!__first)return;
+
+	//welcome message
 	$("#welcome-mac").addClass("success");
 	$("#welcome-msg").html("Hello, "+myProfile.name+" ("+myProfile.username+")");
 	$("#welcome-img").attr("src",imageLM(myProfile.image));
 	$("#welcome-school").html(myProfile.school);
-	$("#accountBtn").data("id",myProfile.username);
-	$(".action-account").data("id",myProfile.username);
-	$(".fill-username").html(myProfile.name);
-	$("#btn-user-img").attr("src",imageLM(myProfile.image));
-	
+	fillIdentity();
+
 	//Backup identity
-	if(typeof localStorage!="undefined"){
+	if(isLocalStorageSupported()){
 		if(!localStorage.getItem("identity"))
 			if(!GIVE_UP_LOADING)viewLoad({});
 		localStorage.setItem("identity",JSON.stringify(resp.profile));
+	}else{
+		if(!GIVE_UP_LOADING)viewLoad({});
 	}
 
 	$("#welcome-hint").css("opacity",1);

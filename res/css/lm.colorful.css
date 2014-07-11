@@ -72,9 +72,6 @@
 	cursor: default;
 	outline-style: none !important;
 }
-.metro .post::selection{
-	box-shadow: 1px 1px red;
-}
 
 .metro .post:focus,
 .metro .post:active{

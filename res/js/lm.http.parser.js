@@ -1,82 +1,80 @@
-﻿//All obj should first be modified.
+﻿var REPLY_PRESET={
+	"share":{category:"comment",application:"reading",mood:true,allowImage:true},
+	"question":{category:"answer",application:"reading",mood:false,allowImage:true},
+	"scrapbook":{category:"comment",application:"scrapbook",mood:true,allowImage:false},
+	"watch":{mood:true,none:true},
+	_none:{category:undefined,application:undefined,mood:false,allowImage:false,none:true},
+	
+	//v1.61
+	//v1.62 moved partially to expri
+	"comment":{mood:false,hideSender:true},
+
+};
+
+//All obj should first be modified.
 function modifyObj(obj,rawresp,type){
-	var __st=new Date();
+	if(!obj)return null;
 	if(type=="announcement")
-		obj._user=rawresp.users[obj.uid];
+		obj._user=rawresp.users[obj.uid]||DUMMY_USER;
 	else
-		obj._user=rawresp.users[obj.from];
+		obj._user=rawresp.users[obj.from]||DUMMY_USER;
 	if(rawresp.related){
 		obj._related=obj.related?rawresp.related[obj.related]:null;
-		obj._related_user=obj.related?rawresp.users[obj._related.from]:null;
+		obj._related_user=obj.related?rawresp.users[obj._related.from]||DUMMY_USER:null;
 	}
+	//v1.61 expri
+	if(typeof EXPRI_ALL_IS_RELATED!="undefined"&&obj.id!="00"){
+		//relates to itself
+		obj.related=obj.id;
+		//create cyclic relationship
+		obj._related=obj;
+		obj._related_user=rawresp.users[obj.from]||DUMMY_USER;
+	}
+	
+	correctCheatCategory(obj);
+	
 	//Replace voters
 	if(obj.voters)
 		for(var i=0;i<obj.voters.length;++i)
-			obj.voters[i]=rawresp.users[obj.voters[i]];
+			obj.voters[i]=rawresp.users[obj.voters[i]]||DUMMY_USER;
 	return obj;
 }
 
-/*function addToContent(resp){
-	var __st1=new Date();
-	var listArr=resp.list;
-	lastestEntryID=resp.info.oldest;
-	switchEnabled("#btn-loadmore",resp.info.more);
-	// var data=[];
-	// for (var x in listArr){
-	// 	var obj=modifyObj(listArr[x],resp);
-	// 	data.push(renderPostListView(obj));
-	// }
-	$("#mainContent").append(data.join(""));
-	if(!listArr.length)$("#mainContent").append(listitemNull("沒有動態可顯示。"));
-	setShow("#main-loading","",true);
-	//Add lightbox listener
-	registerListListener();
-	var __st2=new Date();
-	console.log("[addToContent/Render] "+(__st2-__st1)+"ms");
-}
-
-function addToThumbnails(resp){
-	var __st1=new Date();
-	var listArr=resp.list;
-	lastestEntryID=resp.info.oldest;
-	switchEnabled("#btn-loadmore",resp.info.more);
-	var arr=[];
-	for (var x in listArr){
-		arr.push(renderPostImageView(modifyObj(listArr[x],resp)));
+function correctCheatCategory(obj){
+	if(obj.category=="annotation"&&!isNaN(obj.url)){
+		obj.category="practice";
+		return true;
 	}
-	var data=processGrid(arr,4);
-	$("#mainContent").append(TAG("div","grid",data.join("")));
-	setShow("#main-loading","",true);
-	//Add lightbox listener
-	registerListListener();
-	var __st2=new Date();
-	console.log("[addToThumbnails/Render] "+(__st2-__st1)+"ms");
-}*/
+	return false;
+}
 
 function addToAnnouncementPopup(resp){
 	var listArr=resp.list;
 	lastestAnnouncementID=resp.info.oldest;
 	switchEnabled("#btn-loadmore-announcement",resp.info.more);
-	var buf="";
+	var ctrl=$("#announcement-body"),buf="";
 	for (var x in listArr){
 		var obj=modifyObj(listArr[x],resp,"announcement");
 		buf+=renderAnnouncement(obj);
 	}
-	$("#announcement-body").append(buf);
+	ctrl.append(buf);
 	setShow("#announcement-loading","",true);
-	registerListListener();
+	registerListUtil(ctrl).registerAll();
 }
 
 function addToUsersPopup(resp){
 	setShow("#users-loading","#users-ok",true);
 	var listArr=resp.list,userArr=resp.users;
-	lastestUsersID=resp.info.oldest;
+	usersMoreFN._param=usersMoreFN._param||{};
+	usersMoreFN._param.before=resp.info.oldest;
+
 	switchEnabled("#btn-loadmore-users",resp.info.more);
+	var ctrl=$("#users-body");
 	//Tricky, the searching result never contains oneself.
-	if(userArr.length==0)$("#users-body").append(listitemNull("查無結果..."));
+	if(userArr.length==0)ctrl.append(listitemNull("查無結果..."));
 	var buf="";
 	for (var x in listArr){
-		var user=userArr[listArr[x].user];
+		var user=userArr[listArr[x].user]||DUMMY_USER;
 		//Maybe there is some useful data, merge them to the userobj.
 		user._badge=listArr[x].badge;
 		user._subject=listArr[x].subject;
@@ -84,7 +82,8 @@ function addToUsersPopup(resp){
 		buf+=renderUserListView(user);
 	}
 	$("#users-body").append(buf);
-	registerListListener();
+	//v1.64 - activate timeago
+	registerListUtil(ctrl.parent()).registerAll();
 	$("#users-body-loading").empty();
 	setShow("#users-body-loading","",true);
 }
@@ -93,21 +92,27 @@ function addToReplyPopup(resp){
 	var listArr=resp.list;
 	replyObject._oldest=resp.info.oldest;
 	if(!replyObject._newest)replyObject._newest=resp.info.newest;
+	var refCount=0;
 	if(resp.list[0]){
 		var idRelated=resp.list[0].related;
-		if(pinList[idRelated]&&pinList[idRelated].unread){
+		if(pinList&&pinList[idRelated]&&pinList[idRelated].unread){
 			console.log("[addToReplyPopup] cleared");
 			clearUnread(idRelated);
 			postSavePinList();
 		}
+		
+		//v1.64 - count move to here
+		refCount=resp.related[idRelated].ref_count;
 	}
+
+	$("#reply-ok .panel-title > div").children("span").eq(1).html(refCount);
 		
 	switchEnabled("#btn-loadmore-reply",resp.info.more);
 	if(listArr.length==0){
 		$("#reply-content").html(listitemNull("還沒有回應。"));
 	}
 	var buf="";
-	for (var a in resp.list){
+	for (var a in listArr){
 		var obj=modifyObj(listArr[a],resp);
 		//obj._user=userArr[obj.from];
 		buf+=renderPostListView(obj,true);
@@ -118,7 +123,7 @@ function addToReplyPopup(resp){
 
 function finishReplyPopup(){
 	//Add lightbox listener
-	registerListListener();
+	registerListUtil("#reply-sub-ok").registerAll();
 	//Show the result
 	setShow("#reply-sub-loading","#reply-sub-ok",true);
 	$("#reply-content-loading").empty();
@@ -145,10 +150,12 @@ function parseDetailedMood(resp){
 	for(var i=0;i<5;++i)detailedMood[i]=[];
 	for(var x in resp.list){
 		var obj=resp.list[x];
-		var user=resp.users[obj.user];
-		//Modify user
-		user._mood_date=obj.date;
-		if(obj.mood>0)detailedMood[obj.mood-1].push(user);
+		var user=resp.users[obj.user]||DUMMY_USER;
+		if(user){
+			//Modify user
+			user._mood_date=obj.date;
+			if(obj.mood>0)detailedMood[obj.mood-1].push(user);
+		}
 	}
 	//ready
 	switchClass(".moodlightbox","success",true);
@@ -160,19 +167,22 @@ function parseReply(resp){
 	//Add sort info
 	replyObject._sort="date";
 
-	$("#reply-body").html(renderCompactPost(replyObject));
-	registerListListener();
+	var ctrl=$("#reply-body");
+	ctrl.html(renderCompactPost(replyObject));
+	registerListUtil(ctrl).registerAll();
 	parseMood(resp);
-	var replyBase=HASH.replyParser[replyObject.category]||HASH.replyParser._none;
+	var replyBase=REPLY_PRESET[replyObject.category]||REPLY_PRESET._none;
 	//If the obj is undefined, then don't show anything
-	switchVisible("#reply-accordion,#reply-tool,#reply-content,#reply-bottom",!replyBase.none);
+	switchVisible("#reply-tool,#reply-content,#reply-bottom",!replyBase.none);
+	switchVisible("#reply-accordion",!replyBase.none&&!replyBase.hideSender);
+	
 	switchVisible("#reply-mood,.moodlightbox",replyBase.mood);
-	switchVisible(".action-refresh-by-score",replyObject.category=="question");
+	//switchVisible(".action-refresh-by-score",replyObject.category=="question");
 	switchVisible("#postreply-file-uploader",replyBase.allowImage);
 	replyObject._replyBase=replyBase;
 	if(!replyBase.none){
 		//Set count
-		$("#reply-ok .panel-title > div").children("span").eq(1).html(resp.list[0].ref_count);
+		//v1.64 - deferred count...
 		getRelated({id:resp.list[0].id});
 	}else{
 		finishReplyPopup();
@@ -203,6 +213,7 @@ function addToAward(resp){
 	var level=[],levelObj={};
 	var badgeCount=0;
 	badgeObj={};
+	var ctrl=$("#mainContent");
 	for (var x in resp){
 		var badge=resp[x];
 		if(isLevel(badge.badge)){
@@ -211,6 +222,7 @@ function addToAward(resp){
 			var subjectName=SUBJECT_MAP[badge.subject];
 			if(typeof badge.subject=="string"){
 				//malformed subject
+				//caused by addBadgeScore api
 				subject+="@@@";
 				subjectName=TAG("span","fg-emerald",ICON("film"))+" "+subjectName;
 			}else{
@@ -218,7 +230,8 @@ function addToAward(resp){
 			}
 			var currentLevel=levelObj[subject];
 			if(!currentLevel||b[1]>=currentLevel[1])
-				levelObj[subject]=[subjectName,b[1],b[0],new Date(badge.date)];
+				//v1.64 stub - progress bar
+				levelObj[subject]=[subjectName,b[1],"",b[0],badge.date];
 		}else{
 			var ba=badge.badge.split("_");
 			var key=ba[0]+badge.subject;
@@ -237,21 +250,33 @@ function addToAward(resp){
 		badgeArr.push(renderAward(badgeObj[x][badgeObj[x].length-1]));
 	}
 	var badgeData=processGrid(badgeArr,4);
-	$("#mainContent").append(
-		TAG("h2","獎章 "+TAG("small","x"+badgeCount+" (只會顯示最高位階)"))
+	ctrl.append(
+		TAG("h2","獎牌 "+TAG("small","x"+badgeCount+" (只會顯示最高位階)"))
 		+TAG("div","grid fluid",badgeData.join(""))
 	);
 
 	for(var x in levelObj)level.push(levelObj[x]);
 	//Level Sort by date.
-	level.sort(function(a,b){return b[3]-a[3]});
+	level.sort(function(a,b){return new Date(b[4])-new Date(a[4])});
 	//Convert date
-	for(var i=0;i<level.length;++i)level[i][3]=dateConverter(level[i][3]);
-	var columns=["科目","等級","等級名稱","獲得日期"];
-	$("#mainContent").append(
+	for(var i=0;i<level.length;++i){
+		level[i][2]=repeatStr("|",level[i][1])+repeatStr(TAG("span","fg-grayLighter","|"),16-level[i][1]);
+		level[i][4]=dateConverter(level[i][4],true);
+	}
+	var columns=["科目","等級","","等級名稱","獲得日期"];
+	ctrl.append(
 		TAG("h2","等級"+TAG("small"," x"+level.length))+
 		TAG("table","table fill-level hovered",TABLE_HEADER(columns)+TABLE(level))
 	);
+
+	//v1.64 - activate timestamp, which is originally not needed here
+	registerListUtil(ctrl).registerTimeAgo();
+}
+
+function repeatStr(s,n){
+	var rtn="";
+	for(var i=0;i<n;i++)rtn+=s;
+	return rtn;
 }
 
 function clrReplyPopup(alsoClearMain){
@@ -265,7 +290,7 @@ function clrReplyPopup(alsoClearMain){
 function clrUsersPopup(){
 	$("#users-body").empty();
 	//clr ori id
-	lastestUsersID="";
+	usersMoreFN._param=null;
 	switchEnabled("#btn-loadmore-users",false);
 }
 

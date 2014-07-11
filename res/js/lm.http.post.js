@@ -113,11 +113,11 @@ function postMood(num){
 	var formData = new FormData();
 	formData.append("device",storageObject.load("mac"));
 	formData.append("mood",num);
-	formData.append("id",$("#postreply-id").val());
+	formData.append("id",replyObject.id);
 	postProxy("postMood",formData,function(resp){
 		var msg=resp.message=="0"?"清除表情或未變動":("甩了一個 [ "+HASH.mood[resp.message]+" ]");
 			notify.info(msg+"！");
-		getDetailedPost({id:$("#postreply-id").val()},true);
+		getDetailedPost({id:replyObject.id},true);
 	});
 }
 
@@ -162,7 +162,7 @@ function BLOCK_CAUTION_MAKER(user,yesno){
 		alert("Syntax: postIfBlock(a,b), \n a is ignored, and b is your decision.");
 		return false;
 	}
-	var _tmp_="這是一個本網頁未實作的功能，\n"+
+	var _tmp_="這是一個本網頁的實驗功能，\n"+
 		"可以利用這個函式來封鎖/解除封鎖某人。\n"+
 		"進入該人的大聲公之後呼叫此函式即可。\n\n";
 	if(isMyself(user)){

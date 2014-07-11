@@ -3,7 +3,8 @@
 function modalNavigate(instance,isModal,needZoom){
 	modal(instance,isModal,needZoom,{
 		callbacks:{
-			close:function(){
+			//v1.47
+			beforeClose:function(){
 				try{
 					location.hash="#!";
 					history.replaceState(null,"",
@@ -68,6 +69,9 @@ function initHashRoutes(){
 		var id=this.params['id'];
 		var query=this.params['restArg'];
 		if(!hashBodyIsChanged(query))return;
+		//v1.61 - if no login, then don't go to anywhere but
+		// force the user to login first!
+		if(!storageObject.load("mac"))return;
 		modalNavigate("#popup-reply",false,false);
 		
 		clrReplyPopup(true);

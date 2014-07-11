@@ -1,5 +1,15 @@
 ﻿/*Add*/
-@import url(lm.colorful.css);
+/*@import url(lm.colorful.css);*/
+
+#menu-title-mobile{
+	padding-left:0;
+	position:relative;
+	left:0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-right: 60px;
+}
 
 .list-title{
 	line-height: 135% !important;
@@ -34,11 +44,17 @@ img.shadow-award:hover{
 	height: 0;
 }
 
-.post .list-title,.post .list-subtitle{
-	overflow: hidden;
-	padding-top:6px !important;
+.post .list-title{
+	padding-top:4px !important;
 	padding-bottom:12px !important;
 }
+
+.post .list-subtitle{
+	padding-top:12px !important;
+	padding-bottom:8px !important;
+	margin-bottom: 0;
+}
+
 .post .list-title:empty,.post .list-subtitle:empty{
 	padding-bottom:0 !important;
 }
@@ -56,16 +72,39 @@ img.shadow-award:hover{
 }
 
 .list-datetime time,.list-datetime .datetime-full{
-	font-family: "Consolas",typewriter !important;
 	font-size: 105%;
 }
 
 .list-datetime{
-	font-size:75%;
+	font-size: 80%;
+	padding-left: .5em;
 }
 
 .list-small{
 	font-size: 80%;
+}
+
+.voterlightbox{
+	font-size: 80%;
+	/*for no spacing*/
+	line-height: 0;
+	/*but the border/underline can't be added to the bottom,
+	so we need some tweak*/
+	position: relative;
+	top: 11px;
+	margin-bottom: 17px;
+}
+
+.voterlightbox:after{
+	content: '';
+	display: block;
+	border-bottom: 1px transparent dashed;
+	position: absolute;
+	bottom: -7px;left: 0;right: 0;
+}
+
+.voterlightbox:hover:after{
+	border-bottom-color: currentColor;
 }
 
 dt{color:rgb(0, 138, 0);font-weight: bold;}
@@ -128,15 +167,82 @@ span.action-reply.pseudolink{
 
 .userview-banner{position:absolute;left:0;right:0;bottom:60px;}
 .userview-cover{width:100%;}
-.userview-block-outer{position:absolute;left:4px;bottom:82px;padding:6px 12px;height:80px;}
-.userview-tool{position:absolute;left:0;right:0;bottom:0;padding:10px;height:60px;width:100%;}
+.userview-block-outer{position:absolute;left:4px;bottom:82px;padding:6px 12px;height:80px;height:min(80px,50%);}
+.userview-tool{position:absolute;left:0;right:0;bottom:0;padding:10px;height:60px;width:100%;box-shadow:0 -4px 8px 2px rgba(0,0,0,.4);}
 .userview-info{padding-right:10px;overflow:hidden;word-break:break-all;display:table-cell;vertical-align:middle;}
+
+.userview-viewport{
+	transition: top 700ms ease;
+	position: absolute;
+	top:0;height:100%;width: 100%;
+}
+.userview-viewport.alt{
+	top: -100%;
+}
+
+.userview-first{position:absolute;top:0;height:100%;width:100%;}
+.userview-second{
+	position:absolute;top:100%;height:100%;width: 100%;
+	overflow: auto;
+	background: white;
+	/* strangely, padding-bottom has no effect here */
+	padding: 0 5%;
+	/* use pseudo elements instead */
+}
+
+.userview-second:after,.userview-second:before{
+	content: '';
+	display: block;
+	height: 5%;
+}
+
+.userview-desc{
+	color: rgb(0, 103, 203);
+	font-family: monospace !important;
+}
+
+
+
+.userview-toggle{
+	position: absolute;
+	top:0;
+	right: 32px;
+	padding: 10px;
+	background: rgba(100,100,100,.3);
+	color: white;
+	width: 50px;
+	height: 60px;
+	text-align: center;
+	line-height: 40px;
+	z-index: 2;
+	transition-property: background, width, height, padding;
+}
+
+.userview-toggle:hover{
+	height: 70px;
+	padding-top: 30px;
+	background:rgba(0,0,0,.6);
+}
+.userview-toggle:active{
+	background:rgba(0,0,0,.85);
+	padding-top: 40px;
+	height: 85px;
+}
 
 .userview-block *{
 	cursor: default;
 	font-size: 90%;
 }
-.userview-block .following{font-size:85%;font-weight: bold;}
+.userview-block .following{
+	font-size:85%;
+	padding: 2px;
+	font-weight: bold;
+	background-color: rgba(0,0,0,.6);
+}
+.userview-block:hover .following{
+	background-color: #fff;
+}
+
 .userview-block .title{
 	font-size: 115%;
 	font-weight: bold;
@@ -170,11 +276,12 @@ ul{
 	font-size: 100% !important;
 	font-weight: normal;
 	line-height: 20px !important;
+	word-wrap: break-word;
 }
 
 .list-content *{
 	white-space:normal !important;
-	word-break:break-all !important;
+	word-break: normal;
 }
 
 /*Moods , url(../image/mood/mood.png)*/
@@ -194,6 +301,8 @@ ul{
 
 .moodview,.voterview{position:absolute !important;top:0;bottom:0;left:0;right:0;}
 .moodview .list-content,.voterview .list-content{position: absolute !important; top: 2px; bottom: 2px; right: 0px; left: 0px;}
+.shbox .listview-outlook .list-content *{text-align: justify;}
+
 
 img.inline{width:32px;vertical-align:bottom;}
 img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27,161,226,.7);}
@@ -232,6 +341,11 @@ img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27
   left: 10px;
 }
 
+.metro button.large.compact{
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
 #btn-bringtop{
 	/*Stub*/	
 }
@@ -239,6 +353,14 @@ img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27
 .moodview .mood{
 	float: left;
 	margin-right: 10px;
+}
+
+#reply-label-sort-1{
+	display: none;
+}
+
+#reply-label-sort-2{
+	font-size: 1rem;
 }
 
 #footer{
@@ -252,7 +374,11 @@ img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27
 		padding-right: 10px !important;
 		font-size: 16px !important;
 	}
-	.metro .horizontal-menu li a {
+	.metro .horizontal-menu li{
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.metro .horizontal-menu li a{
 		padding-left: 0px !important;
 		padding-right: 0px !important;
 	}
@@ -263,8 +389,18 @@ img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27
 		width: 40px !important;
 		height: 40px !important;
 	}
+	#reply-label-sort-1{
+		display: initial !important;
+	}
+	#reply-label-sort-2{
+		display: none !important;
+	}
 	.post .list-title{
 		margin-top: 6px !important;
+	}
+
+	a.action-account{
+		white-space: nowrap;
 	}
 
 	.action-vote{
@@ -293,4 +429,37 @@ img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27
 	}
 
 	img.inline{width:16px !important;}
+	.userview-image{height: 40px;}
+}
+
+@media only screen and (max-width: 480px) {
+	#reply-label-sort-2{
+		display: none !important;
+	}
+	#reply-label-sort-1{
+		display: none !important;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	.metro button.large{
+		font-size: 12px !important;
+		padding-top: 7px !important;
+		padding-bottom: 7px !important;
+	}
+	
+	.mood.mood0{background-position: 0 -100px !important;}
+	.mood.mood1{background-position: 0 -80px !important;}
+	.mood.mood2{background-position: 0 -60px !important;}
+	.mood.mood3{background-position: 0 -40px !important;}
+	.mood.mood4{background-position: 0 -20px !important;}
+	.mood.mood5{background-position: 0 0px !important;}
+	.mood{
+		width: 20px !important;
+		height: 20px !important;
+		background-size: 20px !important;
+	}
+	.moodview .list-content > div{
+		padding-left: 20px !important;
+	}
 }

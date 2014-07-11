@@ -95,7 +95,7 @@ function getVoter(param){
 		voter[1]=[];
 		for(var x in resp.list){
 			var item=resp.list[x];
-			var user=resp.users[item.user];
+			var user=resp.users[item.user]||DUMMY_USER;
 			user._vote_date=item.date;
 			if(item.vote=="up"){
 				voter[0].push(user);
@@ -119,12 +119,14 @@ function refreshReply(){
 	clrReplyPopup();
 	replyObject._newest=undefined;
 	replyObject._sort="date";
+	replyObject._user_filter=null;
 	getRelated({id:replyObject.id});
 }
 function sortReplyByScore(){
 	clrReplyPopup();
 	replyObject._newest=undefined;
 	replyObject._sort="score";
+	replyObject._user_filter=null;
 	getRelated({id:replyObject.id});
 }
 
@@ -132,5 +134,13 @@ function sortReplyReverse(){
 	clrReplyPopup();
 	replyObject._newest=undefined;
 	replyObject._sort="subject";
+	replyObject._user_filter=null;
 	getRelated({id:replyObject.id});
+}
+
+//v1.64
+function seekReplyByPerson(){
+	clrReplyPopup();
+	replyObject._user_filter=$(this).data("user");
+	getRelated({id:replyObject.id,user:replyObject._user_filter});
 }

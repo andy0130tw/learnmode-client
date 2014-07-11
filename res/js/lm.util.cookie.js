@@ -4,11 +4,15 @@
 var cookie=null;
 var useLocalStorage=false;
 
+function isLocalStorageSupported(){
+	return localStorage!==null&&localStorage!==undefined;
+}
+
 var storageObject={
 	init:function(){
 		assert(!cookie,"storageObject.init","cookie is not null.");
 		cookie={};
-		if(localStorage){
+		if(isLocalStorageSupported()){
 			useLocalStorage=true;
 			//migration
 			var macMigration=$.cookie("mac");

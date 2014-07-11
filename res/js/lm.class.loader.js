@@ -22,6 +22,8 @@ function LMLoader(){
 	var flush=function(resp){
 		//pre-process item, allowing modification,
 		//but no storaging to save memory.
+		var lreq=self.lastReq;
+		if(!lreq.sort&&lreq.after)resp.list.reverse();
 		var data=self.parse(resp);
 		//Grab info from response
 		self.respInfo=resp.info;
@@ -43,7 +45,12 @@ function LMLoader(){
 	self.loadMore=function(){
 		self.clearBefore=false;
 		if(!self.respInfo)return;
-		self.lastReq.before=self.respInfo.oldest;
+		var lreq=self.lastReq;
+		if(lreq.after){
+			if(lreq.sort=="date")self.lastReq.after=self.respInfo.oldest;
+			else self.lastReq.after=self.respInfo.newest;
+		}
+		else self.lastReq.before=self.respInfo.oldest;
 		var toCont=self.preLoad();
 		if(toCont){
 			if(self.xhr)self.xhr.abort();
@@ -115,7 +122,7 @@ function addToContent(data){
 	$("#main-loading").empty();
 	setShow("#main-loading","",true);
 	//Add lightbox listener
-	registerListListener();
+	registerListUtil(this.target).registerAll();
 	var __st2=new Date();
 	console.log("[addToContent/Render] "+(__st2-__st1)+"ms");
 }

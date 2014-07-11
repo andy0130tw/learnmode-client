@@ -1,7 +1,7 @@
 ﻿var VERSION_MAJOR="1.";
-var VERSION_MINOR="43";
+var VERSION_MINOR="64";
 var VERSION_COUNT="";
-var LAST_MODIFY="2014/5/3";
+var LAST_MODIFY="2014/7/11";
 
 var LOCAL_TEST=(location.hostname=="localhost");
 var DEBUGGING_ENVIROMENT=(!location.hostname);
@@ -15,13 +15,33 @@ var URL_USERDATA=
 
 var URL_LM="https://apollo.omcompany.com:5443/api/";
 var URL_IMAGE="https://apollo.omcompany.com:5443/image/";
-var URL_BADGE_BASE="/res/image/badge/";
 var URL_HST="http://lmadmin.learnmode.net/api/v1/";
 var URL_SEARCH="https://mercury.omcompany.com:5443/";
+
+var URL_BADGE_BASE="res/image/badge/";
 
 var SPLASH_OFF_DURATION=2500;
 var FX_VIEW_DURATION=1000;
 var FX_BRING_TOP_DURATION=400;
+var FX_POPOVER_SHOW_DELAY=200;
+var FX_POPOVER_HIDE_DELAY=1200;
+
+var FX_SHADOWBOX_FADE_DURATION=.25;
+var FX_SHADOWBOX_RESIZE_DURATION=.3;
+
+var SHADOWBOX_DEFAULT_OPTION={
+		skipSetup:true,
+		viewportPadding:24,
+		displayNav:false,
+		resizeDuration:FX_SHADOWBOX_RESIZE_DURATION,
+		fadeDuration:FX_SHADOWBOX_FADE_DURATION,
+		initialHeight:120,
+		initialWidth:120,
+		overlayOpacity: .3
+};
+
+//used in expri of v1.47
+var OLDEST_TIMESTAMP="T0001F681040000";
 
 var NOTIFY_TIME={
 	SHORT:3e3,
@@ -51,6 +71,7 @@ var COUNT={
 
 var COLOR_CLASS={
 	APPLICATION:"text-muted list-small",
+	CATEGORY:"text-info item-title-secondary",
 	SCHOOL:"text-muted list-small",
 	VOTE:"fg-amber",
 	EMOTION:"fg-pink",
@@ -78,6 +99,27 @@ var COLOR_CLASS={
 
 var TEXT_RETURN_ALT=" "+TAG("small","text-pilcrow",ICON("pilcrow"));
 
+//v1.49, for removed usr
+var DUMMY_USER={
+	badges:[],
+	is_following:false,
+	is_followed_by:false,
+	is_blocked:false,
+	is_blocked_by:false,
+	id:"",
+	uid:"",
+	username:"",
+	roles:[],
+	name:"帳號已被刪除",
+	image:"D768239C61B080F71F4807B27C2A39A10BB44FB00C89B0675144F6403B23B4E5",
+	desc:"本帳號已被刪除，因此此處顯示的帳號資料是虛擬的。",
+	class_name:"(未知)",
+	followers_count:0,
+	following_count:0,
+	school:"(未知)",
+	_is_dummy:true
+};
+
 var valueOrOriginal=function(key,map){
 	return map[key]||key;
 }
@@ -100,16 +142,7 @@ var HASH={
 		"master": ["名家大師",14],
 		"guru": ["權威人士",15],
 		"professor": ["專家教授",16],
-	},
-	
-	replyParser:{
-		"share":{category:"comment",application:"reading",mood:true,allowImage:true},
-		"question":{category:"answer",application:"reading",mood:false,allowImage:true},
-		"scrapbook":{category:"comment",application:"scrapbook",mood:true,allowImage:false},
-		"watch":null,
-		_none:{category:undefined,application:undefined,mood:false,allowImage:false,none:true}
-	},
-	
+	},	
 	badgeName: {
 		"explorer": ["探險家",["於Books應用程式中閱讀","一頁+10分|累計30頁+15分"],[1e3,5e3,15e3]],
 		"scout": ["影武者",["於YouTube中觀看在LM分享的影片","一部+10分|累計30部+15分"],[1e3,5e3,15e3]],
@@ -205,14 +238,13 @@ var randomTip=[
 	"隨機小提示全部重新寫過了！重新整理可以看到另一些提示喔。",
 	"LM Textbook 已經因版權的緣故終止服務了，哭哭。",
 	"Flyer內建的瀏覽器有時候會跑不出小圖示。舉例來說：["+ICON("database")+"]。",
-	"程式碼破三千行、十萬字了，如果能寫小說有多好。",
+	"程式碼現在是破三千五百行、快四十萬字了，這是超長篇小說！",
 	"這個網頁常常在更新啊。懷疑是不是最新版的話，整個網頁重新整理一次就知道了。",
 	"用網頁版留言的附帶優惠，是計算機科學的等級會升級。",
-	"這網頁的圖標是 皮 用 InkScape 做的。",
-	"宣傳一下本校同學製作的 LMClientX，詳情請見作者開發樓。",
-	"Open Sans 果然是網頁上的免費神字體，自 1.36 版已全面更換。",
+	"這網頁的圖標是 皮皮 用 InkScape 做的，詳見選單中的「關於...」。",
+	"網頁的英文字型叫做 Roboto，是 Android 4.0+ 的系統字體(之一)。",
 	"這網頁在Flyer預設瀏覽器的效能問題，一直是惡夢。",
 	"關注/解關注常常會很遲鈍，這是伺服器的問題，需要耐心等待。",
 	"想不到 Tips 了... 請常逛作者開發樓吧。",
-	"小螢幕和大螢幕會有好多地方不一樣，這都是為了在有限的視窗中擺放最適合的內容，所精心(?)調整而成。"
+	"網頁版沒有將圖片裁切或縮小的功能，拍照前請先將解析度調低，比較容易成功，也方便其他使用者觀看。"
 ];

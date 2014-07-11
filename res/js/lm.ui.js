@@ -19,7 +19,7 @@
 	//History.pushState(null,"","#!/post/"+self.data("id"));
 }
 
-function registerListListener(){
+function registerListUtil(scope){
 	/*if(USE_MOBILE_RULE){
 		//Note that vanillabox will be
 		// called twice if we don't do cleanup.
@@ -29,29 +29,100 @@ function registerListListener(){
 		});
 
 	}else{*/
-	Shadowbox.setup("a.imglightbox");
-	//}
+	
+	/*! Since v1.44, JSON flavor :) */
+	var scopeSel="",$scope=null;
+	if(typeof scope=="undefined"){
+		$scope=$;
+	}else if(typeof scope=="string"){
+		scopeSel=scope;
+		$scope=$(scope);
+		if(!$scope.length)$scope=$;
+	}else{
+		//when passing 'this', the scopeSel can't be set, 
+		//due to the lack of selector.
+		//Leave it blank.
+		$scope=scope;
+		scopeSel=$scope.selector;
+	}
+	
+	//console.log("[registerListUtil] sel/jqObj: ",scopeSel,$scope);
 
-	//Init popOver
-	$('*[data-toggle="popover"]').popover({
-		container:"#root",
-		html:true,
-		trigger:"hover",
-		delay: { show: 200, hide: 1200 }
-	});
+	var utilArr=[
+		/*0*/function(option){
+			Shadowbox.setup(scopeSel+" a.imglightbox",option);
+			return rtn;
+		},
+		/*1*/function(){
+			$scope.find('*[data-toggle="popover"]').popover({
+				container:"body",
+				html:true,
+				placement:function(){
+					if($(window).width()<500)return "bottom";
+					else return "right";
+				},
+				trigger:"hover",
+				delay:{
+					show:FX_POPOVER_SHOW_DELAY,
+					hide:FX_POPOVER_HIDE_DELAY
+				}
+			});
+			return rtn;
+		},
+		/*2*/function(){
+			$scope.find("time.timeago").timeago();
 
-	//Init timeago
-	$("time.timeago").timeago();
+			return rtn;
+		}
+	];
+	var utilLen=utilArr.length;
+xyz=utilArr;
+
+	var rtn={
+		setupLightbox:utilArr[0],
+		registerPopOver:utilArr[1],
+		registerTimeAgo:utilArr[2],
+		registerAll:function(){
+			for(var i=0;i<utilLen;++i)utilArr[i]();
+
+		}
+	};
+	
+	return rtn;
 }
+
+function popOverShownHandler(){
+	var self=$(this);
+	registerListUtil(self).setupLightbox();
+}
+
 
 function voteClick(e){
 	var self=$(this);
+	var btnList=self.parent().children();
 	var data=self.data();
 	var id=data.id;
 	var func=data.func;
+	var role=data.role;
+	
+	//get the other btn
+	var theOther=btnList.eq(0);
+	if(self[0]==theOther[0])theOther=btnList.eq(1);
+
+	var data2=theOther.data();
+	var func2=data2.func;
+	var role2=data2.role;
+	
 	var classConst=COLOR_CLASS.VOTE_BUTTON;
 	postVote(func,id,function(resp){
-		self.removeClass().addClass(classConst._common+" "+classConst[resp.message]);
+		self.removeClass()
+			.addClass(classConst._common+" "+classConst[resp.message])
+			.data("func",func=="clear"?role:"clear");
+		if(func!="clear"&&func2=="clear")
+			//if to enable one, clear the other
+			theOther.removeClass()
+				.addClass(classConst._common+" "+classConst.clear)
+				.data("func",role2);
 	});
 }
 
@@ -82,10 +153,14 @@ function readRMPostAndRender(){
 		var obj=modifyObj(resp.list[0],resp);
 		obj.flagged=false;
 		obj._flagged=true;
+		//Note! the request will NOT contain the related section,
+		// thus, frankly speaking, the returned data can't be seen as a regular post.
+		//console.log(obj);
 		// This will overwrite the main area
-		var isCompact=!that.parents(".list").hasClass("autoheight");
-		that.parents(".list").replaceWith(renderPostListView(obj,isCompact));
-		registerListListener();
+		var ctrl=that.parents(".list").eq(0);
+		var isCompact=!ctrl.hasClass("autoheight");
+		ctrl.replaceWith(renderPostListView(obj,isCompact));
+		registerListUtil(ctrl).registerAll();
 		//that.data("rm",null);
 	});
 }
@@ -102,7 +177,7 @@ function loadMore(){
 function loadMoreReply(){
 	$("#reply-content-loading").html(getLoadingRing("center"));
 	setShow("#reply-content-loading","",false);
-	getRelated({id:replyObject.id,before:replyObject._oldest});
+	getRelated({id:replyObject.id,before:replyObject._oldest,user:replyObject._user_filter});
 }
 
 function loadMoreAnnouncement(){
@@ -111,8 +186,9 @@ function loadMoreAnnouncement(){
 }
 
 function refreshMain(){	/*loadMoreFN*/
-	viewLoad(deleteProp(mainLoader.lastReq,"before"),true);
+	viewLoadMerge(clearParamTimeStamp({}),true);
 }
+
 
 /*
 function clearMain(bool){
@@ -131,8 +207,11 @@ function viewRecognize(param,clearbefore){
 	param=param||{};
 	var s="",c="",type="";
 
+	var isSpecialCategory=param.category&&param.category.indexOf("__")==0;
+
 	if(param.user){
-		if(param.user==myProfile.uid||param.user==myProfile.username){
+		if(param.user==myProfile.uid||param.user==myProfile.username
+			||(isSpecialCategory&&isMyself(currentProfile))){
 			s="自己";
 			c=COUNT.HOMEPAGE;
 		}else{
@@ -142,9 +221,9 @@ function viewRecognize(param,clearbefore){
 		s+="的"+getCategory(param.category);
 		type="user";
 	}else{
-		if(param.category&&param.category.indexOf("_")!=0){
-			s=getCategory(param.category);
+		if(param.category){
 			type=param.category;
+			s=getCategory(param.category);
 			if(param.sort=="score"){
 				c=COUNT.HOT;
 			}else if(param.sort=="date"){
@@ -190,11 +269,24 @@ function viewLoadMerge(param,clearbefore,parser){
 	viewLoad($.extend(mainLoader.lastReq,param),clearbefore,parser);
 }
 
+function clearParamTimeStamp(param){
+	param=param||{};
+	param.before=null;
+	param.after=param.after?OLDEST_TIMESTAMP:null;
+	return param;
+}
+
 function getCategory(categoryStr){
 	var tmp;
 	if(categoryStr){
-		if(tmp=RENDER_ENG.category1[categoryStr])return tmp.label;
-		else if(tmp=RENDER_ENG.category2[categoryStr])return tmp.label;
+		if(categoryStr.indexOf("__")==0){
+			if(categoryStr=="__badge"){
+				return "獎獎堂";
+			}
+		}else{
+			if(tmp=RENDER_ENG.category1[categoryStr])return tmp.label;
+			else if(tmp=RENDER_ENG.category2[categoryStr])return tmp.label;
+		}
 	}
 	return "大聲公";
 }
@@ -221,6 +313,9 @@ function replyBringToTop(){
 }
 
 function getLoadingRing(cls){
+	//v1.52, add fallback for browser with no css animation
+	if(!isAnimationSupported())
+		return TAG("div","text-center"+(cls?" "+cls:""),ICON("loading")+" Now Loading");
 	var cir="";
 	for(var i=0;i<5;i++)
 		cir+=TAG("span","circle","");

@@ -20,7 +20,7 @@ html{
 /**********
  * Animation
  **********/
-*{
+*,*:before,*:after{
 	-webkit-transition: all 400ms ease-out;
 	-moz-transition: all 400ms ease-out;
 	-o-transition: all 400ms ease-out;

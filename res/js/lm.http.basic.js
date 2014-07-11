@@ -54,7 +54,7 @@ function loadFromProxy(action,data,success){
 	data.action=action;
 	return $.ajax({url:urlParam(URL_PROXY,data),
 		data:data,
-		dataType:"jsonp",
+		//dataType:"jsonp",
 		timeout: 50000,
 		success:function(resp){
 			if(resp.status.http_code=="200"){
@@ -123,7 +123,7 @@ function loadUserdata(action,data,success){
 		data.mac=storageObject.load("mac");
 	}
 	return $.ajax({url:urlParam(URL_USERDATA,data),
-		dataType:"jsonp",
+		//dataType:"jsonp",
 		timeout: 40000,
 		success:function(resp){
 			if(resp.status.http_code==200){

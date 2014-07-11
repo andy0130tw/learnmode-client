@@ -1,5 +1,8 @@
 ﻿USE_MOBILE_RULE=false;
 
+//add console for IE
+if(!console||!console.log)console={log:function(){}};
+
 //Only entry
 main();
 
@@ -15,7 +18,7 @@ function main(){
 	$("#_loadingState .loading").prepend(LOADING_MARKUP);
 
 	//Init lightbox
-	Shadowbox.init({skipSetup:true,viewportPadding:24});
+	Shadowbox.init(SHADOWBOX_DEFAULT_OPTION);
 	//Init useMobileRule
 	checkUseMobileRule();
 
@@ -50,7 +53,8 @@ function init(){
 		initOverlayButtons();
 		
 		translateMagnificPopup();
-		translateTimeago();
+		//v1.64 - staging - already translated.
+		//translateTimeago();
 		$.magnificPopup.defaults.fixedBgPos=true;
 
 		fillInConstants();
@@ -61,6 +65,7 @@ function init(){
 		initLogin();
 	}catch(e){
 		alert("Error occured while initializing!\n"+e.toString()+"\nPlease report the fatal error.");
+		throw e;
 	}
 }
 
@@ -104,7 +109,8 @@ function setupListeners(){
 		.on("click",".action-badgewinner",modalShowBadgeWinners)
 		.on("click",'.action-vote',voteClick)
 		.on("click",'.action-reveal-rm',readRMPostAndRender)
-		.on("shown.bs.popover",'*[data-toggle="popover"]',registerListListener);
+		.on("click",'.action-seek-this-person',seekReplyByPerson)
+		.on("shown.bs.popover",'*[data-toggle="popover"]',popOverShownHandler);
 
 	/*$(window).resize(
 		_.debounce(function(){
@@ -212,7 +218,7 @@ function initOverlayButtons(){
 
 
 function checkUseMobileRule(){
-	if(typeof localStorage!="undefined"){
+	if(useLocalStorage){
 		USE_MOBILE_RULE=!!localStorage.getItem("use-mobile")||false;
 	}
 	if(USE_MOBILE_RULE)console.log("[checkUseMobileRule] Rule applied.");

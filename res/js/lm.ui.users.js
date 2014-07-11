@@ -1,4 +1,11 @@
-﻿function searchUser(param,clearbefore){
+﻿function loadMoreUsers(){
+	$("#users-body-loading").html(getLoadingRing("center"));
+	setShow("#users-body-loading","",false);
+	usersMoreFN();
+}
+
+function searchUser(param,clearbefore){
+	param=param||usersMoreFN._param||{};
 	param.count=COUNT.USER_SEARCH;
 	if(clearbefore)clrUsersPopup();
 	switchVisible("#users-award",false);
@@ -9,25 +16,27 @@
 	return param;
 }
 function searchFollowing(param,clearbefore){
-	param=param||{};
+	param=param||usersMoreFN._param||{};
 	if(clearbefore)clrUsersPopup();
 	switchVisible("#users-award",false);
 	param.count=COUNT.USER;
 	param.user=currentProfile.username;
 	lastestUsersReq=loadFromLM("following",param,addToUsersPopup);
+	usersMoreFN._param=param;
 	return param;
 }
 function searchFollower(param,clearbefore){
-	param=param||{};
+	param=param||usersMoreFN._param||{};
 	if(clearbefore)clrUsersPopup();
 	switchVisible("#users-award",false);
 	param.count=COUNT.USER;
 	param.user=currentProfile.username;
 	lastestUsersReq=loadFromLM("followers",param,addToUsersPopup);
+	usersMoreFN._param=param;
 	return param;
 }
 function searchBadgeWinners(param,clearbefore){
-	param=param||{};
+	param=param||usersMoreFN._param||{};
 	if(clearbefore)clrUsersPopup();
 	param.count=COUNT.USER_BADGE;
 	lastestUsersReq=loadFromLM("badge/winners",param,addToUsersPopup);
@@ -36,19 +45,9 @@ function searchBadgeWinners(param,clearbefore){
 	return param;
 }
 
-function loadMoreUsers(){
-	$("#users-body-loading").html(getLoadingRing("center"));
-	setShow("#users-body-loading","",false);
-	var param={before:lastestUsersID};
-	var oldParam=usersMoreFN._param;	
-	if(oldParam)param=$.extend(true,param,oldParam);
-	usersMoreFN(param);
-}
-
 function searchUserSubmit(e){
 	e.preventDefault();
 	var param={q:encodeURIComponent($('#users-searchbox').val())};
-	lastestUsersID="";
-	searchUser(param,true);
 	usersMoreFN=searchUser;
+	searchUser(param,true);
 }

@@ -1,15 +1,62 @@
 var RENDER_ENG={
 	category1:{
-		"share":{label:"愛分享",base:"分享了一篇#貼文#。",scoreFN:renderScore,buttonLabel:"評論",contentFN:renderContent,reactFN:NULL/*stub*/},
-		"question":{label:"大哉問",base:"提出了一個#問題#。",scoreFN:renderScore,buttonLabel:"回答",contentFN:renderContent,reactFN:NULL},
-		"scrapbook":{label:"剪貼簿",base:"在剪貼簿上新增一則#貼圖#。",scoreFN:renderScore,buttonLabel:"評論",contentFN:renderContent,reactFN:NULL},
-		"comment":{label:"評論",base:"回應了%%%的#&&&#。",scoreFN:NULL,buttonLabel:"觀看",contentFN:renderContent,reactFN:NULL},
-		"answer":{label:"回答",base:"回答了%%%所提的#&&&#。",scoreFN:renderVote,buttonLabel:"觀看",contentFN:renderContent,reactFN:renderVoteButton/*stub*/},
-		"course":{label:"課程",base:"在#Course#上的動態。",scoreFN:NULL,buttonLabel:"讀取",contentFN:renderContent,reactFN:NULL},
-		"annotation":{label:"Textbook/Practice",base:"在#Textbook#上新增了一則註解。",scoreFN:NULL,buttonLabel:"讀取",contentFN:renderContent,reactFN:NULL},
-		"practice":{label:"Practice",base:"在#Practice#上完成了一次考試。",scoreFN:NULL,buttonLabel:"讀取",contentFN:renderContent,reactFN:NULL},
+		"share":{
+			label:"愛分享",
+			label_alt:"貼文",
+			base:"分享了一篇#貼文#。",
+			buttonLabel:"評論",
+			scoreFN:renderScore,contentFN:renderContent,reactFN:NULL/*stub*/
+		},
+		"question":{
+			label:"大哉問",
+			label_alt:"問題",
+			base:"提出了一個#問題#。",
+			buttonLabel:"回答",
+			scoreFN:renderScore,contentFN:renderContent,reactFN:NULL
+		},
+		"scrapbook":{
+			label:"剪貼簿",
+			label_alt:"貼圖",
+			base:"在剪貼簿上新增一則#貼圖#。",
+			buttonLabel:"評論",
+			scoreFN:renderScore,contentFN:renderContent,reactFN:NULL
+		},
+		"comment":{
+			label:"評論",
+			base:"回應了%%%的#&&&#。",
+			base_norel:"發表了#回應#。",
+			buttonLabel:"觀看",
+			scoreFN:NULL,contentFN:renderContent,reactFN:NULL
+		},
+		"answer":{
+			label:"回答",
+			base:"回答了%%%所提的#&&&#。",
+			base_norel:"發表了#回答#。",
+			buttonLabel:"觀看",
+			scoreFN:renderVote,contentFN:renderContent,reactFN:renderVoteButton/*stub*/
+		},
+		"course":{
+			label:"課程",
+			base:"在#Course#上",
+			base_fallback:"在#Course#上的動態。",
+			buttonLabel:"讀取",
+			scoreFN:NULL,contentFN:renderContent,reactFN:NULL
+		},
+		"annotation":{
+			label:"Textbook/Practice",
+			base:"在#Textbook#上新增了一則註解。",
+			buttonLabel:"讀取",
+			scoreFN:NULL,contentFN:renderContent,reactFN:NULL
+		},
+		"practice":{
+			label:"Practice",
+			base:"在#Practice#上",
+			base_fallback:"在#Practice#上的動態。",
+			buttonLabel:"讀取",
+			scoreFN:NULL,contentFN:renderContent,reactFN:NULL
+		},
 		"tutor":{label:"講座",base:"分享了一篇#講座#(已廢棄，只有早期貼文會出現)",scoreFN:renderScore,buttonLabel:"評論",contentFN:renderContent,reactFN:NULL/*stub*/},
-		"watch":{label:"觀看影片",base:"看了一部#影片#。",scoreFN:NULL,buttonLabel:"讀取",contentFN:renderWatch,reactFN:NULL}//bug
+		"watch":{label:"觀看影片",label_alt:"影片",base:"看了一部#影片#。",scoreFN:NULL,buttonLabel:"讀取",contentFN:renderWatch,reactFN:NULL}//bug
 	},
 	category2:{
 		"!follow":{label:"關注",scoreFN:NULL,buttonLabel:"",contentFN:NULL,reactFN:NULL},
@@ -20,30 +67,54 @@ var RENDER_ENG={
 	}
 }
 
-var RELATED_CATEGORY={"share":"貼文","scrapbook":"貼圖","question":"問題"};
-
 function renderPost(obj,isCompact){
 	try{
 	var content="",op={};
 	var user=obj._user;
+	//In IE8, array's prototype will be polyfilled(corrupted).
+	// A quick and dirty way to hide this is to check if the obj is undefined
+	// IE8 is not supported offically, though.
+	if(obj.category===undefined)return "";
+	
+	//v1.61 - decide whether the button needed to be displayed.
+	// if isCompact but not correspondent, 
+	// the button is still needed.
+	var needButton=!isCompact;
+	/*v1.61 condition: isCompact&&replyObject&&replyObject.id!=obj.related&&replyObject.id!=obj.id*/
+	if(isCompact&&replyObject&&replyObject.id!=obj.id&&obj.ref_count>0)
+		needButton=true;
+
+	//v1.61 - decide whether the category is important.
+	var needCategory=["share","question","scrapbook"].indexOf(obj.category)>=0;
+	//v1.64 - add some info for matching and marking up content
+	var contAlt=matchAltContent(obj,isCompact);
+	//if(content)console.log(contAlt);
+
 	if(op=RENDER_ENG.category1[obj.category]){
-		content=(!isCompact?renderButton(obj,op.buttonLabel):"")
-			+op.scoreFN(obj)+op.reactFN(obj)
+		//If score exist but scoreFN===NULL (玄奇樓),
+		// the score must be perserved and be shown as vote.
+		var scoreFN=op.scoreFN;
+		if(obj.voters.length&&scoreFN==NULL)scoreFN=renderVote;
+		content=(needButton?renderButton(obj,op.buttonLabel):"")
+			+scoreFN(obj)+op.reactFN(obj)
+			//+(isCompact?renderSeekButton(obj):"")
 			+renderAvatar(user)
 			+renderUser(obj)+"&nbsp;"
 			+TAG("span",COLOR_CLASS.SCHOOL,user.school)+"&nbsp;"
-			+(!isCompact?renderAbstract(obj):"")
+			+(!isCompact?renderAbstract(obj,contAlt):"")
+			+(isCompact&&needCategory?TAG("span",COLOR_CLASS.CATEGORY,"&nbsp;"+(op.label)):"")
 			+renderApplication(obj)+"<br/>"
-			//+TAG("span","text-info list-small","&nbsp;&nbsp;&nbsp;"+(op.label))+"<br/>"
 			+TAG("span","list-datetime",renderSSTitle(obj))
-			+op.contentFN(obj)
+			+renderVotersRaw(obj)
+			+op.contentFN(obj,contAlt)
 			+renderURI(obj)
 			+(obj.image?TAGi(obj.image):"")
 			//+TAG("span","list-subtitle",obj);
 	}else if(op=RENDER_ENG.category2[obj.category]){
 		//Compact view
-		content=(!isCompact?renderButton(obj,op.buttonLabel):"")+
-			renderAvatar(user)
+		content=(needButton?renderButton(obj,op.buttonLabel):"")
+			+op.reactFN(obj)
+			+renderAvatar(user)
 			+renderUser(obj)+"&nbsp;"
 			+TAG("span",COLOR_CLASS.SCHOOL,user.school)+"&nbsp;"
 			+TAG("span",compactMsg(obj))+"<br/>"
@@ -53,7 +124,7 @@ function renderPost(obj,isCompact){
 			+renderURI(obj)
 			//+TAG("span","list-subtitle",obj);
 	}else{
-		content=(!isCompact?renderButton(obj,""):"")
+		content=(needButton?renderButton(obj,""):"")
 			+renderScore(obj)
 			+renderAvatar(user)
 			+renderUser(obj)+"&nbsp;"
@@ -67,6 +138,8 @@ function renderPost(obj,isCompact){
 	return content;
 	}catch(e){
 		notify.warning("有貼文無法正確排版! <br/>請截圖貼到 \"功能表->作者開發樓\" 協助回報這個錯誤, 謝謝! <br/>"+e.toString());
+		//throw e;
+		console.log("[renderPost] render failure, obj: ",obj," e:",e);
 		return TAG("p",COLOR_CLASS.PARSE_ERROR,"ERROR occured in renderPost: "+e.toString())+obj;
 	}
 }
@@ -134,24 +207,37 @@ function renderWatch(obj){
 		+TAG("blockquote","",ICON("right-quote")+" 影片："+LINK(url,obj.title)));
 }
 
+/*if (!String.prototype.trim) {
+  String.prototype.trim = function () {
+    return this.replace(/^\s+|\s+$/g, '');
+  };
+}*/
+
 function renderUser(obj){
 	return renderUserRaw(obj._user);
 }
 function renderUserRaw(user,base){
-	if(base)base=base.replace("%%%",user.name);
-	if(user.roles[0]=="teacher")
-		return TAG("strong","userlightbox bd-indigo",
-			"data-id='"+user.username+"' style='border:3px dotted;'",
-			base||user.name);
-	return TAG("strong","userlightbox",
-		"data-id='"+user.username+"'",
-		base||user.name);
+	var s=user.name;
+	//console.log(user.name);
+	if(base)base=base.replace("%%%",s);
+	var sty=user._is_dummy?"text-warning":"userlightbox";
+	var attr=user._is_dummy?"":"data-id='"+user.username+"'";
+	if(user.roles[0]=="teacher"){
+		sty+=" bd-indigo";
+		attr+=" style='border:3px dotted;'";
+	}
+	return TAG("strong",sty,attr,base||s);
 }
+
 function renderAvatar(user,sty){
-	return renderAvatarRaw(user,"icon shadow userlightbox"+(sty?" "+sty:""));
+	sty=sty||"";
+	if(!user._is_dummy)sty+=" userlightbox";
+	return renderAvatarRaw(user,"icon shadow"+(sty?" "+sty:""));
 }
 function renderAvatarRaw(user,sty){
-	return TAG("img",sty,"src='"+imageLM(user.image)+"' data-id='"+user.username+"'","");
+	var src=imageLM(user.image);
+	var id=user.username;
+	return TAG("img",sty,"src='"+src+"' data-id='"+id+"'","");
 }
 
 function renderVoteButton(obj){
@@ -166,12 +252,12 @@ function renderVoteButton(obj){
 		renderButtonRaw(
 			ICON("thumbs-up"),
 			classConst._common+" "+class1.sty,
-			{func:class1.func,id:obj.id}
+			{func:class1.func,id:obj.id,role:"up"}
 		)
 		+renderButtonRaw(
 			ICON("thumbs-down"),
 			classConst._common+" "+class2.sty,
-			{func:class2.func,id:obj.id}
+			{func:class2.func,id:obj.id,role:"down"}
 		)
 	);
 }
@@ -183,36 +269,78 @@ function renderApplication(obj){
 	return TAG("span",COLOR_CLASS.APPLICATION," @ "+(obj.application));
 }
 
-function renderContent(obj){
-	if(obj.category=="course"){
-		var coursere1=/(對)(.+)(課程的評分為)(.+)/;
-		var coursere2=/(對)(.+)(課程，有以下的意見,)'(.+)'/;
-		obj.message=obj.message.replace(coursere1,"$1"+TAG("strong"," $2 ")+"$3"+TAG("strong"," $4 "));
-		obj.message=obj.message.replace(coursere2,"$1"+TAG("strong"," $2 ")+"$3"+"<br/>$4");
-		return TAG("span","list-title",obj.message.replaceAll("_"," "));
-	}else if(obj.category=="practice"){
-		var practicere=/(考完)(.+)(的試卷)/;
-		obj.message=obj.message.replace(practicere,"$1"+TAG("strong"," $2 ")+"$3");
-		var practicere2=/(,獲得)(.+)(分)/
-		obj.message=obj.message.replace(practicere2,"$1"+TAG("strong"," $2 ")+"$3");
-		return TAG("span","list-title",obj.message.replaceAll("_"," "));
+function renderContent(obj,contAlt){
+	//if alt message placement found, drop this
+	//v1.63 - change cont to obj, add arg further
+	var cont=processContent(obj.message);
+	//v1.64 - not to check the type of the returning value
+	if(contAlt){
+		//!v1.64 - fix bug of potential XSS attack
+		//! Haha, just forgot to add processContent function!
+		cont=processContent(contAlt.further);
+		//v1.63 stub, isCompact is not the standardized arg
+		//v1.64 - now standardized
+		if(contAlt.isCompact)cont=contAlt.content+"<br/>"+cont;
 	}
 	var cls="list-title";
-	var cont=processContent(obj.message);
 	if(obj.flagged)
 		return TAG("strong",cls+" "+COLOR_CLASS.RM_HINT,
 			"data-rm='"+obj.id+"'",ICON("blocked")+" Removed by Moderator，點此觀看。");
 	if(obj.message=="　"||obj.message==" ")cls+=" empty";
 	if(obj._flagged){
 		cls+=" "+COLOR_CLASS.RM_REVEALED;
+		//replace cont
 		cont=ICON("unlocked")+" <strong>[RM Revealed!]</strong><br/>"+cont;
 	}
 	return TAG("span",cls,cont);
 }
 
+//v1.64 - rename this function
+function matchAltContent(obj,isCompact){
+	var m=obj.message.replaceAll("_"," ");
+	var op=RENDER_ENG.category1[obj.category];
+	var rtn={content:"",further:"",isCompact:isCompact};
+	//v1.61 - add some feature based on category
+	if(obj.category=="course"){
+		var coursere1=/^(對|对)(.*)(課程的評分為|课程的评分为)(.+)/;
+		//v1.64 - add multiline matching
+		var coursere2=/^(對|对)(.*)(課程，有以下的意見|课程，有以下的意见),'([\s\S]+)'/;
+		var matched=false;
+		if(m.match(coursere1)){
+			m=m.replace(coursere1,"$1"+TAG("strong"," $2 ")+"$3"+TAG("strong"," $4 "));
+			matched=true;
+		}else if(m.match(coursere2)){
+			m=m.replace(coursere2,function(match,p1,p2,p3,p4,off,str){
+				//v1.63 - add further data
+				rtn.further=p4;
+				return p1+TAG("strong"," "+p2+" ")+p3+"：";
+			});
+			matched=true;
+		}	
+		//+"<br/><p class='tertiary-text'>$4</p>"
+		//v1.64 - intact when no matching
+		if(!matched){
+			console.log("[renderContent] Try to match the content of category but failed.",m);
+			//rtn.content=op.base_fallback;
+			return rtn;//false;
+		}
+		rtn.content=m;
+		return rtn;
+	}else if(obj.category=="practice"){
+		var practicePattern="$1"+TAG("strong"," $2 ")+"$3";
+		var practicere=/^(考完)(.+)(的試卷|的试卷)/;
+		m=m.replace(practicere,practicePattern);
+		var practicere2=/(,獲得|获得)(.+)(分)$/
+		m=m.replace(practicere2,practicePattern);
+		rtn.content=m;
+		return rtn;
+	}
+	return false;
+}
+
 function renderURI(obj){
 	var url=obj.url;
-	if(!url||url.match(/:\/\/$/)||obj.category=="practice"||obj.category=="watch")return "";
+	if(!url||url.match(/:\/\/$/)||obj.category=="watch")return "";
 	if(url.indexOf("course:")==0){
 		var courseid=url.match(/id=(.+)&chapterId=(.+)/);
 		if(!courseid)return "";
@@ -221,27 +349,43 @@ function renderURI(obj){
 	}else if(url.indexOf("textbook:")==0){
 		var bookid=url.match(/textbook:discussion=(.+)&page=(.+)/);
 		if(!bookid)return "";
+		//v1.64 - fix bug, page starts from 1 instead of 0
+		bookid[2]++;
 		var bookurl="http://textbook01.learnmode.net/upload/"+bookid[1]+".pdf?direct=1#page="+bookid[2];
+		//As for other annotations...
+		//https://lmadmin.learnmode.net/api/v2/annotations.json?uuid=
 		return TAG("blockquote",ICON("book")+" Books 書籍PDF："+LINK(bookurl,"Books #"+bookid[1]+" (第 "+bookid[2]+" 頁)"));
 	}else if(url.indexOf("content://")==0){
 		var lmcontentid=url.match(/com.htc.learnmode\/(.+)\/(.+)/);
 		if(!lmcontentid)return "";
-		return TAG("blockquote",ICON("tag")+" 跳至貼文："+TAG("span","action-reply text-info pseudolink","data-id='"+lmcontentid[2]+"'",RENDER_ENG.category1[lmcontentid[1]].label));
-	}else if(url.indexOf("http")==0){
+		return TAG("blockquote",ICON("tag")+" 跳至貼文："
+			+TAG("span","action-reply text-info pseudolink",
+				"data-id='"+lmcontentid[2]+"'",
+				RENDER_ENG.category1[lmcontentid[1]].label
+					+" ["+postIdTruncate(lmcontentid[2])+"]"));
+	}else if(obj.category=="practice"){
+		//v1.63
+		var test_id=url;
+		url="http://practice.learnmode.net/upload/"+url+"/test_"+url+"_info.zip";
+		return TAG("blockquote",ICON("calculate")+" Practice試題(測試)："+LINK(url,"Exam Archive #"+test_id));
+	}
+	else if(url.indexOf("http")==0){
 		return TAG("blockquote",ICON("right-quote")+" 網頁："+LINK(url));
 	}
 	return TAG("blockquote",url+" (Can't be interpreted yet)");	
 }
 
 function renderSubject(obj,limit){
-	var arr=[],len=obj.subjects.length;
+	var arr=[],len=obj.subjects.length,trimmed;
 	for(var i=0;i<len;++i){
 		arr.push(SUBJECT_MAP[obj.subjects[i].id]);
 		if(i+1==limit&&len-arr.length>1){
 			arr.push("…("+(len-arr.length)+")");
+			trimmed=true;
 			break;
 		}
 	}
+	arr._trimmed=!!trimmed;
 	return arr;
 }
 
@@ -270,7 +414,7 @@ function renderAward(badge){
 	return thumbitem(BADGE(badge.badge),"bg-white action-award span3",
 		TAG("div","text-center item-title",badgeTranslate(badge.badge))
 		+(subject?TAG("div","text-center text-muted",TAG("small",subject)):"")
-		+TAG("div","text-center fg-lightBlue item-title-secondary",dateConverter(badge.date))
+		+TAG("div","text-center fg-lightBlue item-title-secondary",dateConverter(badge.date,true))
 		,badge.badge.split("_")[0]+badge.subject);
 }
 
@@ -308,11 +452,25 @@ function renderButton(obj,label){
 	if(!label)return "";
 	if(obj.flagged)label=ICON("locked-2")+" "+label;
 	var id=obj.related||obj.id;
+	//v1.62 revised
+	if(obj.ref_count>0)id=obj.id;
 	if(obj.category=="!vote"&&obj._related.category=="answer")
 		id=obj._related.related||null;
 	if(!id)return "";
 	return renderButtonRaw(label,"large primary place-right action-reply",id);
 }
+function renderSeekButton(obj){
+	var cls="place-right small action-seek-this-person";
+	var data={user:obj._user.uid};
+	if(replyObject._user_filter){
+		cls+=" primary";
+		data={};
+	}else{
+		cls+=" link";
+	}
+	return renderButtonRaw("*",cls,data);
+}
+
 function renderButtonRaw(label,sty,data,customTAG){
 	if(!data)return "";
 	var dataObj={};
@@ -336,12 +494,24 @@ function renderScoreVoteRaw(score,sty){
 	return TAG("span",sty,score);
 }
 
-function renderAbstract(obj){
+function renderAbstract(obj,contAlt){
+	//v1.61, no rel should not be shown anymore (except RMreveal).
+	var _op=RENDER_ENG.category1[obj.category],_norel;
 	var template=RENDER_ENG.category1[obj.category].base;
-	var tagre=/#(.+)#/;
+	if(!obj.related&&(_norel=_op.base_norel))
+		template=_norel;
+	var tagre=/#(.+?)#/;
 	template=template.replace(tagre,TAG("span","text-info"," $1 "));
+	
+	//v1.61 - add alt content
+	//v1.64 - modify process
+	if(contAlt)
+		return contAlt.content?(template+contAlt.content):_op.base_fallback;
+
+	//format template by recognizing some special characters
 	if(template.indexOf("&&&")>=0)
 		template=template.replace("&&&",renderPopLabel(obj));
+
 	if(template.indexOf("%%%")<0)return template;
 	return template.replace("%%%",TAG("strong",renderInlineName(obj,true)));
 	//return template.replace("%%%",TAG("strong",renderInlineName(obj)));
@@ -357,15 +527,33 @@ function renderBadgeImage(obj){
 }
 
 function renderSSTitle(obj){
-	var voters=[];
-	for(var i=0;i<obj.voters.length;++i)voters.push(obj.voters[i].name);
+
+
 	var rtn=dateConverter(obj.date,true);
 	var subject=renderSubject(obj,5);
-	rtn+=(needSubject(obj.category)?TAG("span","text-muted"," 科目："+subject):"")
-		+(voters.length?
-			"<br/>"+TAG("span","text-muted place-right voterlightbox",
-			"data-id='"+obj.id+"'","誰評分："+voters.join(", ")):"");
+	var attr=subject._trimmed?"title='"+renderSubject(obj)+"'":"";
+	rtn+=(needSubject(obj.category)?TAG("span","text-muted",attr," 科目："+subject):"");
 	return rtn;
+}
+
+function renderVotersRaw(obj){
+	var voters=[],myVote,selfVote,qmakerVote;
+	var insertFirst=function(t){voters.unshift(TAG("big","text-bold",t));}
+	for(var i=0;i<obj.voters.length;++i){
+		var vuser=obj.voters[i];
+		if(isMyself(vuser))myVote=true;
+		else if(isSameUser(vuser,obj._user))selfVote=true;
+		else if(obj._related_user&&isSameUser(vuser,obj._related_user))qmakerVote=true;
+		else voters.push(vuser.name);
+	}
+	//note the order.
+	if(selfVote)insertFirst("他自己");
+	if(myVote)insertFirst("你");
+	if(qmakerVote)insertFirst("發問者");
+
+	return voters.length?
+			("<br/>"+TAG("span","text-muted place-right voterlightbox",
+				"data-id='"+obj.id+"'","誰評分："+voters.join(", "))):"";
 }
 
 function compactMsg(obj){
@@ -399,7 +587,7 @@ function compactMsg(obj){
 			+TAG("strong",rin())+"的 "
 			+wi(COLOR_CLASS.VOTE)+" 的"
 			+TAG("strong",COLOR_CLASS.VOTE,"評價")+"。";
-		return "給了"+TAG("strong",rin())+"的"+wi(COLOR_CLASS.VOTE)+"一個 "
+		return "給了"+TAG("strong",rin())+"的 "+wi(COLOR_CLASS.VOTE)+" 一個 "
 			+TAG("strong",COLOR_CLASS.VOTE,
 				obj.message=='up'?
 					(ICON("thumbs-up")+" 讚")
@@ -414,13 +602,12 @@ function renderInlineName(obj,containsAvatar){
 	var related=obj._related;
 	var reluser=obj._related_user;
 	if(!reluser){
-		console.log("[renderInlineName] The post is marked as rel, but no reluser found.");
+		console.log("[renderInlineName] The obj has been asked for its parent, but no reluser found.");
 		return UNKNOWN();
 	}
 	var relusername=reluser.name;
 	if(!relusername)return UNKNOWN();
 	if(related){
-		reluser.name=" "+reluser.name+" ";
 		var noLink=false;
 		if(reluser.id==obj.from){
 			relusername="他自己";
@@ -433,7 +620,8 @@ function renderInlineName(obj,containsAvatar){
 				inlineAvatar=renderAvatarRaw(obj._related_user,
 					"inline-small userlightbox on-right-more")+" ";
 			}
-			return inlineAvatar+renderUserRaw(reluser);
+			//v1.64 - should not modify the user's data
+			return inlineAvatar+" "+renderUserRaw(reluser)+" ";
 		}
 	}
 	return relusername;
@@ -443,11 +631,15 @@ function renderPopLabel(obj){
 	var relatedObj=obj._related;
 	if(!relatedObj)return UNKNOWN();
 	var _op=RENDER_ENG.category1[relatedObj.category];
-	var text=obj._related?(RELATED_CATEGORY[relatedObj.category]||_op.label):UNKNOWN();
+	var _label=UNKNOWN();
+	if(_op)
+		_label=_op.label_alt||_op.label;
+	var text=obj._related?_label:UNKNOWN();
 	//create a box for it
 	var img=(relatedObj.image?TAGi(relatedObj.image,80)+"<br/>":"");
 	var txt=normalize(truncateText(relatedObj.message,150)).replaceAll("\n",TEXT_RETURN_ALT);
-	var content=img+txt.replaceAll("'","\"");
+	//v1.64 - fix bug
+	var content=img+txt.replaceAll("'","&#39;");
 	return frag="<span data-toggle='popover'"
 		+" data-placement='auto left'"
 		+" data-title='"+RENDER_ENG.category1[relatedObj.category].label
