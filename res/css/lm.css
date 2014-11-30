@@ -1,6 +1,17 @@
 ﻿/*Add*/
 /*@import url(lm.colorful.css);*/
 
+/* typography start */
+/*.text-semibold{
+	font-family: "Source Hans TWHK","Noto Sans T Chinese","Segoe UI_","Open Sans",Verdana,Arial,Helvetica,sans-serif !important;
+	font-weight: 500 !important;
+}*/
+.text-light{
+	font-family: "Open Sans Light" !important;
+	font-weight: 300;
+}
+/* typography end */
+
 #menu-title-mobile{
 	padding-left:0;
 	position:relative;
@@ -24,6 +35,11 @@
 .text-pilcrow{
 	color: #bbb;
 	font-size: 70%;
+}
+
+img.shadow:hover{
+	/*box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3), 0px 3px 8px rgba(0, 0, 0, 0.2);*/
+	box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5), 0px 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 img.shadow-award{
@@ -107,7 +123,7 @@ img.shadow-award:hover{
 	border-bottom-color: currentColor;
 }
 
-dt{color:rgb(0, 138, 0);font-weight: bold;}
+dt{color:rgb(0, 138, 0);font-weight: 500;}
 
 dt,dl.horizontal dd{
 	padding-top:12px;
@@ -127,12 +143,17 @@ span.action-reply.pseudolink{
 	cursor: pointer;
 }
 
+span.action-reply.pseudolink:hover{
+	box-shadow: 0 0 10px;
+}
+
 .zoomin{
 	font-size: 140% !important;
 	padding: 5px 7px !important;
 }
 
 .btn-placeholder{
+	line-height: 40px;
 	min-height: 40px;
 }
 
@@ -147,7 +168,7 @@ span.action-reply.pseudolink{
 	z-index: 99;
 	border-radius: 50%;
 	border: 4px solid;
-	box-shadow: 0px 0px 3px navy;
+	box-shadow: 0 0 3px #4390DF;
 }
 
 .vote-container{margin-right:14px !important;}
@@ -163,6 +184,35 @@ span.action-reply.pseudolink{
 .userlightbox{
 	font-size: 110%;
 	cursor: pointer;
+}
+
+.icon.overlay-wrapper{
+	position: relative;
+	line-height: 0;
+}
+
+.overlay-wrapper > .ind{
+	position: absolute;
+	width: 6px; height: 6px;
+	/*border-radius: 50%;*/
+}
+.overlay-wrapper > .ind-not-following{
+	bottom: 0; right: -9px;
+	background: #9954BB;
+}
+
+.overlay-wrapper > .ind-not-followed{
+	bottom: 8px; right: -9px;
+	background: #3FB618;
+}
+
+.overlay-wrapper > .ind-block-either{
+	top: 0; right: -9px;
+	background: gray;
+}
+
+.ind-disabled{
+	color: #bbb;
 }
 
 .userview-banner{position:absolute;left:0;right:0;bottom:60px;}
@@ -201,8 +251,6 @@ span.action-reply.pseudolink{
 	font-family: monospace !important;
 }
 
-
-
 .userview-toggle{
 	position: absolute;
 	top:0;
@@ -215,16 +263,19 @@ span.action-reply.pseudolink{
 	text-align: center;
 	line-height: 40px;
 	z-index: 2;
-	transition-property: background, width, height, padding;
+	box-shadow: 0px 3px 7px 4px rgba(0,0,0,0.23);
+	transition-property: background, box-shadow, width, height, padding;
 }
 
 .userview-toggle:hover{
 	height: 70px;
 	padding-top: 30px;
+	box-shadow: 0px 6px 18px 6px rgba(0,0,0,0.46);
 	background:rgba(0,0,0,.6);
 }
 .userview-toggle:active{
 	background:rgba(0,0,0,.85);
+	box-shadow: 0px 6px 6px 2px rgba(0,0,0,0.72);
 	padding-top: 40px;
 	height: 85px;
 }
@@ -236,7 +287,7 @@ span.action-reply.pseudolink{
 .userview-block .following{
 	font-size:85%;
 	padding: 2px;
-	font-weight: bold;
+	font-weight: 900;
 	background-color: rgba(0,0,0,.6);
 }
 .userview-block:hover .following{
@@ -305,7 +356,7 @@ ul{
 
 
 img.inline{width:32px;vertical-align:bottom;}
-img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27,161,226,.7);}
+img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 2px 4px rgba(0,0,0,.7);}
 
 .moodview .list-content > div,.voterview .list-content > div {padding-left: 50px}
 .moodview .list-content small, .voterview .list-content small{
@@ -323,7 +374,7 @@ img.inline-small{width:24px;vertical-align:bottom;box-shadow:0px 0px 6px rgba(27
     float: right !important;
     color: #FFF;
     cursor: pointer;
-    font: 1.8em/20px sans-serif;
+    font-size: 1.8em/20px;
     position: absolute;
     top: 0px;
     right: 40px;

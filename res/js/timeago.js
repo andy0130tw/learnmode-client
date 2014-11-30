@@ -40,10 +40,10 @@
     settings: {
       refreshMillis: 60000,
       allowPast: true,
-      allowFuture: false,
+      allowFuture: true,
       localeTitle: false,
       cutoff: 0,
-      strings: {
+      strings: /*{
         prefixAgo: null,
         prefixFromNow: null,
         suffixAgo: "前",
@@ -62,6 +62,26 @@
         years: "%d years",
         wordSeparator: " ",
         numbers: []
+      }*/
+      {
+        prefixAgo:null,
+        prefixFromNow:null,
+        suffixAgo:"前",
+        suffixFromNow:"後",
+        several_seconds:"幾秒",
+        seconds:"%d 秒",
+        minute:"約 1 分鐘",
+        minutes:"%d 分鐘",
+        hour:"約 1 小時",
+        hours:"%d 小時",
+        day:"約 1 天",
+        days:"%d 天",
+        month:"約 1 個月",
+        months:"%d 個月",
+        year:"約 1 年",
+        years:"%d 年",
+        wordSeparator:"",
+        numbers:[]
       }
     },
 
@@ -96,15 +116,22 @@
         return string.replace(/%d/i, value);
       }
 
-      var words = seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
+      //var words = seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
+      var words = 
+        seconds < 15 && substitute($l.several_seconds||$l.seconds, Math.round(seconds)) ||
+        seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
         seconds < 90 && substitute($l.minute, 1) ||
         minutes < 45 && substitute($l.minutes, Math.round(minutes)) ||
         minutes < 90 && substitute($l.hour, 1) ||
-        hours < 24 && substitute($l.hours, Math.round(hours)) ||
-        hours < 42 && substitute($l.day, 1) ||
-        days < 30 && substitute($l.days, Math.round(days)) ||
+        //hours < 24 && substitute($l.hours, Math.round(hours)) ||
+        hours < 22 && substitute($l.hours, Math.round(hours)) ||
+        // hours < 42 && substitute($l.day, 1) ||
+        hours < 36 && substitute($l.day, 1) ||
+        // days < 30 && substitute($l.days, Math.round(days)) ||
+        days < 25 && substitute($l.days, Math.round(days)) ||
         days < 45 && substitute($l.month, 1) ||
-        days < 365 && substitute($l.months, Math.round(days / 30)) ||
+        // days < 365 && substitute($l.months, Math.round(days / 30)) ||
+        days < 345 && substitute($l.months, Math.round(days / 30)) ||
         years < 1.5 && substitute($l.year, 1) ||
         substitute($l.years, Math.round(years));
 
@@ -117,7 +144,7 @@
       var s = $.trim(iso8601);
       s = s.replace(/\.\d+/,""); // remove milliseconds
       s = s.replace(/-/,"/").replace(/-/,"/");
-      s = s.replace(/T/," ").replace(/Z/," UTC");
+      s = s.replace(/(\d{2})T/,"$1 ").replace(/(\d{2})Z/,"$1 UTC");
       s = s.replace(/([\+\-]\d\d)\:?(\d\d)/," $1$2"); // -04:00 -> -0400
       s = s.replace(/([\+\-]\d\d)$/," $100"); // +09 -> +0900
       return new Date(s);
@@ -175,6 +202,11 @@
   };
 
   function refresh() {
+    if(!$.contains(document.documentElement,this)){
+      //fix memory leak here!!
+      $(this).timeago("dispose");
+      return this;
+    }
     var data = prepareData(this);
     var $s = $t.settings;
 

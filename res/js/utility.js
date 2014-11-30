@@ -123,8 +123,8 @@ function dateConverter(raw,useStamp){
 	var td=numFill([d.getHours(),d.getMinutes(),d.getSeconds()],2).join(":");
 	var dist=new Date()-d;
 	var dfull=td;
-	if(dist>=1296e5)dfull=sd+" "+dfull;
-	if(dist>=29808e6)dfull=yd+"-"+dfull;
+	if(dist<0||dist>=1296e5)dfull=sd+" "+dfull;
+	if(dist<0||dist>=29808e6)dfull=yd+"-"+dfull;
 	if(useStamp)return TAG("time","timeago","datetime='"+raw+"'","")
 		+TAG("span","datetime-full"," &middot; "+dfull);
 	sd=diff||yd+"-"+sd;

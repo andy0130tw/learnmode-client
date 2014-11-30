@@ -94,6 +94,11 @@
 		var sort=data["sort"]||null;
 		viewLoad(clearParamTimeStamp({category:data["category"],sort:sort}),true);
 	});
+	$(".action-sel-em-special").click(function(){
+		var data=$(this).data("append");
+		var sort=data["sort"]||null;
+		viewLoad(clearParamTimeStamp({append:data,sort:sort}),true);
+	});
 }
 
 

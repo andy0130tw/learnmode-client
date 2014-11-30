@@ -71,10 +71,7 @@ function renderPost(obj,isCompact){
 	try{
 	var content="",op={};
 	var user=obj._user;
-	//In IE8, array's prototype will be polyfilled(corrupted).
-	// A quick and dirty way to hide this is to check if the obj is undefined
-	// IE8 is not supported offically, though.
-	if(obj.category===undefined)return "";
+	// if(obj.category==null)return "";
 	
 	//v1.61 - decide whether the button needed to be displayed.
 	// if isCompact but not correspondent, 
@@ -100,7 +97,7 @@ function renderPost(obj,isCompact){
 			//+(isCompact?renderSeekButton(obj):"")
 			+renderAvatar(user)
 			+renderUser(obj)+"&nbsp;"
-			+TAG("span",COLOR_CLASS.SCHOOL,user.school)+"&nbsp;"
+			+renderSubLabel(user)+"&nbsp;"
 			+(!isCompact?renderAbstract(obj,contAlt):"")
 			+(isCompact&&needCategory?TAG("span",COLOR_CLASS.CATEGORY,"&nbsp;"+(op.label)):"")
 			+renderApplication(obj)+"<br/>"
@@ -116,7 +113,7 @@ function renderPost(obj,isCompact){
 			+op.reactFN(obj)
 			+renderAvatar(user)
 			+renderUser(obj)+"&nbsp;"
-			+TAG("span",COLOR_CLASS.SCHOOL,user.school)+"&nbsp;"
+			+renderSubLabel(user)+"&nbsp;"
 			+TAG("span",compactMsg(obj))+"<br/>"
 			//+TAG("span","text-warning list-small","&nbsp;&nbsp;&nbsp;"+op.label)+"<br/>"
 			+TAG("span","list-datetime",dateConverter(obj.date,true))+"<br/>"
@@ -128,7 +125,7 @@ function renderPost(obj,isCompact){
 			+renderScore(obj)
 			+renderAvatar(user)
 			+renderUser(obj)+"&nbsp;"
-			+TAG("span",COLOR_CLASS.SCHOOL,user.school)
+			+renderSubLabel(user)
 			+TAG("span","text-muted list-small"," @ "+(obj.application||"---"))
 			+TAG("span","text-info list-small","&nbsp;&nbsp;&nbsp;"+("?: "+obj.category))+"<br/>"
 			+TAG("span","list-datetime",dateConverter(obj.date,true))+"<br/>"
@@ -144,22 +141,32 @@ function renderPost(obj,isCompact){
 	}
 }
 
+//v1.71
+function renderSubLabel(user){
+	if(typeof EXPRI_SUBLABEL_SHOW_ID!="undefined"&&EXPRI_SUBLABEL_SHOW_ID)
+		return TAG("span","text-light","("+user.username+")");
+	else
+		return TAG("span",COLOR_CLASS.SCHOOL,user.school);
+}
+
 function renderPinPost(obj){
 	try{
 	var content="",user=obj._user;
 	//Truncate and remove wrap
-	obj.message=truncateText(obj.message.replaceAll("\n"," "),70);
+	//v1.72 - fixed severe wrong truncation
+	obj.message=obj.message.replaceAll("\n"," ");
 	content=renderButton(obj,"詳細")
 		//should be subitituted to +X
 		+TAG("span","label fill-count place-right","...")
 		+renderAvatar(user)
 		+renderUser(obj)+"&nbsp;"
-		+TAG("span",COLOR_CLASS.SCHOOL,user.school)+"&nbsp;"
+		+renderSubLabel(user)+"&nbsp;"
 		+"："
 		+renderApplication(obj)+"<br/>"
 		+TAG("span","list-datetime",renderSSTitle(obj))
-		+renderContent(obj)
-		+(obj.image?TAGi(obj.image,60):"")
+		+truncateText(renderContent(obj),70);
+		+(obj.image?TAGi(obj.image,60):"");
+		console.log(obj.message);
 	return content;
 	}catch(e){
 		notify.warning("追蹤列表無法正確排版! <br/>請截圖貼到 \"功能表->作者開發樓\" 協助回報這個錯誤, 謝謝! <br/>"+e.toString());
@@ -181,7 +188,7 @@ function renderAnnouncement(obj){
 	var user=obj._user;
 	var content=renderAvatar(user)
 			+renderUser(obj)+"&nbsp;"
-			+TAG("span",COLOR_CLASS.SCHOOL,user.school)+"<br/>"
+			+renderSubLabel(user)+"<br/>"
 			+TAG("span","list-datetime",dateConverter(obj.date,true))+"<br/>"
 			+renderContent(obj)
 			+(obj.image?TAGi(obj.image):"")
@@ -221,22 +228,51 @@ function renderUserRaw(user,base){
 	//console.log(user.name);
 	if(base)base=base.replace("%%%",s);
 	var sty=user._is_dummy?"text-warning":"userlightbox";
-	var attr=user._is_dummy?"":"data-id='"+user.username+"'";
+	// var attr=user._is_dummy?"":"data-id='"+user.username+"'";
+	var attr=user._is_dummy?"":"data-id='"+UID(user)+"'";
+	if(!isMyself(user)&&!user.is_following&&!user.is_followed_by)
+		sty+=" ind-disabled";
 	if(user.roles[0]=="teacher"){
 		sty+=" bd-indigo";
 		attr+=" style='border:3px dotted;'";
 	}
 	return TAG("strong",sty,attr,base||s);
+	// v1.70 revised - not succeed
+	//return TAG("span",sty+" text-semibold",attr,base||s);
 }
 
 function renderAvatar(user,sty){
+	//v1.71 - add following information
+	var overlayTag="",overlayArr=[];
+	var explain={
+		"ind-not-following":"你沒有關注他",
+		"ind-not-followed":"你沒有被他關注",
+		"ind-block-either":"你們之間存在封鎖或被封鎖的關係"
+	}
 	sty=sty||"";
 	if(!user._is_dummy)sty+=" userlightbox";
-	return renderAvatarRaw(user,"icon shadow"+(sty?" "+sty:""));
+	if(!isMyself(user)){
+		if(user.is_blocked_by||user.is_blocked)
+			overlayArr.push("ind-block-either");
+		else{
+			if(!user.is_following)overlayArr.push("ind-not-following");
+			if(!user.is_followed_by)overlayArr.push("ind-not-followed");
+		}
+	}
+
+	for(var i=0,c=overlayArr.length;i<c;i++){
+		var olSty=overlayArr[i];
+		overlayTag+=TAG("div","ind "+olSty,"title='"+explain[olSty]+"'","");
+	}
+
+	return TAG("div","icon overlay-wrapper",
+		renderAvatarRaw(user,"shadow"+(sty?" "+sty:""))+overlayTag
+	);
 }
 function renderAvatarRaw(user,sty){
 	var src=imageLM(user.image);
-	var id=user.username;
+	// var id=user.username;
+	var id=UID(user);
 	return TAG("img",sty,"src='"+src+"' data-id='"+id+"'","");
 }
 
@@ -283,9 +319,19 @@ function renderContent(obj,contAlt){
 		if(contAlt.isCompact)cont=contAlt.content+"<br/>"+cont;
 	}
 	var cls="list-title";
-	if(obj.flagged)
-		return TAG("strong",cls+" "+COLOR_CLASS.RM_HINT,
-			"data-rm='"+obj.id+"'",ICON("blocked")+" Removed by Moderator，點此觀看。");
+	if(obj.flagged){
+		//v1.73 - since 4.14.1040.1, LM has changed its rule of `Removed by moderator`
+		// flagged post is no longer hiding its content.
+		// For compatibility, we still match the flagged post by its title which cannot
+		// be set by user normally.
+		var clsRM=cls+" "+COLOR_CLASS.RM_HINT;
+		if(obj.title=="Removed by Moderator")
+			return TAG("strong",clsRM,
+				"data-rm='"+obj.id+"'",ICON("blocked")+" Removed by Moderator，點此觀看。");
+		cont=TAG("span",COLOR_CLASS.RM_HINT,
+			"["+ICON("blocked")+" Removed by Moderator]<br/>")+cont;
+	}
+		
 	if(obj.message=="　"||obj.message==" ")cls+=" empty";
 	if(obj._flagged){
 		cls+=" "+COLOR_CLASS.RM_REVEALED;
@@ -391,6 +437,13 @@ function renderSubject(obj,limit){
 
 function renderPostListView(obj,isCompact){
 	var sty="";
+	//v1.71 - correctly handle empty object
+	// moved from renderPost
+	// 
+	//In IE8, array's prototype will be polyfilled(corrupted).
+	// A quick and dirty way to hide this is to check if the obj is undefined
+	// IE8 is not supported offically, though.
+	if(!obj||!obj.category)return "";
 	if(obj.category=="!follow"){
 		sty={inner:COLOR_CLASS.FOLLOW_BD,outer:"follow-outer"};
 	}else if(obj.category=="!emotion"){
@@ -560,7 +613,10 @@ function compactMsg(obj){
 	var rin=function(){return TAG("strong",renderInlineName(obj))};
 	var wi=function(cls){return TAG("span",cls,renderPopLabel(obj))};
 	if(obj.category=="!follow"){
-		return "正在"+TAG("span",COLOR_CLASS.FOLLOW,"關注")+"你。";
+		var who="你";
+		if(obj._who&&myProfile.id!==obj._who)
+			who=" "+TAG("strong",obj._who_user.name)+" ";
+		return "正在"+TAG("span",COLOR_CLASS.FOLLOW,"關注")+who+"。";
 	}else if(obj.category=="!badge"){
 		if(isLevel(obj.badge))//Level
 			return "現在是 "

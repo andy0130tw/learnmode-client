@@ -1,3 +1,8 @@
+EXPRI_SUBLABEL_SHOW_ID=false;
+if(localStorage&&localStorage.getItem)
+	EXPRI_SUBLABEL_SHOW_ID=!!localStorage.getItem("preference-show-id");
+
+
 function experimental(num){
 	var CAT1_ARR=["share","question","scrapbook","comment","watch","tutor"];
 	if(num==1){
@@ -22,6 +27,19 @@ function experimental(num){
 		window.EXPRI_ALL_IS_RELATED=true;
 		REPLY_PRESET.comment={category:"comment",application:"reading LMClient",mood:true,allowImage:true};
 		alert("究極玄奇樓已設置(含有強制玄奇樓內的所有效果)。網頁重新整理後會失效。");
+	}else if(num==7){
+		if(!localStorage||!localStorage.setItem)
+			alert("這個瀏覽器不支援此功能。");
+		var key="preference-show-id";
+		var lastResult=localStorage.getItem(key);
+		if(lastResult){
+			localStorage.removeItem(key);
+			alert("變更顯示內容：學校");
+		}else{
+			localStorage.setItem(key,"true");
+			alert("變更顯示內容：帳號");
+		}
+		window.EXPRI_SUBLABEL_SHOW_ID=!lastResult;
 	}else{
 		alert("無效的實驗功能！");
 	}
@@ -55,6 +73,21 @@ function convertToLMTimeStamp(ts){
 	}
 	return "T000"+tsenc.toString(16).toUpperCase();
 }
+
+//CONST_BLACK_LIST=["3fe6b59c7aadc9a1412016ade6e210b6d2aa4884"];
+
+function checkPerm(){}
+
+function iterate(f,v,c){
+	var rtn=v;
+	while(c>0){
+		rtn=f(rtn);
+		c--;
+	}
+	return rtn;
+}
+
+/*! For the person, who is constantly urging me to answer the question: If you read the source again, I tell you why I banned you. All because the idea of our production are too similar. And, frankly speaing, you are copying my ideas without mentioning me. OK. I end up putting a linense. That's all. Period. */
 
 //this should not be used in production.
 /*(function(){

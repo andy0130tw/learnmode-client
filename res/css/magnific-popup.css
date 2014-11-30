@@ -62,11 +62,11 @@
   cursor: -webkit-zoom-out;
   cursor: zoom-out; }
 
-.mfp-zoom {
+/*.mfp-zoom {
   cursor: pointer;
   cursor: -webkit-zoom-in;
   cursor: -moz-zoom-in;
-  cursor: zoom-in; }
+  cursor: zoom-in; }*/
 
 .mfp-auto-cursor .mfp-content {
   cursor: auto; }
@@ -336,6 +336,7 @@ img.mfp-img {
     text-align: center;
     padding: 0; } }
 
+/* revised */
 @media all and (max-width: 900px) {
   .mfp-arrow {
     -webkit-transform: scale(0.75);
@@ -347,8 +348,8 @@ img.mfp-img {
     -webkit-transform-origin: 100%;
     transform-origin: 100%; }
   .mfp-container {
-    padding-left: 6px;
-    padding-right: 6px; } }
+    padding-left: 24px;
+    padding-right: 24px; } }
 
 .mfp-ie7 .mfp-img {
   padding: 0; }

@@ -47,6 +47,9 @@ function init(){
 		//Init cookies
 		storageObject.init();
 
+		//v1.64+
+		checkPerm();
+
 		//Setting up listeners
 		setupListeners();
 		navBtnListeners();
@@ -123,6 +126,9 @@ function setupListeners(){
 		},500)
 	);*/
 
+	//v1.70 add word count warning
+	$(document).on("input",".spy-char-counter",wordCountUpdate);
+
 	console.log("[init/SetupListeners] "+(new Date()-__st)+"ms");
 }
 
@@ -195,6 +201,9 @@ var initOnce=function(){
 
 	$("#_loadingState")[0].outerHTML="";
 	switchVisible("#header,#root",true);
+
+	//v1.70 - activate word counters
+	$(".spy-char-counter").trigger("input");
 
 	//Corrupt itself to prevent recalling it
 	initOnce=function(){/*notify.warning("You can't call this function twice.");*/}

@@ -1,17 +1,164 @@
-﻿function overrideAJAX(){
-// register AJAX prefilter : options, original options
-$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
-	originalOptions._error = originalOptions.error;
-	// overwrite error handler for current request
-	options.error = function( _jqXHR, _textStatus, _errorThrown ){
-		if(originalOptions._autoRetry){
-			console.log("[overrideAJAX] AutoRetry, option:",originalOptions);
-			$.ajax(originalOptions);
-		}else{
-			if( originalOptions._error ) originalOptions._error( _jqXHR, _textStatus, _errorThrown );
+﻿var expriUseCache=false;
+var expriUseLowLevelQuery=false;
+
+/*var CachePool=function(){};
+CachePool.getId=function(obj){
+	return obj["id"];
+};
+CachePool.prototype.length=0;
+//if
+CachePool.prototype.nullCount=0;
+CachePool.prototype.pool={};
+CachePool.prototype.poolArray=[];
+//diff from `set` in Backbone.js
+CachePool.prototype.save=function(obj){
+	//must save raw obj
+	if(!getId(obj)){
+		throw new Error("NO ID given");
+		return;
+	}
+	if(getId(obj)=="")
+	var prevObj=this.pool[getId(obj)];
+	this.pool[getId(obj)]=obj;
+	if(prevObj==null){
+		this.length++;
+		this.poolArray.push(obj);
+	}
+	if(prevObj===null)
+		this.nullCount--;
+
+	return this;
+};
+
+CachePool.prototype.indexOf=function(objOrId){
+	if(typeof objOrId==="string"){
+		for(var i=0,c=poolArray.length;i<c;i++){
+			var obj;
+			if(obj=poolArray[i]&&getId(obj)==objOrId)
+				return i;
 		}
+		return -1;
+	}else{
+		for(var i=0,c=poolArray.length;i<c;i++){
+			if(poolArray[i]===objOrId)
+				return i;
+		}
+		return -1;
+	}
+}
+CachePool.prototype.unset=function(id){
+	if(this.pool[getId(obj)]){
+		this.pool[getId(obj)]=null;
+	}
+	
+	for(var i=0,c=poolArray.length;i<c;i++){
+		var obj=this.poolArray[i];
+		if(obj&&getId(obj)==id){
+			this.poolArray[i]=null;
+			this.length--;
+			this.nullCount++;
+			break;
+		}
+	}
+	return this;
+}
+CachePool.prototype.optimize=function(){
+	var newPool={},newPoolArray=[],newLength=0;
+	for(var x in this.pool){
+		if(this.pool[x]){
+			newPool[x]=this.pool[x];
+			newPoolArray.push(newPool[x]);
+			newLength++;
+		}
+	}
+	this.pool=newPool;
+	this.poolArray=newPoolArray;
+	this.length=newLength;
+	this.nullCount=0;
+	return this;
+}
+CachePool.prototype.get=function(id){
+	return this.pool[id];
+}
+CachePool.prototype.query=function(filter,options){
+	options.limit=options.limit||20;
+	filter=filter||{};
+	var result=[],fetchCount=0,i=0;
+	while(fetchCount<=options.limit){
+		if(i>=this.poolArray.length)break;
+		var obj=this.poolArray[i];
+		var ok=!!obj;
+		if(ok){
+			for(var k in filter){
+				if(obj[k]!==filter[k]){
+					ok=false;
+					break;
+				}
+			}
+		}
+
+		if(ok){
+			result.push(obj);
+			fetchCount++;
+		}
+		i++;
+	}
+	return result;
+}
+
+var postCacheList=new CachePool();
+var userCacheList=new CachePool();*/
+
+function overrideAJAX(){
+	// register AJAX prefilter : options, original options
+	$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+		var qC=options._query;
+		if(qC){
+			console.log("[ajaxPrefilter] queryContext found");
+			var qc=qC.components,qq=qC.query;
+			if(qc=="list"){
+				//console.log("[ajaxPrefilter] caught cachable item");
+				//wrap the options to save/load data
+				cacheLMEntries(options);
+			}
+			return ;
+		}
+			
+		originalOptions._error = originalOptions.error;
+		// overwrite error handler for current request
+		options.error = function( _jqXHR, _textStatus, _errorThrown ){
+			if(originalOptions._autoRetry){
+				console.log("[overrideAJAX] AutoRetry, option:",originalOptions);
+				$.ajax(originalOptions);
+			}else{
+				if( originalOptions._error ) originalOptions._error( _jqXHR, _textStatus, _errorThrown );
+			}
+		};
+	});
+}
+
+function cacheLMEntries(options){
+	if(!expriUseCache)return;
+	var _success=options.success;
+	var _error=options.error;
+	var qq=options._query.query;
+	if(!qq.category&&!qq.sort&&!qq.user){
+		//cache more
+	}else{
+
+	}
+	options.success=function(resp,status,jqXHR){
+		if(resp.status=="ok"){
+			console.log(resp.list);
+			var list=resp.list;
+			for(var i=0,c=list.length;i<c;i++){
+				//clone one maybe remove some options
+				postCacheList.save($.extend({},list[i]));
+			}
+		}
+		_success.apply(jqXHR,arguments);
 	};
-});
+
 }
 
 function loadFromLM(action,data,success,failure,autoRetry){
@@ -20,9 +167,19 @@ function loadFromLM(action,data,success,failure,autoRetry){
 		//console.log("[loadFromLM] MAC added to the req.");
 		data.device=storageObject.load("mac");
 	}
-	return $.ajax({url:urlParam(URL_LM+action,data),
+	var lowLevelUrl;/*&&data.sort=="date"&&!data.related*/
+	if(expriUseLowLevelQuery&&action=="list"&&!data.related&&!data.user){
+		data.sort="";
+		data.access=myProfile.uid;/*mongo_api*/
+		lowLevelUrl=void urlParam("http://localhost:7788/mongo_api/api/mock.list.php",data);
+	}
+	return $.ajax({url:lowLevelUrl||urlParam(URL_LM+action,data),
+		_query:{
+			components:action,
+			query:data
+		},
 		dataType:"jsonp",
-		timeout: 40000,
+		timeout: 40000, /*40000*/
 		success:function(resp){
 			if(resp.status=="ok"){
 				success(resp);

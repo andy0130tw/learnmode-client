@@ -1,7 +1,7 @@
 ﻿var VERSION_MAJOR="1.";
-var VERSION_MINOR="64";
+var VERSION_MINOR="73";
 var VERSION_COUNT="";
-var LAST_MODIFY="2014/7/11";
+var LAST_MODIFY="2014/10/22,2014/9/29";
 
 var LOCAL_TEST=(location.hostname=="localhost");
 var DEBUGGING_ENVIROMENT=(!location.hostname);
@@ -13,8 +13,10 @@ var URL_USERDATA=
 	DEBUGGING_ENVIROMENT?"":
 		(LOCAL_TEST?"":"http://andy0130tw.qov.tw/userdata.php");
 
-var URL_LM="https://apollo.omcompany.com:5443/api/";
-var URL_IMAGE="https://apollo.omcompany.com:5443/image/";
+//apollo.omcompany.com
+//! v1.71 - change server (maybe it's an alias)
+var URL_LM="https://message.learnmode.net:5443/api/";
+var URL_IMAGE="https://message.learnmode.net:5443/image/";
 var URL_HST="http://lmadmin.learnmode.net/api/v1/";
 var URL_SEARCH="https://mercury.omcompany.com:5443/";
 
@@ -30,14 +32,14 @@ var FX_SHADOWBOX_FADE_DURATION=.25;
 var FX_SHADOWBOX_RESIZE_DURATION=.3;
 
 var SHADOWBOX_DEFAULT_OPTION={
-		skipSetup:true,
-		viewportPadding:24,
-		displayNav:false,
-		resizeDuration:FX_SHADOWBOX_RESIZE_DURATION,
-		fadeDuration:FX_SHADOWBOX_FADE_DURATION,
-		initialHeight:120,
-		initialWidth:120,
-		overlayOpacity: .3
+	skipSetup:true,
+	viewportPadding:24,
+	displayNav:false,
+	resizeDuration:FX_SHADOWBOX_RESIZE_DURATION,
+	fadeDuration:FX_SHADOWBOX_FADE_DURATION,
+	initialHeight:120,
+	initialWidth:120,
+	overlayOpacity: .3
 };
 
 //used in expri of v1.47
@@ -147,16 +149,16 @@ var HASH={
 		"explorer": ["探險家",["於Books應用程式中閱讀","一頁+10分|累計30頁+15分"],[1e3,5e3,15e3]],
 		"scout": ["影武者",["於YouTube中觀看在LM分享的影片","一部+10分|累計30部+15分"],[1e3,5e3,15e3]],
 		"vanguard": ["好學士",["於Practice應用程式中完成考試","一次考試+10分|成績高於90分+15分|累計3次+15分"],[1e3,5e3,15e3]],
-		"upgrader": ["助力士",["還不知道。","有賴活躍者提供。"],[5e2,3e3,12e3]],
+		"upgrader": ["助力士",["建立講座","未知。|有賴活躍者提供。"],[5e2,3e3,12e3]],
 		"connector": ["博學家",["於Books應用程式中新增註解","每則+3分"],[5e2,3e3,12e3]],
-		"generator": ["學問星",["提出問題","每則+3分"],[1e3,5e3,12e3]],
-		"trailblazer": ["善答星",["回答問題","每題問題+2分"],[5e2,3e3,12e3]],
-		"validator": ["讚讚星",["對回答進行評分","???"],[5e2,3e3,12e3]],
+		"generator": ["學問星",["提出問題","每個問題+3分"],[1e3,5e3,12e3]],
+		"trailblazer": ["善答星",["回答問題","每個回答+2分"],[5e2,3e3,12e3]],
+		"validator": ["讚讚星",["對回答進行評分","每評分+1分(含清除評分)|同日評分不重複計算"],[5e2,3e3,12e3]],
 		"apprentice": ["實習生",["登入","每天+1分|同日登入不重複計算"],[30,80,2e2]],
 		"lodestar": ["北極星",["被其他人關注","每人+1分|不重複計算，解關注不會減少"],[30,80,2e2]],
 		"visionary": ["夢想家",["發表貼圖","每則+3分"],[2e2,15e2,3e3]],
-		"discoverer": ["發現家",["發表貼文","每則+1分"],[5e2,4e3,8e3]],
-		"touchstone": ["感動家",["甩表情","每個+1分"],[2e2,15e2,3e3]],
+		"discoverer": ["發現家",["發表貼文","每則+3分"],[5e2,4e3,8e3]],
+		"touchstone": ["感動家",["甩表情","每個+1分|同日甩表情不重複計算"],[2e2,15e2,3e3]],
 		"catalyst": ["催化劑",["對貼文或貼圖發表評論","每則+1分"],[2e2,15e2,3e3]]
 	},
 	
@@ -236,15 +238,17 @@ var randomTip=[
 	"If something goes wrong, simply tell me ASAP!",
 	"Changelog have been fully updated~~ Read it now!"*/
 	"隨機小提示全部重新寫過了！重新整理可以看到另一些提示喔。",
-	"LM Textbook 已經因版權的緣故終止服務了，哭哭。",
+	"Tips 在 v1.71 之後又多了一些哦！",
+	"點開大頭貼之後，按右上角可以顯示那個人的自介。",
+	"帳號可以利用LMUtility修改，可以適度使用。",
+	"考古模式可以將貼文由舊到新排列，翻文好工具。",
 	"Flyer內建的瀏覽器有時候會跑不出小圖示。舉例來說：["+ICON("database")+"]。",
-	"程式碼現在是破三千五百行、快四十萬字了，這是超長篇小說！",
-	"這個網頁常常在更新啊。懷疑是不是最新版的話，整個網頁重新整理一次就知道了。",
-	"用網頁版留言的附帶優惠，是計算機科學的等級會升級。",
 	"這網頁的圖標是 皮皮 用 InkScape 做的，詳見選單中的「關於...」。",
 	"網頁的英文字型叫做 Roboto，是 Android 4.0+ 的系統字體(之一)。",
 	"這網頁在Flyer預設瀏覽器的效能問題，一直是惡夢。",
-	"關注/解關注常常會很遲鈍，這是伺服器的問題，需要耐心等待。",
-	"想不到 Tips 了... 請常逛作者開發樓吧。",
-	"網頁版沒有將圖片裁切或縮小的功能，拍照前請先將解析度調低，比較容易成功，也方便其他使用者觀看。"
+	"關注/解關注牽涉到大量資料的複製或刪除，十分消耗系統資源。",
+	"網頁版沒有將圖片裁切或縮小的功能，拍照前請先將解析度調低，比較容易成功，也方便其他使用者觀看。",
+	"這個網頁後來加入了一點 Google Material Design 的元素。",
+	"發現任何bugs或者想要提供任何建議，歡迎到主選單中的「作者開發樓」發表喔！感謝～",
+	"由於作者的大學課業...很重，這個網頁不會這麼常更新了。"
 ];

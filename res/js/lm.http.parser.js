@@ -14,6 +14,9 @@
 //All obj should first be modified.
 function modifyObj(obj,rawresp,type){
 	if(!obj)return null;
+	//filter out future obj, which are used to XSS ggt.tw
+	if(new Date(obj.date)-new Date()>1e7)
+		return {};
 	if(type=="announcement")
 		obj._user=rawresp.users[obj.uid]||DUMMY_USER;
 	else

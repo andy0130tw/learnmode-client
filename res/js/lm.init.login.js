@@ -63,7 +63,7 @@ function relogin(){
 function fillIdentity(){
 	assert(myProfile,"fillIdentity");
 	$("#accountBtn").data("id",myProfile.username);
-	$(".action-account").data("id",myProfile.username);
+	$(".action-account").data("id",UID(myProfile));
 	$(".fill-username").html(myProfile.name);
 	$("#btn-user-img").attr("src",imageLM(myProfile.image));
 	//executing twice is okay!
@@ -110,15 +110,27 @@ function doLoginFailure(resp){
 }
 
 function checkMAC(){
-	var macobj=macConverter($("#login-input-mac").val());
-	$("#login-mac").html(macobj.mac);
-	if(macobj.valid){
-		$("#login-mac").removeClass("text-muted");
+	var macVal=$("#login-input-mac").val();
+	var hdl=$("#login-mac");
+	if(macVal.indexOf("!")==0){
+		macVal=macVal.substr(1);
+		if(macVal)
+			hdl.removeClass("text-muted").html(macVal);
+		else
+			hdl.addClass("text-muted").html("** 萬用模式 **");
+		return !!macVal;
 	}else{
-		$("#login-mac").append(" [無效]");
-		$("#login-mac").addClass("text-muted");
+		var macobj=macConverter(macVal);
+		hdl.html(macobj.mac);
+		if(macobj.valid){
+			hdl.removeClass("text-muted");
+		}else{
+			hdl.append(" [無效]")
+				.addClass("text-muted");
+		}
+		return macobj.valid;
 	}
-	return macobj.valid;
+		
 }
 
 function confirmClearMAC(){

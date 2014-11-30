@@ -79,9 +79,9 @@ function addToUserLightbox(){
 			});
 			container.find(".userview-desc").html(processContent(user.desc));
 			container.find(".userview-misc").html(
-				"地點："+user.location
-				+"<br/>使用者UID："+user.uid
-				+"<br/>使用者ID："+user.id
+				//"地點："+user.location
+				"使用者UID："+user.uid
+				//"<br/>使用者ID："+user.id
 			);
 
 			container.find(".userview-image").attr("src",imageLM(user.image));

@@ -1,4 +1,4 @@
-﻿function modalShowReply(e){
+function modalShowReply(e){
 	//modal("#popup-reply");
 	var self=$(this);
 	var id=self.data("id");
@@ -76,7 +76,6 @@ function registerListUtil(scope){
 		}
 	];
 	var utilLen=utilArr.length;
-xyz=utilArr;
 
 	var rtn={
 		setupLightbox:utilArr[0],
@@ -238,7 +237,8 @@ function viewRecognize(param,clearbefore){
 		}else{
 			s="首頁";
 			type="homepage";
-			c=COUNT.NOTIFICATION;
+			//v1.67 - fix typo
+			c=COUNT.HOMEPAGE;
 		}
 	}/*&&customFunc!=listProfile*/
 	if(param.category=="scrapbook"&&mainLoader.parse==parsePostThumbView){
@@ -262,7 +262,10 @@ function viewRecognize(param,clearbefore){
 function viewLoad(param,clearbefore,parser){
 	mainLoader.clearBefore=clearbefore;
 	mainLoader.parse=parser||parsePostListView;
-	mainLoader.load("list",param);
+	if(param.append)
+		mainLoader.load("list/"+param.append,deleteProp(param,"append"));
+	else
+		mainLoader.load("list",param);
 }
 
 function viewLoadMerge(param,clearbefore,parser){
@@ -304,7 +307,7 @@ function replyBringToTop(){
 	//Determine scroll mode
 	var that=$('.mfp-wrap');
 	if(that.css("position")=="absolute"){
-		var topPos=parseInt(that.css("top"));
+		var topPos=parseInt(that.css("top"),10);
 		//Animation is laggy, so no animation.
 		//$('html').animate({ scrollTop: topPos },FX_BRING_TOP_DURATION);
 		$('html,body').scrollTop(topPos);
@@ -312,6 +315,7 @@ function replyBringToTop(){
 	else that.animate({ scrollTop: 0 },FX_BRING_TOP_DURATION);
 }
 
+//v1.70 proposal - move to lm.util.js
 function getLoadingRing(cls){
 	//v1.52, add fallback for browser with no css animation
 	if(!isAnimationSupported())
@@ -321,6 +325,50 @@ function getLoadingRing(cls){
 		cir+=TAG("span","circle","");
 	return TAG("div","loader-ring"+(cls?" "+cls:""),cir);
 }
+
+//v1.70 - this should not be written like this.
+// need to separate the ui and the logic.
+function wordCountUpdate(){
+	var MAX_CHAR_OF_TEXTAREA=1<<10;
+	var self=$(this);
+	var text=self.val();
+	var view=$(self.data("counter"));
+	if(!view){
+		console.warn("[wordCountUpdate] word counter is not accessible through UI.");
+	}
+	//the server might use different chars for line-breaking?
+	//for accurate calculation, we need to get count of '\n's and double it.
+	var count=text.length+occurrences(text,"\n");
+	var diff=MAX_CHAR_OF_TEXTAREA-count;
+	var warnMessage="";
+	var countText=TAG("span","text-muted",count);
+	if(diff<0){
+		warnMessage=TAG("abbr","text-alert",
+			"title='超過上限之後，多餘的字會被截斷。'",
+			"(超過 "+TAG("span","text-bold",-diff)+" 字！)")+" ";
+	}else if(diff<140){
+		warnMessage="(還剩下 "+TAG("span","text-warning text-bold",diff)+" 字) ";
+	}
+	view.html(warnMessage+countText);
+}
+
+function occurrences(string, substring) {
+  var n = 0;
+  var pos = 0;
+  var l=substring.length;
+
+  while (true) {
+    pos = string.indexOf(substring, pos);
+    if (pos > -1) {
+      n++;
+      pos += l;
+    } else {
+      break;
+    }
+  }
+  return (n);
+}
+
 
 /******* VIEW MANAGEMENT *******/
 /*var view=[];

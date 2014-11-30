@@ -35,6 +35,18 @@ function TAGb(badge){
 		+"'","");
 }
 
+//test if username is safe to be included in query.
+//v1.72 - changed UID test. The server always use 
+// lower case when querying username(but not uid). 
+// This is usually OK if the user only use a-z0-9
+// as a username but for now there is a changeId utility...
+function UID(user){
+	var un=user.username;
+	if(un==un.toLowerCase())
+		return encodeURIComponent(un);
+	return user.uid;
+}
+
 //Badge detail image (raw)
 function TAGb2(badgeName){
 	var img=BADGE(badgeName);
