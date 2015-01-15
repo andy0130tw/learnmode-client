@@ -5,12 +5,40 @@ A Learn Mode client built with HTML5, CSS3 and JavaScript, which focuses on perf
 
 Version
 ------
-v1.64
+v1.73
 
 The project is used only as a repo to save and compare code, not a copy from the live demo.
 
 Recent changes
 ------
+###v1.64 to v1.73
+* Add font weight 300 (aka "light")
+* Update some shadows according to Google Material Design spec
+* Overlay feature - show a small dot to indicate...
+  * Someone blocks you or is blocked by you
+  * Someone you are not following
+  * Someone that is not following you
+* Disable mfp's zoom cursor (name collision)
+* Modals now have wider gaps on small viewports so that one can close a modal more easily.
+* Update the server to *.learnmode.net (since it usually faster)
+* Update badge description according to my analysis.
+* Add experimental feature: Show user id instead of school
+* Try to implement cache system but failed
+* `LowLevelQuery` is made because the system leaks all of its data, allowing anyone to access.
+  * but it is now patched, so the code is not working.
+* Modify the logic because the server change its beheavior after update
+  * LM 4.14.1040.1 or LMC v1.73
+  * Moderated posts(`flagged=true`) no longer hides the data
+  * New features DaDaTalk
+  * username frozen
+* Add word counters
+  * correctly handling newlines(1 nl = 2 char)
+  * the limit is 1024 characters
+  * warning
+* Update MAC autocomplete: if the MAC starts with `!`, then use the raw string without that `!`.
+* Update information on name cards
+* Add detection of future time in timestamps
+
 ###v1.43 to v1.64
 * Modify custom code of Shadowbox
 * Beautify login popup
