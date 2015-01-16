@@ -188,7 +188,8 @@ var initOnce=function(){
 	$("#postshare-subject-category").change(postshareSubjectCategoryChange);
 	//Handle default change
 	postshareSubjectCategoryChange();
-	postshareCategoryChange();
+	//v1.74 - now do it just before showing modal 
+	//postshareCategoryChange();
 
 	$("#users-search").submit(searchUserSubmit);
 	
@@ -204,6 +205,22 @@ var initOnce=function(){
 
 	//v1.70 - activate word counters
 	$(".spy-char-counter").trigger("input");
+
+	//v1.75 - check support of XMLHttpRequest2
+	if(!window.FormData||FormData.isPolyfilled){
+		$("input[type='file']")
+			.attr("disabled","disabled")
+			.addClass("hide")
+				.parent()
+				.append(TAG("span","not-supported","抱歉！目前的環境不支援圖片上傳功能。"));
+
+		var fd=window.FormData=function(){
+			this.__content__={};
+		};
+		fd.prototype.append=function(k,v){
+			this.__content__[k]=v;
+		}
+	}
 
 	//Corrupt itself to prevent recalling it
 	initOnce=function(){/*notify.warning("You can't call this function twice.");*/}

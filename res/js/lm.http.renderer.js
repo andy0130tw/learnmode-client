@@ -100,8 +100,9 @@ function renderPost(obj,isCompact){
 			+renderSubLabel(user)+"&nbsp;"
 			+(!isCompact?renderAbstract(obj,contAlt):"")
 			+(isCompact&&needCategory?TAG("span",COLOR_CLASS.CATEGORY,"&nbsp;"+(op.label)):"")
-			+renderApplication(obj)+"<br/>"
+			+"<br/>"
 			+TAG("span","list-datetime",renderSSTitle(obj))
+			+renderApplication(obj)
 			+renderVotersRaw(obj)
 			+op.contentFN(obj,contAlt)
 			+renderURI(obj)
@@ -301,8 +302,16 @@ function renderVoteButton(obj){
 function NULL(){return "";}
 
 function renderApplication(obj){
-	if(obj.category!="scrapbook")return "";
-	return TAG("span",COLOR_CLASS.APPLICATION," @ "+(obj.application));
+	//v1.75 - heavily rewrite renderApp to do l18n
+	var pkg=obj.application,pkgDisp;
+	if(["scrapbook","share","question","answer","comment"].indexOf(obj.category)<0||!pkg)return "";
+	pkgDisp=APP_TRANSLATION[pkg];
+	if(pkgDisp==null)
+		pkgDisp=" @ "+pkg;
+	else if(pkgDisp)
+		pkgDisp="來自 "+pkgDisp+" 的"+(obj.category=="scrapbook"?"截圖":"訊息");
+	else return "";
+	return TAG("span",COLOR_CLASS.APPLICATION," &horbar; "+pkgDisp);
 }
 
 function renderContent(obj,contAlt){
@@ -373,11 +382,17 @@ function matchAltContent(obj,isCompact){
 		rtn.content=m;
 		return rtn;
 	}else if(obj.category=="practice"){
-		var practicePattern="$1"+TAG("strong"," $2 ")+"$3";
+		//v1.75 - replace null
+		// and do better l18n
 		var practicere=/^(考完)(.+)(的試卷|的试卷)/;
-		m=m.replace(practicere,practicePattern);
-		var practicere2=/(,獲得|获得)(.+)(分)$/
-		m=m.replace(practicere2,practicePattern);
+		m=m.replace(practicere,function(match,p1,p2,p3,off,str){
+			if(p2=="null")
+				return p1+"一場考試";
+			return "考完"+TAG("strong",p2)+"的試卷";
+		});
+		var practicere2=/,(獲得|获得)(.+)(分)$/
+		//v1.76 - comma bug
+		m=m.replace(practicere2,"，$1"+TAG("strong"," $2 ")+"$3");
 		rtn.content=m;
 		return rtn;
 	}
@@ -411,9 +426,41 @@ function renderURI(obj){
 					+" ["+postIdTruncate(lmcontentid[2])+"]"));
 	}else if(obj.category=="practice"){
 		//v1.63
-		var test_id=url;
-		url="http://practice.learnmode.net/upload/"+url+"/test_"+url+"_info.zip";
-		return TAG("blockquote",ICON("calculate")+" Practice試題(測試)："+LINK(url,"Exam Archive #"+test_id));
+		var test_id=url,event_id,
+			testMeta,examDisp,examExtra,
+			email=myProfile.email,
+			isNewSource;
+			if(email)email=encodeURIComponent(email);
+		//v1.75 - new practice provides extra information
+		if((testMeta=obj.url.split("|")).length>1){
+			test_id=testMeta[0];
+			//really literally null
+			if(testMeta[1]=="null"){
+				testMeta[1]="[可能為題庫考堂]";
+				isNewSource=true;
+			}else{
+				//for now just guessing
+								
+			}
+			examDisp="Exam Archive: "+testMeta[1];
+		}else{
+			examDisp="Exam Archive #"+test_id;
+		}
+		if(isNewSource){
+			if(email){
+				url=URL_PRACTICE+"webappv3/question_base/get?username="+email+"&test_id="+test_id;
+				examDisp=LINK(url,examDisp);
+			}else
+				examDisp=TAG("span","text-muted","抱歉，無法取得題目檔案！(需要有效的信箱)");
+		}else{
+			url=URL_PRACTICE+"upload/"+test_id+"/test_"+test_id+"_info.zip";
+			examDisp=LINK(url,examDisp);
+		}
+		if(email)
+			examExtra=" | "+LINK(URL_PRACTICE+"webappv3/answer?username="+email+"&test_id="+test_id,"解答");
+		if(testMeta&&(event_id=testMeta[6]))
+			examExtra+=" | "+LINK(URL_PRACTICE+"webappv3/answer/get_zip?username="+email+"&tested_id="+event_id,"解答壓縮檔");
+		return TAG("blockquote",ICON("calculate")+" Practice試題(測試)："+examDisp+examExtra);
 	}
 	else if(url.indexOf("http")==0){
 		return TAG("blockquote",ICON("right-quote")+" 網頁："+LINK(url));
@@ -436,13 +483,13 @@ function renderSubject(obj,limit){
 }
 
 function renderPostListView(obj,isCompact){
-	var sty="";
+	var sty;
 	//v1.71 - correctly handle empty object
 	// moved from renderPost
 	// 
 	//In IE8, array's prototype will be polyfilled(corrupted).
 	// A quick and dirty way to hide this is to check if the obj is undefined
-	// IE8 is not supported offically, though.
+	// IE8 is not supported officially, though.
 	if(!obj||!obj.category)return "";
 	if(obj.category=="!follow"){
 		sty={inner:COLOR_CLASS.FOLLOW_BD,outer:"follow-outer"};

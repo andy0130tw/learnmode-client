@@ -1,7 +1,9 @@
 ﻿var VERSION_MAJOR="1.";
-var VERSION_MINOR="73";
+var VERSION_MINOR="75";
 var VERSION_COUNT="";
-var LAST_MODIFY="2014/10/22,2014/9/29";
+//! v1.74 - concat the version to provide a unified constant
+var VERSION=VERSION_MAJOR+VERSION_MINOR;
+var LAST_MODIFY="2015/1/15";
 
 var LOCAL_TEST=(location.hostname=="localhost");
 var DEBUGGING_ENVIROMENT=(!location.hostname);
@@ -18,6 +20,7 @@ var URL_USERDATA=
 var URL_LM="https://message.learnmode.net:5443/api/";
 var URL_IMAGE="https://message.learnmode.net:5443/image/";
 var URL_HST="http://lmadmin.learnmode.net/api/v1/";
+var URL_PRACTICE="http://practice.learnmode.net/";
 var URL_SEARCH="https://mercury.omcompany.com:5443/";
 
 var URL_BADGE_BASE="res/image/badge/";
@@ -213,7 +216,68 @@ var SUBJECT_CATEGORY_NAME=[
 	"運動","教育","語言"
 ];
 
+//v1.75 - App name translation
+//from experience and analysis from LM data
+var APP_TRANSLATION={
+	//Android essential
+	"com.android.browser":  "瀏覽器",
+	"com.android.settings": "設定",
+	"com.android.camera":   "相機",
+	"com.android.vending":  "Play 商店",
+	"com.android.updater":  "系統更新",
+	"com.android.calculator2": "計算機",
 
+	//common HTC applications
+	"com.htc.album":      "HTC 相簿",
+	"com.htc.music":      "HTC 音樂",
+	"com.htc.calendar":   "HTC 行事曆",
+	"com.htc.notes":      "Flyer 筆記本",
+	"com.htc.pdfviewer":  "Flyer PDF檢視器",
+	"com.htc.mysketcher": "Flyer 繪圖器",
+	"com.htc.android.worldclock": "世界時鐘",
+
+	//common applications (pre-installed)
+	"com.google.android.youtube":   "YouTube App",
+	"com.twitter.android":          "Twitter App",
+	"com.dropbox.android":          "Dropbox App",
+	"tunein.player":                "TuneIn Player App",
+	"com.adobe.reader":             "Adobe Reader App",
+	"com.inventec.dreye.htc":       "Dr.eye App",
+	"com.google.android.apps.maps": "Google 地圖",
+
+	//not apps, LM states
+	//some discovery
+	// legacy 'annotation' use 'reading' as category, this might be a mistake
+	// legacy 'scrapbook' don't use app name, which is strange
+	"reading":   false,                  //too complicated :(
+	"scrapbook": false, /*LM > 剪貼簿*/  //default of category 'comment' in scrapbook
+	"browser":   "LM > 影片播放器",       //default of category 'watch'
+	"textbook":  "LM > Textbook",
+	//actually this can't be determined
+	"android":   "彈出視窗",
+	
+	//LM apps
+	"com.htc.learnmode":   "LearnMode主程式",
+	"com.dopod.classroom": "LM Classroom",
+	"com.dopod.oppia":     "LM Course",
+	"com.dopod.prova":     "LM Practice",
+	"com.handstand_inc.primer.tw": "LM Books",
+	
+	"com.wolfram.android.algebra":     "Wolfram|Alpha 代數",
+	"com.wolfram.android.precalculus": "Wolfram|Alpha 基礎微積分",
+	"com.wolfram.android.calculus":    "微積分",
+
+	//LM legacy apps
+	"air.iTS": "課間工具 iTS(舊版)",
+	
+	//web client mock-up
+	"lmclient": "LMClient",
+	//...
+	"org.wikipedia": "Wikipedia App",
+	
+	//unknown... but common
+	"com.android.restartapp":"RestartApp(未知)"
+}
 
 //Random tip
 var randomTip=[
@@ -237,18 +301,16 @@ var randomTip=[
 	"A good service is no need to be well-known. Users' happy experiences are the most precious things.",
 	"If something goes wrong, simply tell me ASAP!",
 	"Changelog have been fully updated~~ Read it now!"*/
-	"隨機小提示全部重新寫過了！重新整理可以看到另一些提示喔。",
 	"Tips 在 v1.71 之後又多了一些哦！",
 	"點開大頭貼之後，按右上角可以顯示那個人的自介。",
-	"帳號可以利用LMUtility修改，可以適度使用。",
 	"考古模式可以將貼文由舊到新排列，翻文好工具。",
-	"Flyer內建的瀏覽器有時候會跑不出小圖示。舉例來說：["+ICON("database")+"]。",
+	"網頁版目前有改寫的打算，但是沒時間辦到。",
 	"這網頁的圖標是 皮皮 用 InkScape 做的，詳見選單中的「關於...」。",
 	"網頁的英文字型叫做 Roboto，是 Android 4.0+ 的系統字體(之一)。",
 	"這網頁在Flyer預設瀏覽器的效能問題，一直是惡夢。",
-	"關注/解關注牽涉到大量資料的複製或刪除，十分消耗系統資源。",
+	"關注/解關注牽涉到大量資料的建立或刪除，十分消耗系統資源。",
 	"網頁版沒有將圖片裁切或縮小的功能，拍照前請先將解析度調低，比較容易成功，也方便其他使用者觀看。",
 	"這個網頁後來加入了一點 Google Material Design 的元素。",
 	"發現任何bugs或者想要提供任何建議，歡迎到主選單中的「作者開發樓」發表喔！感謝～",
-	"由於作者的大學課業...很重，這個網頁不會這麼常更新了。"
+	"Happy New Year! 隨著2015年的到來，網頁版也將持續成長唷！"
 ];

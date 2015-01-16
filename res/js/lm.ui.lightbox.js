@@ -80,8 +80,9 @@ function addToUserLightbox(){
 			container.find(".userview-desc").html(processContent(user.desc));
 			container.find(".userview-misc").html(
 				//"地點："+user.location
-				"使用者UID："+user.uid
-				//"<br/>使用者ID："+user.id
+				"使用者UID："+user.uid+
+				//v1.74 - add id to help debugging
+				"<br/>使用者ID："+user.id
 			);
 
 			container.find(".userview-image").attr("src",imageLM(user.image));

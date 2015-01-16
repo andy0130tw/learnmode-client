@@ -1,5 +1,7 @@
 ﻿function openPostShareForm(){
 	setShow("#postshare-ok","#postshare-processing",false);
+	//v1.74 - update the view first
+	$("#postshare-category").change();
 	modal("#popup-postshare",false,true);
 }
 function openNewsForm(){

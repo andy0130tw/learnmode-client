@@ -20,7 +20,11 @@ function postShareForm(){
 		__ADDURL=null;
 	}
 	if(category=="scrapbook"){
-		if(!ctrlFile.files[0]){
+		//v1.75 - bug fix, check for file api
+		if(!ctrlFile.files){
+			alert("噢噢，此環境下無法發送剪貼簿。");
+			return;
+		}else if(!ctrlFile.files[0]){
 			alert("剪貼簿必須要有圖片才可發佈。");
 			return;
 		}	
@@ -92,9 +96,11 @@ function postReplyForm(){
 	formData.append("related",replyObject.id);
 	formData=appendSubject(formData,extractSubject(replyObject.subjects));
 	var ctrlFile=$("#postreply-file-image")[0];
-	if(ctrlFile.files&&ctrlFile.files[0])
+	//v1.75 - small refactoring
+	var fileRef;
+	if(ctrlFile.files&&(fileRef=ctrlFile.files[0]))
 		if(replyObject._replyBase.allowImage)
-			formData.append("image",ctrlFile.files[0]);
+			formData.append("image",fileRef);
 	postProxy("postNotify",formData,function(resp){
 		notify.complete({message:"回應發佈成功！",status:resp._status});
 		//clear the form
