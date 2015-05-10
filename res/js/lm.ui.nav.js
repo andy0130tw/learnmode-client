@@ -10,7 +10,8 @@
 	});
 	$("#myActivity2").click(function(){
 		navClick();
-		viewLoad({user:myProfile.username,sort:"date"},true);
+		//v1.76 - unified id
+		viewLoad({user:UID(myProfile),sort:"date"},true);
 		currentProfile=myProfile;
 	});
 
@@ -57,7 +58,9 @@
 	$("#nav-album").click(function(){
 		var param={category:"scrapbook"};
 		//If user is not defined, put my id
-		param.user=mainLoader.lastReq.user||myProfile.username;
+		//v1.76 - unified id
+		//v1.77 - mistaken argument in UID
+		param.user=mainLoader.lastReq.user||UID(myProfile);
 		viewLoadMerge(param,true,parsePostThumbView/*listProfileThumb*/);
 	});
 	$("#nav-award").click(function(){

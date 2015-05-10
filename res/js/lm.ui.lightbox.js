@@ -67,7 +67,8 @@ function addToUserLightbox(){
 			user._rendered=true;
 			$("#sb-player .ext-userview .userview-cover").attr("src",imageLM(user.cover,"X"));
 			/*container.find(".userview-block-outer").off()*/
-			container.find(".userview-toggle").click(function(){
+			//v1.76 - bug, this should only be bound once
+			container.find(".userview-toggle").off().click(function(){
 				//v1.64
 				/*alert(user.desc?
 					"自介：\n--------\n"
@@ -91,7 +92,8 @@ function addToUserLightbox(){
 			container.css("opacity",1);
 			container2.find(".userview-go").click(function(){
 				currentProfile=user;
-				viewLoad({/*sort:"date",*/user:user.username},true);
+				//v1.76 - unified id
+				viewLoad({/*sort:"date",*/user:UID(user)},true);
 				modalHide();
 				Shadowbox.close();
 			});
@@ -110,7 +112,9 @@ function addToUserLightbox(){
 		);
 		switchVisible(container1.find(".following"),user.is_followed_by);
 		var followingButton=container2.find(".userview-following");
-		followingButton.data("id",user.username);
+		//v1.76 - there is an issue of using which id to send out request
+		// see lm.util.js
+		followingButton.data("id",UID(user));
 		//Attach appropriate event listener
 		followingButton.off().removeClass("danger info");
 		if(isMyself(user)){

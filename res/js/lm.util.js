@@ -40,9 +40,10 @@ function TAGb(badge){
 // lower case when querying username(but not uid). 
 // This is usually OK if the user only use a-z0-9
 // as a username but for now there is a changeId utility...
+//v1.77 - fix bug: username could be undefined...
 function UID(user){
 	var un=user.username;
-	if(un==un.toLowerCase())
+	if(un&&un==un.toLowerCase())
 		return encodeURIComponent(un);
 	return user.uid;
 }

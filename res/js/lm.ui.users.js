@@ -15,26 +15,28 @@ function searchUser(param,clearbefore){
 	usersMoreFN._param=param;
 	return param;
 }
+
+//v1.76 - refactoring
+//v1.77 - a string bug fix
 function searchFollowing(param,clearbefore){
-	param=param||usersMoreFN._param||{};
-	if(clearbefore)clrUsersPopup();
-	switchVisible("#users-award",false);
-	param.count=COUNT.USER;
-	param.user=currentProfile.username;
-	lastestUsersReq=loadFromLM("following",param,addToUsersPopup);
-	usersMoreFN._param=param;
-	return param;
+	return searchFollRaw(param,clearbefore,"following");
 }
 function searchFollower(param,clearbefore){
+	return searchFollRaw(param,clearbefore,"followers");
+}
+
+function searchFollRaw(param,clearbefore,s){
 	param=param||usersMoreFN._param||{};
 	if(clearbefore)clrUsersPopup();
 	switchVisible("#users-award",false);
 	param.count=COUNT.USER;
-	param.user=currentProfile.username;
-	lastestUsersReq=loadFromLM("followers",param,addToUsersPopup);
+	//v1.76 - unified id
+	param.user=UID(currentProfile);
+	lastestUsersReq=loadFromLM(s,param,addToUsersPopup);
 	usersMoreFN._param=param;
 	return param;
 }
+
 function searchBadgeWinners(param,clearbefore){
 	param=param||usersMoreFN._param||{};
 	if(clearbefore)clrUsersPopup();

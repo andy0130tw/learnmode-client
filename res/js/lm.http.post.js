@@ -182,7 +182,8 @@ function BLOCK_CAUTION_MAKER(user,yesno){
 function postIfBlock(user,yesno){
 	if(!BLOCK_CAUTION_MAKER(currentProfile,yesno))return;
 	var formData = new FormData();
-	var userID=currentProfile.username;
+	//v1.76 - unified id
+	var userID=UID(currentProfile);
 	formData.append("device",storageObject.load("mac"));
 	formData.append("user",userID);
 	(yesno?postBlock:postUnblock)(formData,userID);

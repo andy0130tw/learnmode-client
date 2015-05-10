@@ -1,9 +1,9 @@
 ﻿var VERSION_MAJOR="1.";
-var VERSION_MINOR="75";
+var VERSION_MINOR="77";
 var VERSION_COUNT="";
 //! v1.74 - concat the version to provide a unified constant
 var VERSION=VERSION_MAJOR+VERSION_MINOR;
-var LAST_MODIFY="2015/1/15";
+var LAST_MODIFY="2015/2/5";
 
 var LOCAL_TEST=(location.hostname=="localhost");
 var DEBUGGING_ENVIROMENT=(!location.hostname);
@@ -99,7 +99,7 @@ var COLOR_CLASS={
 		up:"success",
 		down:"warning",
 		clear:"inverse"
-	},
+	}
 }
 
 var TEXT_RETURN_ALT=" "+TAG("small","text-pilcrow",ICON("pilcrow"));

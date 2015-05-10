@@ -62,7 +62,8 @@ function relogin(){
 //v1.63 - fill view to skip loading identity
 function fillIdentity(){
 	assert(myProfile,"fillIdentity");
-	$("#accountBtn").data("id",myProfile.username);
+	//v1.76 - unified id
+	$("#accountBtn").data("id",UID(myProfile));
 	$(".action-account").data("id",UID(myProfile));
 	$(".fill-username").html(myProfile.name);
 	$("#btn-user-img").attr("src",imageLM(myProfile.image));

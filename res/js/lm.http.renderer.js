@@ -384,15 +384,16 @@ function matchAltContent(obj,isCompact){
 	}else if(obj.category=="practice"){
 		//v1.75 - replace null
 		// and do better l18n
-		var practicere=/^(考完)(.+)(的試卷|的试卷)/;
-		m=m.replace(practicere,function(match,p1,p2,p3,off,str){
+		//v1.76 - comma bug
+		m=m.replace(/^(考完)(.+)(的試卷|的试卷)/,function(match,p1,p2,p3,off,str){
 			if(p2=="null")
 				return p1+"一場考試";
 			return "考完"+TAG("strong",p2)+"的試卷";
+		}).replace(/,(獲得|获得)(.+)(分)$/,function(match,p1,p2,p3,off,str){
+			//v1.77 - try to separate the score between slashes
+			p2=p2.replace(/\//g," / ");
+			return "，"+p1+" "+TAG("strong",p2)+" "+p3;
 		});
-		var practicere2=/,(獲得|获得)(.+)(分)$/
-		//v1.76 - comma bug
-		m=m.replace(practicere2,"，$1"+TAG("strong"," $2 ")+"$3");
 		rtn.content=m;
 		return rtn;
 	}
