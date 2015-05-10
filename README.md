@@ -20,6 +20,7 @@ Recent changes
 * Fix several bugs of user id issues.
 
 ###v1.73 to v1.76
+* Update Bootstrap (v3.1.1 -> v3.2.0).
 * Use native file-uploading box. (tweaked for IE 10+, since IE9- does not support it; see below)
 * Add detection for legacy browsers which does not support XMLHttpRequest2.
 * Update information and download links according to a big Practice app update (v2 -> v3).
