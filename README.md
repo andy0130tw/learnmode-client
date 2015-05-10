@@ -5,12 +5,29 @@ A Learn Mode client built with HTML5, CSS3 and JavaScript, which focuses on perf
 
 Version
 ------
-v1.73
+**v1.77**
+
+v1.77 is not published until some final modifications.
 
 The project is used only as a repo to save and compare code, not a copy from the live demo.
 
+**Fewer and fewer users are using this platform, so I decided that I would not update the code anymore after v1.77.**
+Also, the code has become hard to maintain since I didn't keep it organized at first.
+
 Recent changes
 ------
+###v1.77 (WIP)
+* Fix several bugs of user id issues.
+
+###v1.73 to v1.76
+* Use native file-uploading box. (tweaked for IE 10+, since IE9- does not support it; see below)
+* Add detection for legacy browsers which does not support XMLHttpRequest2.
+* Update information and download links according to a big Practice app update (v2 -> v3).
+* Update information on name cards (added ID for just debugging).
+* Add some translation to some (common) application field.
+* Fix a bug which user information with custom user ids can't be accessed.
+* Fix a bug in name cards: the handler of follow/unfollow button is not properly bound.
+
 ###v1.64 to v1.73
 * Add font weight 300 (aka "light")
 * Update some shadows according to Google Material Design spec
